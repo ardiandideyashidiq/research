@@ -19,7 +19,8 @@ Key capabilities:
 - **Cross-Corpus Unified Retrieval**: Simultaneous semantic search across academic papers (`literature`), court decisions (`putusan`), and web findings (`web`) with explicit corpus tags and legal context headers.
 - **End-to-End Autonomous Pipeline**: One-command complete lifecycle orchestration (`search -> snowball -> download -> convert -> RAG chunking`).
 - **Indonesian Court Judgment Engine (Putusan)**: Context-preserving conversion and chunking for court decisions across all jurisdictions (MA, MK, MKMK, PN, PT, PA, PM, PTUN, DKPP, KIP) with legal typography unspacing, watermark/disclaimer stripping, section segmentation (`KEPALA`, `IDENTITAS`, `DUDUK_PERKARA`, `PERTIMBANGAN_HUKUM`, `AMAR_PUTUSAN`, `PENUTUP`), context header injection, and direct SQLite RAG indexing.
-- **Production CLI Suite**: Ergonomic subcommands (`pipeline`, `search`, `snowball`, `download`, `convert`, `query`, `export`, `stats`, `putusan`, `web-search`, `embed`).
+- **Literature Review Card System & Matrix Synthesis**: Heuristic & milestone-aware extraction across literature and court rulings into structured research cards (*Isu Hukum*, *Teori/Dasar Hukum*, *Metodologi*, *Temuan Utama/Amar*, *Research Gap*, *Positioning*), persistent SQLite FTS5 storage, researcher annotation/tagging, and multi-format matrix export (GFM table + detailed cards in Markdown, UTF-8 BOM CSV for Excel, and JSON).
+- **Production CLI Suite**: Ergonomic subcommands (`pipeline`, `search`, `snowball`, `download`, `convert`, `query`, `export`, `stats`, `putusan`, `web-search`, `embed`, `cards`).
 
 ## Commands
 
@@ -28,7 +29,7 @@ Environment is managed strictly by [uv](https://docs.astral.sh/uv/); never use p
 ```bash
 uv sync                 # install deps including dev group
 uv run research --help  # view all CLI subcommands
-uv run research stats   # show database publications, downloads, RAG chunks, embeddings
+uv run research stats   # show database publications, downloads, RAG chunks, embeddings, cards
 uv run research pipeline "artificial intelligence copyright" --limit 10
 uv run research search "quantum computing" --providers arxiv,openalex --limit 5
 uv run research web-search "pertanggungjawaban pidana kecerdasan buatan" --provider all --limit 5
@@ -40,6 +41,12 @@ uv run research query "criminal liability deepfake" --mode hybrid --corpus all -
 uv run research query "pertimbangan hukum" --mode hybrid --corpus putusan --limit 3
 uv run research putusan /path/to/putusan.pdf --output-dir data/putusan_processed --index-rag
 uv run research putusan /path/to/putusan_dir/ --sample 50 --concurrency 6 --index-rag
+uv run research cards extract --all --limit 50 # batch extract review cards
+uv run research cards list --corpus literature --limit 20
+uv run research cards show <cite_key> # view full card details & synthesis
+uv run research cards edit <cite_key> --notes "Wajib dikutip Bab 3" --tags "deepfake,strict-liability"
+uv run research cards export --format markdown --output data/literature_matrix.md
+uv run research cards export --format csv --output data/literature_matrix.csv
 uv run research export --format bibtex --output tmp/export.bib
 uv run ruff check .     # lint
 uv run ruff check --fix .
@@ -116,6 +123,11 @@ src/research/
 ├── pipeline/             # Autonomous end-to-end research orchestration
 │   ├── models.py         # PipelineConfig, PipelineResult
 │   └── orchestrator.py   # ResearchPipeline (search -> snowball -> download -> convert -> RAG)
+├── cards/                # Literature review card system, researcher annotations & matrix export
+│   ├── models.py         # ReviewCard dataclass (.to_dict(), .from_row(), .to_markdown_card())
+│   ├── extractor.py      # CardExtractor (heuristic & milestone-aware literature & putusan extractor)
+│   ├── export.py         # Matrix export (Markdown GFM table + cards, UTF-8 BOM CSV, JSON)
+│   └── manager.py        # CardManager (SQLite review_cards & FTS5 CRUD, batch extraction, search)
 └── putusan/              # Indonesian Court Judgment conversion & context-preserving chunking
     ├── models.py         # PutusanMetadata, PutusanSection, PutusanChunk, PutusanDocument
     ├── normalizer.py     # Watermark/disclaimer stripping, spaced typography unspacing, table reflow

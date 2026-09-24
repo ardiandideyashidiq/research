@@ -7,6 +7,7 @@ from typing import Any, Self
 from loguru import logger
 
 from research.bibtex.parser import parse_bib_files
+from research.cards.manager import CardManager
 from research.db.manager import DatabaseManager
 from research.db.models import PublicationRecord
 from research.downloader.downloader import DownloadManager
@@ -54,6 +55,7 @@ class ResearchApp:
         self.scholar = GoogleScholarClient(proxy=scholar_proxy, proxy_pool=proxy_pool)
         self.pdf = PDFConverter()
         self.retriever = RAGRetriever(self.db)
+        self.cards = CardManager(self.db)
         self.pipeline = ResearchPipeline(app=self)
 
     async def close(self) -> None:

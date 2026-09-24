@@ -38,6 +38,8 @@ async def _async_main(args: Any) -> int:
             print(f"  Converted Documents: {stats['converted']}")
             print(f"  RAG Semantic Chunks: {stats['total_chunks']}")
             print(f"  Dense Embeddings:    {stats.get('total_embeddings', 0)}")
+            cards_stats = app.cards.count_cards()
+            print(f"  Review Cards:        {cards_stats['total_cards']}")
             corpus_b = stats.get("corpus_breakdown", {})
             if corpus_b:
                 print("  Corpus breakdown:")
@@ -334,6 +336,100 @@ async def _async_main(args: Any) -> int:
             else:
                 print()
             return 0
+
+        if cmd == "cards":
+            sub = getattr(args, "cards_action", None)
+            if not sub:
+                counts = app.cards.count_cards()
+                print("\n=== Literature Review Cards ===")
+                print(f"  Total Cards: {counts['total_cards']}")
+                for c_name, c_cnt in counts.get("corpus_breakdown", {}).items():
+                    print(f"    - {c_name:<12}: {c_cnt}")
+                print("\nRun 'research cards --help' to view actions: extract, list, show, edit, export.\n")
+                return 0
+
+            if sub == "extract":
+                if args.cite_key:
+                    print(f"\n[+] Extracting literature review card for: '{args.cite_key}'...")
+                    card = app.cards.extract_and_save(args.cite_key, force=args.force)
+                    if not card:
+                        print(f"[-] Publication '{args.cite_key}' not found in database.\n")
+                        return 1
+                    print(f"\n[+] Successfully extracted card: [{card.corpus.upper()}] {card.title}")
+                    print(f"  Isu Hukum:   {card.legal_issue[:100]}...")
+                    print(f"  Dasar/Teori: {card.theory[:100]}...")
+                    print(f"  Temuan:      {card.findings[:100]}...")
+                    print(f"  Gap:         {card.gap[:100]}...")
+                    print(f"  Positioning: {card.positioning[:100]}...\n")
+                    return 0
+
+                print(f"\n[+] Batch extracting literature review cards (corpus={args.corpus}, limit={args.limit})...")
+                cards = app.cards.batch_extract(corpus=args.corpus, force=args.force, limit=args.limit)
+                print(f"\n[+] Batch extraction finished: {len(cards)} review cards processed and saved into SQLite.\n")
+                return 0
+
+            if sub == "list":
+                cards = app.cards.list_cards(corpus=args.corpus, tag=args.tag, query=args.query, limit=args.limit)
+                if not cards:
+                    print("\n  No matching review cards found in database.\n")
+                    return 0
+
+                print(f"\n[+] Found {len(cards)} Literature Review Cards:\n")
+                print(f"{'No':<3} | {'Corpus':<10} | {'Tahun':<5} | {'Cite Key':<35} | {'Judul'}")
+                print("-" * 90)
+                for i, c in enumerate(cards, start=1):
+                    yr = str(c.year) if c.year else "—"
+                    t = c.title[:38] + ".." if len(c.title) > 40 else c.title
+                    ck = c.cite_key[:33] + ".." if len(c.cite_key) > 35 else c.cite_key
+                    print(f"{i:<3} | {c.corpus:<10} | {yr:<5} | {ck:<35} | {t}")
+                print()
+                return 0
+
+            if sub == "show":
+                card = app.cards.get_card(args.cite_key)
+                if not card:
+                    print(
+                        f"\n[-] Review card for '{args.cite_key}' not found. "
+                        f"Try 'research cards extract --cite-key {args.cite_key}'\n"
+                    )
+                    return 1
+                print("\n" + card.to_markdown_card() + "\n")
+                return 0
+
+            if sub == "edit":
+                card = app.cards.update_card(
+                    args.cite_key,
+                    legal_issue=args.issue,
+                    theory=args.theory,
+                    methodology=args.methodology,
+                    findings=args.findings,
+                    gap=args.gap,
+                    positioning=args.positioning,
+                    tags=args.tags,
+                    notes=args.notes,
+                )
+                if not card:
+                    print(f"[-] Could not find or create review card for '{args.cite_key}'.\n")
+                    return 1
+                print(f"\n[+] Review card for '{card.cite_key}' updated successfully.\n")
+                return 0
+
+            if sub == "export":
+                out_ext = "md" if args.format == "markdown" else args.format
+                default_file = f"data/literature_matrix.{out_ext}"
+                out_path = Path(args.output or default_file)
+
+                print(f"\n[+] Exporting literature review matrix (format={args.format}, corpus={args.corpus})...")
+                content = app.cards.export_matrix(
+                    format=args.format,
+                    output_path=out_path,
+                    corpus=args.corpus,
+                    tag=args.tag,
+                    include_details=not args.no_details,
+                )
+                cards_count = len(app.cards.list_cards(corpus=args.corpus, tag=args.tag))
+                print(f"[+] Exported {cards_count} review cards -> {out_path} ({len(content):,} bytes)\n")
+                return 0
 
     finally:
         await app.close()

@@ -158,5 +158,78 @@ def build_parser() -> argparse.ArgumentParser:
         help="Directory to save extracted markdown files (default: data/web_searches)",
     )
 
+    # 12. cards / matrix
+    p_cards = subparsers.add_parser(
+        "cards",
+        help="Card System & Literature Review Matrix: extraction (isu, teori, temuan, gap, positioning) and exports",
+    )
+    cards_subs = p_cards.add_subparsers(dest="cards_action", help="Cards action")
+
+    # cards extract
+    p_cextract = cards_subs.add_parser(
+        "extract",
+        help="Extract literature review cards from papers or court decisions",
+    )
+    p_cextract.add_argument("--cite-key", help="Extract specific publication by cite_key")
+    p_cextract.add_argument("--all", action="store_true", help="Extract cards for all publications in database")
+    p_cextract.add_argument(
+        "--corpus",
+        choices=["all", "literature", "putusan", "web"],
+        default="all",
+        help="Filter extraction by corpus (default: all)",
+    )
+    p_cextract.add_argument("--force", action="store_true", help="Re-extract and overwrite existing cards")
+    p_cextract.add_argument("--limit", type=int, default=200, help="Maximum publications to process (default: 200)")
+
+    # cards list
+    p_clist = cards_subs.add_parser("list", help="List literature review cards in database")
+    p_clist.add_argument(
+        "--corpus",
+        choices=["all", "literature", "putusan", "web"],
+        default="all",
+        help="Filter by corpus (default: all)",
+    )
+    p_clist.add_argument("--tag", help="Filter by tag (e.g. pidana, ai, deepfake)")
+    p_clist.add_argument("--query", help="Keyword search across card fields using FTS5")
+    p_clist.add_argument("--limit", type=int, default=50, help="Max cards to list (default: 50)")
+
+    # cards show
+    p_cshow = cards_subs.add_parser("show", help="Show full literature review card details for a paper/putusan")
+    p_cshow.add_argument("cite_key", help="Citation key or case identifier")
+
+    # cards edit
+    p_cedit = cards_subs.add_parser("edit", help="Update annotations on a literature review card")
+    p_cedit.add_argument("cite_key", help="Citation key or case identifier")
+    p_cedit.add_argument("--issue", help="Update legal issue / research problem")
+    p_cedit.add_argument("--theory", help="Update theory / legal basis")
+    p_cedit.add_argument("--methodology", help="Update research methodology")
+    p_cedit.add_argument("--findings", help="Update key findings / ratio decidendi / verdict")
+    p_cedit.add_argument("--gap", help="Update research gap / limitations")
+    p_cedit.add_argument("--positioning", help="Update research positioning / novelty")
+    p_cedit.add_argument("--tags", help="Update tags (comma-separated)")
+    p_cedit.add_argument("--notes", help="Update researcher personal notes")
+
+    # cards export
+    p_cexport = cards_subs.add_parser("export", help="Export literature review matrix table and cards")
+    p_cexport.add_argument(
+        "--format",
+        choices=["markdown", "csv", "json"],
+        default="markdown",
+        help="Export format (default: markdown)",
+    )
+    p_cexport.add_argument("--output", help="Output file path (default: data/literature_matrix.<ext>)")
+    p_cexport.add_argument(
+        "--corpus",
+        choices=["all", "literature", "putusan", "web"],
+        default="all",
+        help="Filter by corpus (default: all)",
+    )
+    p_cexport.add_argument("--tag", help="Filter by tag")
+    p_cexport.add_argument(
+        "--no-details",
+        action="store_true",
+        help="Exclude detail cards (table only in markdown)",
+    )
+
     return parser
 
