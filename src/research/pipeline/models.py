@@ -26,6 +26,7 @@ class PipelineConfig:
     convert_concurrency: int = 4
     index_rag: bool = True
     streaming: bool = True
+    force: bool = False
 
 
 @dataclass

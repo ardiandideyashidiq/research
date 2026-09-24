@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 from types import TracebackType
-from typing import Literal, Self
+from typing import Any, Literal, Self
 
 import httpx
 from curl_cffi.requests import AsyncSession, Session
@@ -138,6 +138,7 @@ class OJSClient:
 
         session = await self._get_async_session()
         to = timeout or self.timeout
+        timeout_val: Any = (min(float(to), 5.0), float(to)) if self.engine == "curl_cffi" else to
         last_err: Exception | None = None
 
         for attempt in range(retries + 1):
@@ -145,7 +146,7 @@ class OJSClient:
                 if isinstance(session, httpx.AsyncClient):
                     resp = await session.get(url, timeout=to)
                 else:
-                    resp = await session.get(url, timeout=to, allow_redirects=True)
+                    resp = await session.get(url, timeout=timeout_val, allow_redirects=True)
 
                 final_url = str(resp.url)
                 if resp.status_code >= 400:
@@ -187,6 +188,7 @@ class OJSClient:
 
         session = self._get_sync_session()
         to = timeout or self.timeout
+        timeout_val: Any = (min(float(to), 5.0), float(to)) if self.engine == "curl_cffi" else to
         last_err: Exception | None = None
 
         for attempt in range(retries + 1):
@@ -194,7 +196,7 @@ class OJSClient:
                 if isinstance(session, httpx.Client):
                     resp = session.get(url, timeout=to)
                 else:
-                    resp = session.get(url, timeout=to, allow_redirects=True)
+                    resp = session.get(url, timeout=timeout_val, allow_redirects=True)
 
                 final_url = str(resp.url)
                 if resp.status_code >= 400:

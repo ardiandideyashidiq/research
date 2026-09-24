@@ -130,6 +130,7 @@ async def _async_main(args: Any) -> int:
                 convert_concurrency=getattr(args, "convert_concurrency", 4),
                 index_rag=not args.no_rag,
                 streaming=not getattr(args, "no_streaming", False),
+                force=getattr(args, "force_download", False),
             )
             desc = f"query='{args.query}'" if args.query else ""
             if args.bib:

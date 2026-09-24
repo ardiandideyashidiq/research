@@ -198,11 +198,22 @@ class ResearchApp:
     ) -> list[PublicationRecord]:
         """Search Google Scholar and optionally auto-index into SQLite database."""
         res = await self.scholar.search(query, limit=limit, page=page)
-        records = [pub.to_publication_record() for pub in res.publications]
-        if auto_index:
-            for rec in records:
+        raw_records = [pub.to_publication_record() for pub in res.publications]
+        if not auto_index:
+            return raw_records
+
+        final_records: list[PublicationRecord] = []
+        for rec in raw_records:
+            existing = self.db.find_existing(rec)
+            if existing:
+                updated_sources = list(dict.fromkeys(existing.sources + rec.sources))
+                self.db.update(existing.cite_key, sources=updated_sources)
+                existing.sources = updated_sources
+                final_records.append(existing)
+            else:
                 self.db.create(rec)
-        return records
+                final_records.append(rec)
+        return final_records
 
     async def run_snowball(
         self,

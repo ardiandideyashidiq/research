@@ -84,6 +84,40 @@ class ResearchPipeline:
                         continue
 
                     md_path = pdf_path.with_suffix(".md")
+                    is_already_converted = md_path.is_file() and md_path.stat().st_size > 0
+                    has_db_chunks = self.app.db.has_chunks(pub.cite_key)
+                    is_already_chunked = pub.is_chunked or has_db_chunks
+
+                    # Ensure DB tracks markdown_path and is_chunked
+                    if is_already_converted and not pub.markdown_path:
+                        self.app.db.update(pub.cite_key, markdown_path=str(md_path))
+                        pub.markdown_path = str(md_path)
+                    if has_db_chunks and not pub.is_chunked:
+                        self.app.db.update(pub.cite_key, is_chunked=True)
+                        pub.is_chunked = True
+
+                    # 1. Fast-path: already converted and already indexed in RAG
+                    if not cfg.force and is_already_converted and (not cfg.index_rag or is_already_chunked):
+                        logger.debug("Paper '{}' already converted and indexed in RAG. Skipping.", pub.cite_key)
+                        stats["converted_count"] += 1
+                        if cfg.index_rag and is_already_chunked:
+                            stats["indexed_chunks_count"] += self.app.db.count_chunks_for(pub.cite_key)
+                        continue
+
+                    # 2. Markdown exists, but not yet indexed in RAG: index directly without PyMuPDF re-conversion
+                    if not cfg.force and is_already_converted and cfg.index_rag and not is_already_chunked:
+                        md_text = md_path.read_text(encoding="utf-8")
+                        chunks = await asyncio.to_thread(
+                            self.app.retriever.index_markdown,
+                            md_text,
+                            cite_key=pub.cite_key,
+                            paper_title=pub.title,
+                        )
+                        stats["converted_count"] += 1
+                        stats["indexed_chunks_count"] += len(chunks)
+                        continue
+
+                    # 3. Full conversion & RAG chunking
                     out_path, conv_doc = await self.app.pdf.convert_file_async(pdf_path, md_path)
                     self.app.db.update(pub.cite_key, markdown_path=str(out_path))
                     stats["converted_count"] += 1
@@ -122,6 +156,7 @@ class ResearchPipeline:
                         download_queue,
                         out_queue=convert_queue if cfg.convert else None,
                         concurrency=cfg.download_concurrency,
+                        force=cfg.force,
                     )
                     stats["downloaded_count"] = dl_stats.get("downloaded", 0)
 
@@ -384,7 +419,10 @@ class ResearchPipeline:
         downloaded_count = 0
         if cfg.download:
             self.app.downloader.timeout = cfg.download_timeout
-            dl_res = await self.app.downloader.download_all(concurrency=cfg.download_concurrency)
+            dl_res = await self.app.downloader.download_all(
+                concurrency=cfg.download_concurrency,
+                force=cfg.force,
+            )
             downloaded_count = dl_res.get("downloaded", 0)
 
         logger.info("Pipeline Step 3: Verified and downloaded {} PDFs", downloaded_count)
@@ -405,8 +443,38 @@ class ResearchPipeline:
             async def _process_pub(pub: PublicationRecord) -> tuple[bool, int]:
                 pdf_path = Path(pub.download_path)  # type: ignore[arg-type]
                 md_path = pdf_path.with_suffix(".md")
+                is_already_converted = md_path.is_file() and md_path.stat().st_size > 0
+                has_db_chunks = self.app.db.has_chunks(pub.cite_key)
+                is_already_chunked = pub.is_chunked or has_db_chunks
+
+                # Ensure DB tracks markdown_path and is_chunked
+                if is_already_converted and not pub.markdown_path:
+                    self.app.db.update(pub.cite_key, markdown_path=str(md_path))
+                    pub.markdown_path = str(md_path)
+                if has_db_chunks and not pub.is_chunked:
+                    self.app.db.update(pub.cite_key, is_chunked=True)
+                    pub.is_chunked = True
+
+                # 1. Fast-path: already converted and already indexed in RAG
+                if not cfg.force and is_already_converted and (not cfg.index_rag or is_already_chunked):
+                    logger.debug("Paper '{}' already converted and indexed in RAG. Skipping.", pub.cite_key)
+                    c_count = self.app.db.count_chunks_for(pub.cite_key) if cfg.index_rag and is_already_chunked else 0
+                    return True, c_count
+
                 async with sem:
                     try:
+                        # 2. Markdown exists, but not yet indexed in RAG: index directly without PyMuPDF
+                        if not cfg.force and is_already_converted and cfg.index_rag and not is_already_chunked:
+                            md_text = md_path.read_text(encoding="utf-8")
+                            chunks = await asyncio.to_thread(
+                                self.app.retriever.index_markdown,
+                                md_text,
+                                cite_key=pub.cite_key,
+                                paper_title=pub.title,
+                            )
+                            return True, len(chunks)
+
+                        # 3. Full conversion & RAG chunking
                         out_path, conv_doc = await self.app.pdf.convert_file_async(pdf_path, md_path)
                         self.app.db.update(pub.cite_key, markdown_path=str(out_path))
 

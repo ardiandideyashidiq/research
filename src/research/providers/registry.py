@@ -133,16 +133,19 @@ class ProviderRegistry:
             if title_key:
                 seen_titles.add(title_key)
 
-            deduped.append(rec)
-
             # Auto-index into DatabaseManager if configured
+            final_rec = rec
             if auto_index and self.db is not None:
                 existing = self.db.find_existing(rec)
                 if existing:
                     updated_sources = list(dict.fromkeys(existing.sources + rec.sources))
                     self.db.update(existing.cite_key, sources=updated_sources)
+                    existing.sources = updated_sources
+                    final_rec = existing
                 else:
                     self.db.create(rec)
+
+            deduped.append(final_rec)
 
         logger.success(f"Federated search yielded {len(deduped)} deduplicated publications.")
         return deduped

@@ -233,12 +233,36 @@ class DatabaseManager:
         except sqlite3.OperationalError:
             pass
 
-    def create(self, record: PublicationRecord | dict[str, Any]) -> PublicationRecord:
-        """Insert or replace a publication record (Create)."""
+    def create(self, record: PublicationRecord | dict[str, Any], *, merge: bool = True) -> PublicationRecord:
+        """Insert or replace a publication record (Create/Upsert)."""
         if isinstance(record, dict):
             rec = PublicationRecord.from_row(record)
         else:
             rec = record
+
+        # Preserve existing download and processing state if incoming record is pending/empty
+        if merge:
+            existing = self.get(rec.cite_key)
+            if existing:
+                if rec.download_status == "pending" and existing.download_status != "pending":
+                    rec.download_status = existing.download_status
+                    rec.download_path = existing.download_path
+                    rec.download_error = existing.download_error
+                    rec.downloaded_at = existing.downloaded_at
+                    rec.file_size = existing.file_size
+                    rec.file_hash = existing.file_hash
+                    rec.content_type = existing.content_type
+                if not rec.markdown_path and existing.markdown_path:
+                    rec.markdown_path = existing.markdown_path
+                if not rec.is_chunked and existing.is_chunked:
+                    rec.is_chunked = existing.is_chunked
+                if not rec.pdf_url and existing.pdf_url:
+                    rec.pdf_url = existing.pdf_url
+                if not rec.url and existing.url:
+                    rec.url = existing.url
+                if not rec.doi and existing.doi:
+                    rec.doi = existing.doi
+                rec.sources = list(dict.fromkeys(existing.sources + rec.sources))
 
         conn = self.get_connection()
         cursor = conn.cursor()
@@ -634,6 +658,21 @@ class DatabaseManager:
             pass
         conn.commit()
         return deleted
+
+    def has_chunks(self, cite_key: str) -> bool:
+        """Check if document chunks currently exist for a publication cite_key."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1 FROM chunks WHERE cite_key = ? LIMIT 1", (cite_key,))
+        return cursor.fetchone() is not None
+
+    def count_chunks_for(self, cite_key: str) -> int:
+        """Count the number of chunks stored for a publication cite_key."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM chunks WHERE cite_key = ?", (cite_key,))
+        row = cursor.fetchone()
+        return row[0] if row else 0
 
     def save_chunk_embeddings(self, embeddings: dict[str, Any]) -> int:
         """Save binary float32 embeddings for chunks."""

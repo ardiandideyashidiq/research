@@ -203,6 +203,27 @@ class DownloadManager:
         force: bool = False,
     ) -> PublicationRecord:
         """Download and verify a single publication record with multi-tier deduplication."""
+        # Tier 0: Database check for existing state (already downloaded or known failure)
+        if not force:
+            db_rec = self.db.get(record.cite_key)
+            if db_rec:
+                if db_rec.download_status == "downloaded" and db_rec.download_path:
+                    local_path = Path(db_rec.download_path)
+                    if local_path.is_file() and local_path.stat().st_size > 0:
+                        logger.debug(f"Paper {record.cite_key} already downloaded at {local_path}. Skipping.")
+                        return db_rec
+                elif db_rec.download_status in (
+                    "no_pdf_found",
+                    "failed_not_pdf",
+                    "failed_blocked",
+                    "unsupported_format",
+                    "dead_link",
+                ):
+                    logger.info(
+                        f"Paper {record.cite_key}: Skipping previously verified unavailable PDF (status: {db_rec.download_status})"
+                    )
+                    return db_rec
+
         # Tier 1: Check if this record is already downloaded on disk
         if not force and record.download_status == "downloaded" and record.download_path:
             local_path = Path(record.download_path)
