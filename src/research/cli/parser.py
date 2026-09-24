@@ -36,6 +36,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_pipe.add_argument("--no-scholar", action="store_true", help="Exclude Google Scholar")
     p_pipe.add_argument("--no-snowball", action="store_true", help="Skip citation graph snowballing")
     p_pipe.add_argument("--snowball-seeds", type=int, default=2, help="Number of top seed papers to snowball (default: 2)")
+    p_pipe.add_argument(
+        "--snowball-limit",
+        type=int,
+        default=8,
+        help="Max forward/backward citations to fetch per seed (default: 8)",
+    )
     p_pipe.add_argument("--no-download", action="store_true", help="Skip downloading PDFs")
     p_pipe.add_argument("--download-concurrency", type=int, default=6, help="Concurrent download workers (default: 6)")
     p_pipe.add_argument(

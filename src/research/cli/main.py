@@ -134,6 +134,7 @@ async def _async_main(args: Any) -> int:
                 include_scholar=not args.no_scholar,
                 snowball=not args.no_snowball,
                 snowball_seeds=args.snowball_seeds,
+                snowball_limit=getattr(args, "snowball_limit", 8),
                 snowball_concurrency=getattr(args, "snowball_concurrency", 4),
                 download=not args.no_download,
                 download_concurrency=getattr(args, "download_concurrency", 6),
