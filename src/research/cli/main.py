@@ -219,8 +219,15 @@ async def _async_main(args: Any) -> int:
                     except Exception as e:  # noqa: BLE001
                         return False, 0, f"  - Failed {pdf_file.name}: {e}"
 
-            tasks = [_worker(f) for f in files]
-            results = await asyncio.gather(*tasks)
+            tasks = [asyncio.create_task(_worker(f)) for f in files]
+            try:
+                results = await asyncio.gather(*tasks)
+            except (asyncio.CancelledError, KeyboardInterrupt):
+                for t in tasks:
+                    if not t.done():
+                        t.cancel()
+                await asyncio.gather(*tasks, return_exceptions=True)
+                raise
 
             converted_count = 0
             chunks_count = 0
@@ -717,14 +724,20 @@ async def _async_main(args: Any) -> int:
                 print(f"[+] Export complete -> {out_path}\n")
                 return 0
 
+    except (asyncio.CancelledError, KeyboardInterrupt):
+        logger.warning("\n[!] Execution interrupted by user (Ctrl+C). Performing graceful cleanup...")
+        return 130
     finally:
-        await app.close()
+        try:
+            await asyncio.shield(app.close())
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("Error during app cleanup: {}", exc)
 
     return 0
 
 
 def main() -> None:
-    """CLI entry point."""
+    """CLI entry point with robust keyboard interrupt and termination handling."""
     parser = build_parser()
     args = parser.parse_args()
     log_file = setup_logging(
@@ -740,7 +753,7 @@ def main() -> None:
     try:
         code = asyncio.run(_async_main(args))
     except KeyboardInterrupt:
-        logger.warning("Execution interrupted by user.")
+        logger.warning("\n[!] Process terminated by user.")
         sys.exit(130)
     except Exception as exc:  # noqa: BLE001
         logger.exception("Fatal error during execution: {}", exc)

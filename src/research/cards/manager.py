@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import sqlite3
 from datetime import UTC, datetime
@@ -331,12 +332,19 @@ class CardManager:
                     logger.warning("Failed extracting review card for '{}': {}", pub.cite_key, exc)
                     return None
 
-            with ThreadPoolExecutor(max_workers=max(1, concurrency)) as executor:
+            executor = ThreadPoolExecutor(max_workers=max(1, concurrency))
+            try:
                 futures = [executor.submit(_worker, pub) for pub in to_extract]
                 for fut in as_completed(futures):
                     card_res = fut.result()
                     if card_res is not None:
                         results.append(card_res)
+            except (KeyboardInterrupt, asyncio.CancelledError):
+                logger.warning("Batch extraction interrupted by user. Cancelling pending jobs...")
+                executor.shutdown(wait=False, cancel_futures=True)
+                raise
+            finally:
+                executor.shutdown(wait=False, cancel_futures=True)
 
         logger.info("Batch extraction completed: processed {} review cards.", len(results))
         return results

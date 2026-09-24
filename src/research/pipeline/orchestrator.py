@@ -68,7 +68,10 @@ class ResearchPipeline:
         # Worker for CPU-bound conversion and semantic chunking
         async def _convert_worker() -> None:
             while True:
-                pub = await convert_queue.get()
+                try:
+                    pub = await convert_queue.get()
+                except (asyncio.CancelledError, KeyboardInterrupt):
+                    break
                 if pub is None:
                     convert_queue.task_done()
                     break
@@ -92,137 +95,172 @@ class ResearchPipeline:
                             cite_key=pub.cite_key,
                         )
                         stats["indexed_chunks_count"] += len(chunks)
+                except (asyncio.CancelledError, KeyboardInterrupt):
+                    raise
                 except Exception as exc:  # noqa: BLE001
                     logger.warning("Streaming conversion/chunking failed for {}: {}", pub.cite_key, exc)
                 finally:
                     convert_queue.task_done()
 
         # Start conversion workers if convert enabled
-        convert_workers: list[asyncio.Task] = []
-        if cfg.convert:
-            convert_workers = [
-                asyncio.create_task(_convert_worker())
-                for _ in range(max(1, cfg.convert_concurrency))
-            ]
+        convert_workers: list[asyncio.Task[None]] = []
+        download_task: asyncio.Task[None] | None = None
 
-        # Start download workers if download enabled
-        download_task: asyncio.Task | None = None
-        if cfg.download:
+        try:
+            if cfg.convert:
+                convert_workers = [
+                    asyncio.create_task(_convert_worker())
+                    for _ in range(max(1, cfg.convert_concurrency))
+                ]
 
-            async def _run_downloads() -> None:
-                dl_stats = await self.app.downloader.download_stream(
-                    download_queue,
-                    out_queue=convert_queue if cfg.convert else None,
-                    concurrency=cfg.download_concurrency,
-                )
-                stats["downloaded_count"] = dl_stats.get("downloaded", 0)
+            # Start download workers if download enabled
+            if cfg.download:
 
-            download_task = asyncio.create_task(_run_downloads())
-
-        # Step 0: BibTeX Seed Ingestion
-        bib_records: list[PublicationRecord] = []
-        if cfg.bib_path:
-            logger.info("Pipeline Step 0: Ingesting BibTeX seed from {}", cfg.bib_path)
-            try:
-                from research.bibtex.parser import parse_bib_files
-
-                path_list = (
-                    [Path(cfg.bib_path)]
-                    if isinstance(cfg.bib_path, (str, Path))
-                    else [Path(p) for p in cfg.bib_path]
-                )
-                bib_count = self.app.load_bib_files(path_list, auto_normalize=True)
-                stats["bib_count"] = bib_count
-
-                parsed_entries = parse_bib_files(path_list)
-                for e in parsed_entries:
-                    rec = self.app.db.get(e.cite_key)
-                    if rec:
-                        bib_records.append(rec)
-                        if rec.download_status == "downloaded" and rec.download_path and cfg.convert:
-                            if not Path(rec.download_path).with_suffix(".md").exists():
-                                await convert_queue.put(rec)
-                        elif rec.download_status != "downloaded":
-                            await _enqueue_download(rec)
-
-                logger.info("Pipeline Step 0: Ingested and enriched {} BibTeX seed papers", len(bib_records))
-            except Exception as exc:  # noqa: BLE001
-                logger.warning("BibTeX seed ingestion issue: {}", exc)
-
-        # Step 1: Federated Discovery (academic providers + Google Scholar in parallel)
-        discovered: list[PublicationRecord] = []
-        if cfg.query:
-            logger.info("Pipeline Step 1: Launching concurrent academic and Scholar discovery...")
-
-            async def _search_academic() -> list[PublicationRecord]:
-                try:
-                    return await self.app.providers.search_all(
-                        cfg.query,
-                        providers=cfg.providers,
-                        limit_per_provider=max(3, cfg.search_limit // 2),
-                        auto_index=True,
+                async def _run_downloads() -> None:
+                    dl_stats = await self.app.downloader.download_stream(
+                        download_queue,
+                        out_queue=convert_queue if cfg.convert else None,
+                        concurrency=cfg.download_concurrency,
                     )
-                except Exception as exc:  # noqa: BLE001
-                    logger.warning("Academic providers search issue: {}", exc)
-                    return []
+                    stats["downloaded_count"] = dl_stats.get("downloaded", 0)
 
-            async def _search_scholar() -> list[PublicationRecord]:
-                if not cfg.include_scholar:
-                    return []
+                download_task = asyncio.create_task(_run_downloads())
+
+            # Step 0: BibTeX Seed Ingestion
+            bib_records: list[PublicationRecord] = []
+            if cfg.bib_path:
+                logger.info("Pipeline Step 0: Ingesting BibTeX seed from {}", cfg.bib_path)
                 try:
-                    return await self.app.search_scholar(
-                        cfg.query,
-                        limit=cfg.search_limit,
-                        auto_index=True,
+                    from research.bibtex.parser import parse_bib_files
+
+                    path_list = (
+                        [Path(cfg.bib_path)]
+                        if isinstance(cfg.bib_path, (str, Path))
+                        else [Path(p) for p in cfg.bib_path]
                     )
+                    bib_count = self.app.load_bib_files(path_list, auto_normalize=True)
+                    stats["bib_count"] = bib_count
+
+                    parsed_entries = parse_bib_files(path_list)
+                    for e in parsed_entries:
+                        rec = self.app.db.get(e.cite_key)
+                        if rec:
+                            bib_records.append(rec)
+                            if rec.download_status == "downloaded" and rec.download_path and cfg.convert:
+                                if not Path(rec.download_path).with_suffix(".md").exists():
+                                    await convert_queue.put(rec)
+                            elif rec.download_status != "downloaded":
+                                await _enqueue_download(rec)
+
+                    logger.info("Pipeline Step 0: Ingested and enriched {} BibTeX seed papers", len(bib_records))
+                except (asyncio.CancelledError, KeyboardInterrupt):
+                    raise
                 except Exception as exc:  # noqa: BLE001
-                    logger.warning("Google Scholar search issue: {}", exc)
-                    return []
+                    logger.warning("BibTeX seed ingestion issue: {}", exc)
 
-            search_results = await asyncio.gather(_search_academic(), _search_scholar())
-            for res_list in search_results:
-                for rec in res_list:
-                    discovered.append(rec)
-                    await _enqueue_download(rec)
+            # Step 1: Federated Discovery (academic providers + Google Scholar in parallel)
+            discovered: list[PublicationRecord] = []
+            if cfg.query:
+                logger.info("Pipeline Step 1: Launching concurrent academic and Scholar discovery...")
 
-            stats["discovered_count"] = len(discovered)
-            logger.info("Pipeline Step 1: Discovered and indexed {} papers", len(discovered))
+                async def _search_academic() -> list[PublicationRecord]:
+                    try:
+                        return await self.app.providers.search_all(
+                            cfg.query,
+                            providers=cfg.providers,
+                            limit_per_provider=max(3, cfg.search_limit // 2),
+                            auto_index=True,
+                        )
+                    except (asyncio.CancelledError, KeyboardInterrupt):
+                        raise
+                    except Exception as exc:  # noqa: BLE001
+                        logger.warning("Academic providers search issue: {}", exc)
+                        return []
 
-        # Step 2: Parallel Citation Graph Snowballing
-        if cfg.snowball:
-            candidate_seeds = bib_records + [r for r in discovered if r.doi or r.title]
-            seeds = candidate_seeds[: cfg.snowball_seeds]
-            if seeds:
-                logger.info(
-                    "Pipeline Step 2: Snowballing {} seed papers in parallel (concurrency={})...",
-                    len(seeds),
-                    cfg.snowball_concurrency,
-                )
-                self.app.snowball.config.limit_forward = cfg.snowball_limit
-                self.app.snowball.config.limit_backward = cfg.snowball_limit
-                self.app.snowball.config.concurrency = cfg.snowball_concurrency
+                async def _search_scholar() -> list[PublicationRecord]:
+                    if not cfg.include_scholar:
+                        return []
+                    try:
+                        return await self.app.search_scholar(
+                            cfg.query,
+                            limit=cfg.search_limit,
+                            auto_index=True,
+                        )
+                    except (asyncio.CancelledError, KeyboardInterrupt):
+                        raise
+                    except Exception as exc:  # noqa: BLE001
+                        logger.warning("Google Scholar search issue: {}", exc)
+                        return []
 
-                snowball_results = await self.app.snowball.snowball_records(seeds)
-                for s_res in snowball_results:
-                    stats["snowballed_count"] += s_res.forward_count + s_res.backward_count
-                    for rec in s_res.discovered_records:
+                search_tasks = [
+                    asyncio.create_task(_search_academic()),
+                    asyncio.create_task(_search_scholar()),
+                ]
+                try:
+                    search_results = await asyncio.gather(*search_tasks)
+                except (asyncio.CancelledError, KeyboardInterrupt):
+                    for t in search_tasks:
+                        if not t.done():
+                            t.cancel()
+                    await asyncio.gather(*search_tasks, return_exceptions=True)
+                    raise
+
+                for res_list in search_results:
+                    for rec in res_list:
+                        discovered.append(rec)
                         await _enqueue_download(rec)
 
-                logger.info("Pipeline Step 2: Snowballed {} citation nodes", stats["snowballed_count"])
+                stats["discovered_count"] = len(discovered)
+                logger.info("Pipeline Step 1: Discovered and indexed {} papers", len(discovered))
 
-        # Discovery & Snowballing are complete -> close download queue
-        if cfg.download:
-            for _ in range(cfg.download_concurrency):
-                await download_queue.put(None)
-            if download_task:
-                await download_task
+            # Step 2: Parallel Citation Graph Snowballing
+            if cfg.snowball:
+                candidate_seeds = bib_records + [r for r in discovered if r.doi or r.title]
+                seeds = candidate_seeds[: cfg.snowball_seeds]
+                if seeds:
+                    logger.info(
+                        "Pipeline Step 2: Snowballing {} seed papers in parallel (concurrency={})...",
+                        len(seeds),
+                        cfg.snowball_concurrency,
+                    )
+                    self.app.snowball.config.limit_forward = cfg.snowball_limit
+                    self.app.snowball.config.limit_backward = cfg.snowball_limit
+                    self.app.snowball.config.concurrency = cfg.snowball_concurrency
 
-        # Downloads are complete -> close convert queue
-        if cfg.convert:
-            for _ in range(max(1, cfg.convert_concurrency)):
-                await convert_queue.put(None)
-            if convert_workers:
-                await asyncio.gather(*convert_workers)
+                    snowball_results = await self.app.snowball.snowball_records(seeds)
+                    for s_res in snowball_results:
+                        stats["snowballed_count"] += s_res.forward_count + s_res.backward_count
+                        for rec in s_res.discovered_records:
+                            await _enqueue_download(rec)
+
+                    logger.info("Pipeline Step 2: Snowballed {} citation nodes", stats["snowballed_count"])
+
+            # Discovery & Snowballing are complete -> close download queue
+            if cfg.download:
+                for _ in range(cfg.download_concurrency):
+                    await download_queue.put(None)
+                if download_task:
+                    await download_task
+
+            # Downloads are complete -> close convert queue
+            if cfg.convert:
+                for _ in range(max(1, cfg.convert_concurrency)):
+                    await convert_queue.put(None)
+                if convert_workers:
+                    await asyncio.gather(*convert_workers)
+
+        except (asyncio.CancelledError, KeyboardInterrupt):
+            logger.warning("Pipeline streaming execution interrupted. Cancelling worker tasks...")
+            raise
+        finally:
+            if download_task and not download_task.done():
+                download_task.cancel()
+            for w in convert_workers:
+                if not w.done():
+                    w.cancel()
+            all_to_cancel = [t for t in [download_task, *convert_workers] if t and not t.done()]
+            if all_to_cancel:
+                await asyncio.gather(*all_to_cancel, return_exceptions=True)
 
         duration = time.time() - t0
         all_records = self.app.db.list(limit=200)
@@ -306,7 +344,19 @@ class ResearchPipeline:
                     logger.warning("Google Scholar search issue: {}", exc)
                     return []
 
-            search_results = await asyncio.gather(_search_academic(), _search_scholar())
+            search_tasks = [
+                asyncio.create_task(_search_academic()),
+                asyncio.create_task(_search_scholar()),
+            ]
+            try:
+                search_results = await asyncio.gather(*search_tasks)
+            except (asyncio.CancelledError, KeyboardInterrupt):
+                for t in search_tasks:
+                    if not t.done():
+                        t.cancel()
+                await asyncio.gather(*search_tasks, return_exceptions=True)
+                raise
+
             for res_list in search_results:
                 discovered.extend(res_list)
 
@@ -367,12 +417,22 @@ class ResearchPipeline:
                             )
                             chunks_len = len(chunks)
                         return True, chunks_len
+                    except (asyncio.CancelledError, KeyboardInterrupt):
+                        raise
                     except Exception as exc:  # noqa: BLE001
                         logger.warning("Conversion failed for {}: {}", pub.cite_key, exc)
                         return False, 0
 
-            tasks = [_process_pub(p) for p in valid_pubs]
-            processed = await asyncio.gather(*tasks)
+            tasks = [asyncio.create_task(_process_pub(p)) for p in valid_pubs]
+            try:
+                processed = await asyncio.gather(*tasks)
+            except (asyncio.CancelledError, KeyboardInterrupt):
+                for t in tasks:
+                    if not t.done():
+                        t.cancel()
+                await asyncio.gather(*tasks, return_exceptions=True)
+                raise
+
             for ok, c_cnt in processed:
                 if ok:
                     converted_count += 1

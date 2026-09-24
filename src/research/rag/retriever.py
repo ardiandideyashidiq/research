@@ -116,17 +116,24 @@ class RAGRetriever:
         )
 
         total_embedded = 0
-        for i in range(0, len(unembedded), batch_size):
-            batch = unembedded[i : i + batch_size]
-            emb_map = self.embeddings.embed_chunks(batch)
-            saved = self.db.save_chunk_embeddings(emb_map)
-            total_embedded += saved
-            logger.debug(
-                "Embedded chunks {}/{} (saved {})",
-                min(i + batch_size, len(unembedded)),
-                len(unembedded),
-                saved,
+        try:
+            for i in range(0, len(unembedded), batch_size):
+                batch = unembedded[i : i + batch_size]
+                emb_map = self.embeddings.embed_chunks(batch)
+                saved = self.db.save_chunk_embeddings(emb_map)
+                total_embedded += saved
+                logger.debug(
+                    "Embedded chunks {}/{} (saved {})",
+                    min(i + batch_size, len(unembedded)),
+                    len(unembedded),
+                    saved,
+                )
+        except KeyboardInterrupt:
+            logger.warning(
+                "Embedding generation interrupted by user. Saved {} chunk embeddings so far.",
+                total_embedded,
             )
+            raise
 
         logger.info("Successfully generated and saved {} chunk embeddings.", total_embedded)
         return total_embedded

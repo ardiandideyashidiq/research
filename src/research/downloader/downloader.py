@@ -211,7 +211,11 @@ class DownloadManager:
 
             async def _worker() -> None:
                 while True:
-                    rec = await in_queue.get()
+                    try:
+                        rec = await in_queue.get()
+                    except (asyncio.CancelledError, KeyboardInterrupt):
+                        break
+
                     if rec is None:
                         in_queue.task_done()
                         break
@@ -233,6 +237,8 @@ class DownloadManager:
                                     on_downloaded(result)
                             if out_queue is not None:
                                 await out_queue.put(result)
+                    except (asyncio.CancelledError, KeyboardInterrupt):
+                        raise
                     except Exception as e:  # noqa: BLE001
                         logger.error(f"Worker error downloading {rec.cite_key}: {e}")
                         stats["failed_unexpected"] = stats.get("failed_unexpected", 0) + 1
@@ -240,7 +246,14 @@ class DownloadManager:
                         in_queue.task_done()
 
             workers = [asyncio.create_task(_worker()) for _ in range(worker_count)]
-            await asyncio.gather(*workers)
+            try:
+                await asyncio.gather(*workers)
+            except (asyncio.CancelledError, KeyboardInterrupt):
+                for w in workers:
+                    if not w.done():
+                        w.cancel()
+                await asyncio.gather(*workers, return_exceptions=True)
+                raise
 
         return stats
 

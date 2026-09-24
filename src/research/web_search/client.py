@@ -142,9 +142,16 @@ class WebSearchEngine:
             results = await self._search_ddgs(query, topic=topic, limit=limit)
         else:
             # provider == 'all': search concurrently
-            t_coro = self._search_tavily(query, topic=topic, limit=limit)
-            d_coro = self._search_ddgs(query, topic=topic, limit=limit)
-            t_res, d_res = await asyncio.gather(t_coro, d_coro)
+            t_task = asyncio.create_task(self._search_tavily(query, topic=topic, limit=limit))
+            d_task = asyncio.create_task(self._search_ddgs(query, topic=topic, limit=limit))
+            try:
+                t_res, d_res = await asyncio.gather(t_task, d_task)
+            except (asyncio.CancelledError, KeyboardInterrupt):
+                for t in [t_task, d_task]:
+                    if not t.done():
+                        t.cancel()
+                await asyncio.gather(t_task, d_task, return_exceptions=True)
+                raise
 
             # Deduplicate by canonical URL
             seen_urls: set[str] = set()

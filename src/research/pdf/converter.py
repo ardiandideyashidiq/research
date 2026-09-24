@@ -302,4 +302,12 @@ class PDFConverter:
             async with sem:
                 return await self.convert_async(src, options=options)
 
-        return await asyncio.gather(*[_worker(s) for s in sources])
+        tasks = [asyncio.create_task(_worker(s)) for s in sources]
+        try:
+            return await asyncio.gather(*tasks)
+        except (asyncio.CancelledError, KeyboardInterrupt):
+            for t in tasks:
+                if not t.done():
+                    t.cancel()
+            await asyncio.gather(*tasks, return_exceptions=True)
+            raise

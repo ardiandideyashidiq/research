@@ -64,8 +64,15 @@ class ProviderRegistry:
 
         logger.info(f"Federated search for '{query}' across {len(active_providers)} providers: {[p.name for p in active_providers]}")
 
-        tasks = [p.search(query, limit=limit_per_provider) for p in active_providers]
-        nested_results = await asyncio.gather(*tasks, return_exceptions=True)
+        task_objs = [asyncio.create_task(p.search(query, limit=limit_per_provider)) for p in active_providers]
+        try:
+            nested_results = await asyncio.gather(*task_objs, return_exceptions=True)
+        except (asyncio.CancelledError, KeyboardInterrupt):
+            for t in task_objs:
+                if not t.done():
+                    t.cancel()
+            await asyncio.gather(*task_objs, return_exceptions=True)
+            raise
 
         all_records: list[PublicationRecord] = []
         for i, res in enumerate(nested_results):

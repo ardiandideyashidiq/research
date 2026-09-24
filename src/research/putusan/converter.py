@@ -140,16 +140,25 @@ class PutusanConverter:
 
         logger.info(f"Starting batch conversion of {len(pdf_paths)} Putusan documents (workers={max_workers})...")
 
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        executor = ThreadPoolExecutor(max_workers=max_workers)
+        try:
             future_to_path = {executor.submit(self.convert_pdf, p): str(p) for p in pdf_paths}
             for future in as_completed(future_to_path):
                 p_str = future_to_path[future]
                 try:
                     res = future.result()
                     results.append(res)
+                except (KeyboardInterrupt, SystemExit):
+                    raise
                 except Exception as e:  # noqa: BLE001
                     logger.error(f"Failed processing {p_str}: {e}")
                     errors[p_str] = str(e)
+        except (KeyboardInterrupt, SystemExit):
+            logger.warning("Batch Putusan conversion interrupted by user. Cancelling pending jobs...")
+            executor.shutdown(wait=False, cancel_futures=True)
+            raise
+        finally:
+            executor.shutdown(wait=False, cancel_futures=True)
 
         logger.info(
             f"Batch conversion completed: {len(results)} succeeded, {len(errors)} failed out of {len(pdf_paths)}."

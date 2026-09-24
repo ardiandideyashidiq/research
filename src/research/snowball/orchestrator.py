@@ -139,8 +139,15 @@ class SnowballOrchestrator:
                 async with sem:
                     return await self.snowball_record(rec, client=client)
 
-            tasks = [_worker(r) for r in records]
-            gathered = await asyncio.gather(*tasks, return_exceptions=True)
+            tasks = [asyncio.create_task(_worker(r)) for r in records]
+            try:
+                gathered = await asyncio.gather(*tasks, return_exceptions=True)
+            except (asyncio.CancelledError, KeyboardInterrupt):
+                for t in tasks:
+                    if not t.done():
+                        t.cancel()
+                await asyncio.gather(*tasks, return_exceptions=True)
+                raise
 
             for item in gathered:
                 if isinstance(item, SnowballResult):

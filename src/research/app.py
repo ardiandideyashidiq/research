@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from pathlib import Path
 from types import TracebackType
 from typing import Any, Self
@@ -68,11 +69,27 @@ class ResearchApp:
         self.pipeline = ResearchPipeline(app=self)
 
     async def close(self) -> None:
-        await self.providers.close()
-        await self.tavily.close()
-        await self.web_search.close()
-        await self.scholar.close()
-        self.db.close()
+        """Gracefully close all network clients, background pools, and database connections."""
+        closers = [
+            ("providers", self.providers.close),
+            ("tavily", self.tavily.close),
+            ("web_search", self.web_search.close),
+            ("scholar", self.scholar.close),
+        ]
+        for name, closer in closers:
+            try:
+                res = closer()
+                if asyncio.iscoroutine(res):
+                    await asyncio.shield(res)
+            except (asyncio.CancelledError, KeyboardInterrupt):
+                pass
+            except Exception as e:  # noqa: BLE001
+                logger.debug("Error closing {}: {}", name, e)
+
+        try:
+            self.db.close()
+        except Exception as e:  # noqa: BLE001
+            logger.debug("Error closing database: {}", e)
 
     async def __aenter__(self) -> Self:
         return self
