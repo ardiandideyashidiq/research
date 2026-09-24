@@ -23,7 +23,7 @@ class OJSClient:
         *,
         engine: EngineType = "curl_cffi",
         impersonate: str = "chrome",
-        timeout: float = 15.0,
+        timeout: float = 8.0,
         verify_ssl: bool = False,
         cache: HttpCache | None = None,
     ) -> None:
@@ -125,7 +125,7 @@ class OJSClient:
         url: str,
         *,
         timeout: float | None = None,
-        retries: int = 2,
+        retries: int = 1,
     ) -> OJSMetadata:
         """Fetch article page and extract OJS metadata asynchronously."""
         if self.cache is not None:
@@ -165,6 +165,8 @@ class OJSClient:
                     await asyncio.sleep(1.0 * (attempt + 1))
 
         logger.warning(f"Failed to fetch OJS page {url}: {last_err}")
+        if self.cache is not None:
+            self.cache.set(url, 504, b"", content_type="text/html")
         return OJSMetadata(url=url, is_ojs=False)
 
     def fetch_metadata_sync(
@@ -172,7 +174,7 @@ class OJSClient:
         url: str,
         *,
         timeout: float | None = None,
-        retries: int = 2,
+        retries: int = 1,
     ) -> OJSMetadata:
         """Fetch article page and extract OJS metadata synchronously."""
         if self.cache is not None:
@@ -213,4 +215,6 @@ class OJSClient:
                     time.sleep(1.0 * (attempt + 1))
 
         logger.warning(f"Failed to fetch OJS page {url}: {last_err}")
+        if self.cache is not None:
+            self.cache.set(url, 504, b"", content_type="text/html")
         return OJSMetadata(url=url, is_ojs=False)

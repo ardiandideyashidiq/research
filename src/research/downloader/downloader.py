@@ -31,8 +31,8 @@ class DownloadManager:
         *,
         download_dir: str | Path = "data/downloads",
         concurrency: int = 4,
-        timeout: float = 25.0,
-        retries: int = 2,
+        timeout: float = 10.0,
+        retries: int = 1,
         engine: EngineType = "curl_cffi",
         cache: HttpCache | None = None,
     ) -> None:
@@ -81,7 +81,7 @@ class DownloadManager:
                 # If 404, check if landing page has alternative galley before giving up
                 if resp.status_code == 404 and record.url and current_url != record.url and attempt == 0:
                     client = ojs_client or OJSClient(engine=self.engine, cache=self.cache)
-                    meta = await client.fetch_metadata(record.url, timeout=self.timeout)
+                    meta = await client.fetch_metadata(record.url, timeout=min(self.timeout, 8.0))
                     if meta.pdf_url and meta.pdf_url != current_url:
                         logger.info(f"Retrying {record.cite_key} with alternative galley: {meta.pdf_url}")
                         current_url = meta.pdf_url
@@ -262,7 +262,7 @@ class DownloadManager:
         if not pdf_url and record.url:
             client = ojs_client or OJSClient(engine=self.engine, cache=self.cache)
             try:
-                ojs_meta = await client.fetch_metadata(record.url, timeout=self.timeout)
+                ojs_meta = await client.fetch_metadata(record.url, timeout=min(self.timeout, 8.0))
                 if ojs_meta.is_ojs:
                     self.db.update(record.cite_key, is_ojs=True)
                     record.is_ojs = True
@@ -381,7 +381,7 @@ class DownloadManager:
 
         async with (
             session_ctx as session,
-            OJSClient(engine=self.engine, verify_ssl=False, timeout=self.timeout, cache=self.cache) as ojs_client,
+            OJSClient(engine=self.engine, verify_ssl=False, timeout=min(self.timeout, 8.0), cache=self.cache) as ojs_client,
         ):
 
             async def _worker() -> None:

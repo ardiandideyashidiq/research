@@ -22,10 +22,10 @@ class GoogleScholarClient:
     def __init__(
         self,
         *,
-        timeout: float = 30.0,
+        timeout: float = 12.0,
         proxy: str | Proxy | None = None,
         proxy_pool: ProxyPool | None = None,
-        max_retries: int = 3,
+        max_retries: int = 2,
         cache: HttpCache | None = None,
     ) -> None:
         self.timeout = timeout
@@ -257,21 +257,27 @@ class GoogleScholarClient:
         """Fetch details for a single publication directly from its landing page."""
         if self.cache is not None:
             cached = self.cache.get(url)
-            if cached is not None and cached.status_code == 200:
-                html = cached.text
-                return self._parse_publication_html(html, url)
+            if cached is not None:
+                if cached.status_code >= 400:
+                    raise RuntimeError(f"Cached error status {cached.status_code} for {url}")
+                return self._parse_publication_html(cached.text, url)
 
         session = await self._get_session()
         proxy_url = await self._resolve_current_proxy()
 
-        resp = await session.get(url, proxy=proxy_url)
-        resp.raise_for_status()
-        html = resp.text
+        try:
+            resp = await session.get(url, proxy=proxy_url)
+            resp.raise_for_status()
+            html = resp.text
 
-        if self.cache is not None:
-            self.cache.set(url, resp.status_code, html, content_type="text/html")
+            if self.cache is not None:
+                self.cache.set(url, resp.status_code, html, content_type="text/html")
 
-        return self._parse_publication_html(html, url)
+            return self._parse_publication_html(html, url)
+        except Exception:
+            if self.cache is not None:
+                self.cache.set(url, 504, b"", content_type="text/html")
+            raise
 
     def _parse_publication_html(self, html: str, url: str) -> Publication:
         """Parse publication metadata from raw HTML."""

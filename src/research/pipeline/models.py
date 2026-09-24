@@ -21,6 +21,7 @@ class PipelineConfig:
     snowball_concurrency: int = 4
     download: bool = True
     download_concurrency: int = 6
+    download_timeout: float = 10.0
     convert: bool = True
     convert_concurrency: int = 4
     index_rag: bool = True

@@ -38,6 +38,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_pipe.add_argument("--snowball-seeds", type=int, default=2, help="Number of top seed papers to snowball (default: 2)")
     p_pipe.add_argument("--no-download", action="store_true", help="Skip downloading PDFs")
     p_pipe.add_argument("--download-concurrency", type=int, default=6, help="Concurrent download workers (default: 6)")
+    p_pipe.add_argument(
+        "--download-timeout",
+        type=float,
+        default=10.0,
+        help="Download timeout in seconds for unresponsive sites (default: 10.0)",
+    )
     p_pipe.add_argument("--no-convert", action="store_true", help="Skip converting PDFs to Markdown")
     p_pipe.add_argument("--convert-concurrency", type=int, default=4, help="Concurrent conversion workers (default: 4)")
     p_pipe.add_argument("--snowball-concurrency", type=int, default=4, help="Concurrent snowball workers (default: 4)")
@@ -70,6 +76,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_dl = subparsers.add_parser("download", help="Concurrently download open-access PDFs with %%PDF magic byte verification")
     p_dl.add_argument("--cite-keys", help="Comma-separated cite_keys to download (default: all pending)")
     p_dl.add_argument("--concurrency", type=int, default=4, help="Concurrent download workers (default: 4)")
+    p_dl.add_argument("--timeout", type=float, default=10.0, help="Download timeout in seconds per attempt (default: 10.0)")
     p_dl.add_argument("--force", action="store_true", help="Force redownloading papers even if already downloaded or cached")
 
     # 5. convert

@@ -125,6 +125,7 @@ async def _async_main(args: Any) -> int:
                 snowball_concurrency=getattr(args, "snowball_concurrency", 4),
                 download=not args.no_download,
                 download_concurrency=getattr(args, "download_concurrency", 6),
+                download_timeout=getattr(args, "download_timeout", 10.0),
                 convert=not args.no_convert,
                 convert_concurrency=getattr(args, "convert_concurrency", 4),
                 index_rag=not args.no_rag,
@@ -190,6 +191,8 @@ async def _async_main(args: Any) -> int:
         if cmd == "download":
             c_keys = [k.strip() for k in args.cite_keys.split(",")] if args.cite_keys else None
             app.downloader.concurrency = args.concurrency
+            if hasattr(args, "timeout") and args.timeout is not None:
+                app.downloader.timeout = args.timeout
             force = getattr(args, "force", False)
             print("\n[+] Concurrently downloading open-access papers...")
             stats = await app.download_papers(cite_keys=c_keys, force=force)

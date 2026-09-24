@@ -115,6 +115,7 @@ class ResearchPipeline:
 
             # Start download workers if download enabled
             if cfg.download:
+                self.app.downloader.timeout = cfg.download_timeout
 
                 async def _run_downloads() -> None:
                     dl_stats = await self.app.downloader.download_stream(
@@ -382,6 +383,7 @@ class ResearchPipeline:
         # 3. Open-Access Paper Downloading (download)
         downloaded_count = 0
         if cfg.download:
+            self.app.downloader.timeout = cfg.download_timeout
             dl_res = await self.app.downloader.download_all(concurrency=cfg.download_concurrency)
             downloaded_count = dl_res.get("downloaded", 0)
 
