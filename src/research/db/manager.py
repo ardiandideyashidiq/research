@@ -838,9 +838,13 @@ class DatabaseManager:
             pass
 
         corpus_breakdown = {}
+        corpus_docs = {}
         try:
-            c_rows = cursor.execute("SELECT corpus, COUNT(*) FROM chunks GROUP BY corpus").fetchall()
+            c_rows = cursor.execute(
+                "SELECT corpus, COUNT(*), COUNT(DISTINCT cite_key) FROM chunks GROUP BY corpus"
+            ).fetchall()
             corpus_breakdown = {r[0]: r[1] for r in c_rows}
+            corpus_docs = {r[0]: r[2] for r in c_rows}
         except sqlite3.OperationalError:
             pass
 
@@ -851,4 +855,5 @@ class DatabaseManager:
             "total_chunks": total_chunks,
             "total_embeddings": total_embeddings,
             "corpus_breakdown": corpus_breakdown,
+            "corpus_docs": corpus_docs,
         }

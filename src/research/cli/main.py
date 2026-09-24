@@ -86,6 +86,16 @@ async def _async_main(args: Any) -> int:
             print(f"  Downloaded PDFs:     {stats['downloaded']}")
             print(f"  Converted Documents: {stats['converted']}")
             print(f"  RAG Semantic Chunks: {stats['total_chunks']}")
+            corpus_b = stats.get("corpus_breakdown", {})
+            corpus_docs = stats.get("corpus_docs", {})
+            if corpus_b:
+                for c_name, c_cnt in sorted(corpus_b.items()):
+                    d_cnt = corpus_docs.get(c_name, 0)
+                    unit = "court judgments" if c_name == "putusan" else "documents"
+                    if d_cnt:
+                        print(f"    - {c_name: <16}: {c_cnt} chunks (from {d_cnt} {unit})")
+                    else:
+                        print(f"    - {c_name: <16}: {c_cnt} chunks")
             print(f"  Dense Embeddings:    {stats.get('total_embeddings', 0)}")
             cards_stats = app.cards.count_cards()
             print(f"  Review Cards:        {cards_stats['total_cards']}")
@@ -96,11 +106,6 @@ async def _async_main(args: Any) -> int:
                     f"({cache_info.get('active_cached', 0)} active)"
                 )
                 print(f"  HTTP Cache Storage:  {cache_info.get('total_bytes', 0) / 1024:.1f} KB")
-            corpus_b = stats.get("corpus_breakdown", {})
-            if corpus_b:
-                print("  Corpus breakdown:")
-                for c_name, c_cnt in sorted(corpus_b.items()):
-                    print(f"    - {c_name: <16}: {c_cnt}")
             if statuses:
                 print("  Status breakdown:")
                 for st, cnt in sorted(statuses.items()):
