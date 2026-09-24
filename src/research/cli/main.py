@@ -45,9 +45,14 @@ async def _async_main(args: Any) -> int:
             return 0
 
         if cmd == "pipeline":
+            if not args.query and not args.bib:
+                print("\n[-] Error: Please specify a search query or a --bib seed file.\n")
+                return 1
+
             provs = [p.strip() for p in args.providers.split(",")] if args.providers else None
             cfg = PipelineConfig(
-                query=args.query,
+                query=args.query or "",
+                bib_path=args.bib,
                 providers=provs,
                 search_limit=args.limit,
                 include_scholar=not args.no_scholar,
@@ -57,7 +62,10 @@ async def _async_main(args: Any) -> int:
                 convert=not args.no_convert,
                 index_rag=not args.no_rag,
             )
-            print(f"\n[+] Executing research pipeline for: '{args.query}'...")
+            desc = f"query='{args.query}'" if args.query else ""
+            if args.bib:
+                desc += f" (bib seed='{args.bib}')" if desc else f"bib seed='{args.bib}'"
+            print(f"\n[+] Executing end-to-end research pipeline for: {desc}...")
             res = await app.pipeline.run(cfg)
             print("\n" + res.summary() + "\n")
             return 0

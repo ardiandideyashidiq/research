@@ -16,8 +16,17 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True, help="Subcommand to execute")
 
     # 1. pipeline
-    p_pipe = subparsers.add_parser("pipeline", help="Run end-to-end research lifecycle (search -> snowball -> download -> convert -> RAG)")
-    p_pipe.add_argument("query", help="Research topic or search query")
+    p_pipe = subparsers.add_parser(
+        "pipeline",
+        help="Run end-to-end research lifecycle (.bib -> search -> snowball -> download -> convert -> RAG)",
+    )
+    p_pipe.add_argument(
+        "query",
+        nargs="?",
+        default="",
+        help="Research topic or search query (optional if --bib is specified)",
+    )
+    p_pipe.add_argument("--bib", help="Path to seed .bib file or directory with .bib files")
     p_pipe.add_argument("--limit", type=int, default=15, help="Search limit per provider (default: 15)")
     p_pipe.add_argument("--providers", help="Comma-separated providers (e.g. arxiv,openalex,crossref,doaj,openaire)")
     p_pipe.add_argument("--no-scholar", action="store_true", help="Exclude Google Scholar")

@@ -188,8 +188,9 @@ class ResearchApp:
 
     async def run_pipeline(
         self,
-        query: str,
+        query: str = "",
         *,
+        bib_path: str | Path | list[str | Path] | None = None,
         search_limit: int = 15,
         include_scholar: bool = True,
         snowball: bool = True,
@@ -198,9 +199,10 @@ class ResearchApp:
         index_rag: bool = True,
         **kwargs: Any,
     ) -> PipelineResult:
-        """Execute the end-to-end research lifecycle for a query."""
+        """Execute the end-to-end research lifecycle for a query and/or seed .bib file."""
         config = PipelineConfig(
             query=query,
+            bib_path=bib_path,
             search_limit=search_limit,
             include_scholar=include_scholar,
             snowball=snowball,
