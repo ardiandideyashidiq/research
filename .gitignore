@@ -20,3 +20,7 @@ tmp/
 
 # Agent sessions
 sessions/
+
+# Logs
+logs/
+*.log

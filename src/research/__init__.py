@@ -13,6 +13,13 @@ def get_app(*args, **kwargs) -> ResearchApp:
     return ResearchApp(*args, **kwargs)
 
 
+def setup_logging(*args, **kwargs):
+    """Configure console and timestamped file logging under logs directory."""
+    from research.cli.main import setup_logging as _setup_logging
+
+    return _setup_logging(*args, **kwargs)
+
+
 def main() -> None:
     """CLI entry point for research."""
     from research.cli.main import main as cli_main

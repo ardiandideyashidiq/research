@@ -11,6 +11,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--db", default="tmp/publications.sqlite", help="Path to SQLite database (default: tmp/publications.sqlite)")
     parser.add_argument("--downloads", default="data/downloads", help="Path to PDF downloads directory (default: data/downloads)")
+    parser.add_argument("--log-dir", default="logs", help="Directory for auto-generated run log files (default: logs)")
+    parser.add_argument("--no-log-file", action="store_true", help="Disable auto-generating log file under logs directory")
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose debug logging")
 
     subparsers = parser.add_subparsers(dest="command", required=True, help="Subcommand to execute")

@@ -42,7 +42,14 @@ class ResearchApp:
         tavily_keys: list[str] | None = None,
         scholar_proxy: str | Proxy | None = None,
         proxy_pool: ProxyPool | None = None,
+        log_dir: str | Path | None = None,
+        auto_log: bool = False,
     ) -> None:
+        if auto_log:
+            from research.cli.main import setup_logging
+
+            setup_logging(log_dir=log_dir or "logs")
+
         self.db = DatabaseManager(db_path)
         self.providers = ProviderRegistry(db=self.db)
         self.downloader = DownloadManager(self.db, download_dir=download_dir)

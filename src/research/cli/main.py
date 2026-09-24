@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import json
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -14,7 +15,22 @@ from research.db.models import PublicationRecord
 from research.pipeline.models import PipelineConfig
 
 
-def _setup_logging(verbose: bool) -> None:
+def setup_logging(
+    verbose: bool = False,
+    *,
+    log_dir: str | Path = "logs",
+    enable_file_logging: bool = True,
+) -> Path | None:
+    """Configure console and file logging.
+
+    Args:
+        verbose: Set console level to DEBUG if True, else INFO.
+        log_dir: Path to directory for auto-generated run log files.
+        enable_file_logging: Whether to automatically write logs to a file.
+
+    Returns:
+        The Path to the created log file, or None if file logging is disabled.
+    """
     logger.remove()
     level = "DEBUG" if verbose else "INFO"
     logger.add(
@@ -22,6 +38,32 @@ def _setup_logging(verbose: bool) -> None:
         level=level,
         format="<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | {message}",
     )
+
+    if not enable_file_logging:
+        return None
+
+    path = Path(log_dir)
+    path.mkdir(parents=True, exist_ok=True)
+
+    now = datetime.now(tz=UTC).astimezone()
+    timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
+    log_file = path / f"research_{timestamp}.log"
+    if log_file.exists():
+        timestamp = now.strftime("%Y-%m-%d_%H-%M-%S_%f")
+        log_file = path / f"research_{timestamp}.log"
+
+    logger.add(
+        str(log_file),
+        level="DEBUG",
+        format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {name}:{function}:{line} - {message}",
+        encoding="utf-8",
+        enqueue=True,
+    )
+    logger.debug("Run log started: {}", log_file)
+    return log_file
+
+
+_setup_logging = setup_logging
 
 
 async def _async_main(args: Any) -> int:
@@ -652,9 +694,26 @@ def main() -> None:
     """CLI entry point."""
     parser = build_parser()
     args = parser.parse_args()
-    _setup_logging(args.verbose)
-    code = asyncio.run(_async_main(args))
-    sys.exit(code)
+    log_file = setup_logging(
+        verbose=args.verbose,
+        log_dir=getattr(args, "log_dir", "logs"),
+        enable_file_logging=not getattr(args, "no_log_file", False),
+    )
+    cmd_args = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else ""
+    logger.debug("Executing CLI command: research {}", cmd_args)
+    if log_file:
+        logger.debug("Run log path: {}", log_file)
+
+    try:
+        code = asyncio.run(_async_main(args))
+    except KeyboardInterrupt:
+        logger.warning("Execution interrupted by user.")
+        sys.exit(130)
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("Fatal error during execution: {}", exc)
+        sys.exit(1)
+    else:
+        sys.exit(code)
 
 
 if __name__ == "__main__":
