@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from types import TracebackType
-from typing import Self
+from typing import Any, Self
 
 from loguru import logger
 
@@ -14,9 +14,13 @@ from research.google_scholar.client import GoogleScholarClient
 from research.normalizer.normalizer import normalize_record
 from research.pdf.converter import PDFConverter
 from research.pdf.models import ConversionOptions, ConvertedDocument
+from research.pipeline.models import PipelineConfig, PipelineResult
+from research.pipeline.orchestrator import ResearchPipeline
 from research.providers.registry import ProviderRegistry
 from research.proxy.models import Proxy
 from research.proxy.pool import ProxyPool
+from research.rag.models import RetrievalResult
+from research.rag.retriever import RAGRetriever
 from research.snowball.models import SnowballConfig, SnowballResult
 from research.snowball.orchestrator import SnowballOrchestrator
 from research.tavily.client import TavilyClient
@@ -41,6 +45,8 @@ class ResearchApp:
         self.tavily = TavilyClient(api_keys=tavily_keys)
         self.scholar = GoogleScholarClient(proxy=scholar_proxy, proxy_pool=proxy_pool)
         self.pdf = PDFConverter()
+        self.retriever = RAGRetriever(self.db)
+        self.pipeline = ResearchPipeline(app=self)
 
     async def close(self) -> None:
         await self.providers.close()
@@ -170,3 +176,38 @@ class ResearchApp:
         if output_md and isinstance(source, (str, Path)):
             self.pdf.convert_file(source, output_md, options=options)
         return self.pdf.convert(source, options=options)
+
+    async def run_pipeline(
+        self,
+        query: str,
+        *,
+        search_limit: int = 15,
+        include_scholar: bool = True,
+        snowball: bool = True,
+        download: bool = True,
+        convert: bool = True,
+        index_rag: bool = True,
+        **kwargs: Any,
+    ) -> PipelineResult:
+        """Execute the end-to-end research lifecycle for a query."""
+        config = PipelineConfig(
+            query=query,
+            search_limit=search_limit,
+            include_scholar=include_scholar,
+            snowball=snowball,
+            download=download,
+            convert=convert,
+            index_rag=index_rag,
+            **kwargs,
+        )
+        return await self.pipeline.run(config)
+
+    async def query_rag(
+        self,
+        query: str,
+        *,
+        limit: int = 5,
+        cite_key: str | None = None,
+    ) -> list[RetrievalResult]:
+        """Search full-text indexed document chunks via FTS5 BM25."""
+        return self.retriever.search(query, limit=limit, cite_key=cite_key)

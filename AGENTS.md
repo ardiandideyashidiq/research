@@ -14,6 +14,9 @@ Key capabilities:
 - **Web Search Integration**: Multi-API-key load balancing and automatic failover for **Tavily Search** and **DuckDuckGo (ddgs)**.
 - **Anti-Bot Scraping Engine**: `curl-cffi` browser TLS impersonation (`impersonate="chrome"`) for Google Scholar, arXiv, and Cloudflare-protected academic repositories.
 - **PDF to Markdown & Layout Normalization**: High-performance conversion with **PyMuPDF** & **PyMuPDF4LLM**, dehyphenation, heading normalization, running header/footer removal, prose reflow, and YAML frontmatter metadata.
+- **Semantic Chunking & SQLite FTS5 BM25 RAG**: Heading- and page-aware chunking preserving academic citation context, with zero-dependency SQLite BM25 ranking and LLM prompt context formatting.
+- **End-to-End Autonomous Pipeline**: One-command complete lifecycle orchestration (`search -> snowball -> download -> convert -> RAG chunking`).
+- **Production CLI Suite**: Ergonomic subcommands (`pipeline`, `search`, `snowball`, `download`, `convert`, `query`, `export`, `stats`).
 
 ## Commands
 
@@ -21,7 +24,15 @@ Environment is managed strictly by [uv](https://docs.astral.sh/uv/); never use p
 
 ```bash
 uv sync                 # install deps including dev group
-uv run research         # run the CLI entry point (research:main)
+uv run research --help  # view all CLI subcommands
+uv run research stats   # show database publications, downloads, RAG chunks
+uv run research pipeline "artificial intelligence copyright" --limit 10
+uv run research search "quantum computing" --providers arxiv,openalex --limit 5
+uv run research snowball <cite_key> --direction both --limit 10
+uv run research download --concurrency 4
+uv run research convert data/downloads/paper.pdf --index-rag
+uv run research query "criminal liability deepfake" --format-context
+uv run research export --format bibtex --output tmp/export.bib
 uv run ruff check .     # lint
 uv run ruff check --fix .
 uv build                # build distributions with uv_build backend
@@ -33,13 +44,16 @@ uv build                # build distributions with uv_build backend
 src/research/
 ├── __init__.py           # Lazy app loader (get_app) & CLI entry point (research:main)
 ├── app.py                # ResearchApp unified application facade
+├── cli/                  # Production CLI subcommands and runner
+│   ├── parser.py         # Argument parser specification with 8 subcommands
+│   └── main.py           # Async CLI execution handlers
 ├── bibtex/               # BibTeX parser, normalizer, and SQLite/JSON exporter
 │   ├── models.py         # BibEntry dataclass with .to_publication() mapping
 │   ├── parser.py         # parse_bib_file, parse_bib_files, parse_bib_str
-│   └── export.py         # export_to_json, export_to_sqlite (with FTS5)
+│   └── export.py         # export_to_json, export_to_sqlite, export_to_bibtex_str
 ├── db/                   # SQLite storage & full CRUD
 │   ├── models.py         # PublicationRecord dataclass
-│   └── manager.py        # DatabaseManager (CRUD, auto-migrations, FTS5 sync)
+│   └── manager.py        # DatabaseManager (CRUD, auto-migrations, FTS5 sync, chunks table)
 ├── providers/            # Federated academic literature search engines
 │   ├── base.py           # BaseProvider abstract base class
 │   ├── arxiv.py          # arXiv client (curl-cffi Chrome impersonation)
@@ -74,10 +88,17 @@ src/research/
 ├── proxy/                # Rotating proxy pool & V2Ray VLESS bridge
 │   ├── models.py         # Proxy dataclass (.from_url() parser for http, socks5, vless)
 │   └── pool.py           # ProxyPool (round-robin rotation, V2Ray socks5 bridge, validation)
-└── pdf/                  # PDF to Markdown converter & layout normalizer
-    ├── models.py         # PDFMetadata, PageChunk, ConvertedDocument, ConversionOptions
-    ├── normalizer.py     # Dehyphenation, heading cleanup, reflow, header/footer removal
-    └── converter.py      # PDFConverter (PyMuPDF & PyMuPDF4LLM extraction, async batching)
+├── pdf/                  # PDF to Markdown converter & layout normalizer
+│   ├── models.py         # PDFMetadata, PageChunk, ConvertedDocument, ConversionOptions
+│   ├── normalizer.py     # Dehyphenation, heading cleanup, reflow, header/footer removal
+│   └── converter.py      # PDFConverter (PyMuPDF & PyMuPDF4LLM extraction, async batching)
+├── rag/                  # Semantic chunking & local FTS5 BM25 retrieval
+│   ├── models.py         # DocumentChunk, RetrievalResult
+│   ├── chunker.py        # SemanticChunker (heading/page boundary-aware chunking)
+│   └── retriever.py      # RAGRetriever (BM25 ranking, prompt context builder)
+└── pipeline/             # Autonomous end-to-end research orchestration
+    ├── models.py         # PipelineConfig, PipelineResult
+    └── orchestrator.py   # ResearchPipeline (search -> snowball -> download -> convert -> RAG)
 ```
 
 Import packages using absolute `src/` layout: `from research.db import DatabaseManager`, never relative imports.

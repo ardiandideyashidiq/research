@@ -16,10 +16,7 @@ wheels/
 
 # Downloads and local test artifacts
 data/downloads/
-tmp/*.pdf
-tmp/*.sqlite
-tmp/*.json
-tmp/*.md
+tmp/
 
 # Agent sessions
 sessions/

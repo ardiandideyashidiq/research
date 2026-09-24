@@ -78,7 +78,9 @@ class DatabaseManager:
                 file_hash TEXT,
                 content_type TEXT,
                 full_metadata TEXT,
-                raw_fields TEXT
+                raw_fields TEXT,
+                markdown_path TEXT,
+                is_chunked INTEGER NOT NULL DEFAULT 0
             )
             """
         )
@@ -109,6 +111,8 @@ class DatabaseManager:
             "content_type": "TEXT",
             "full_metadata": "TEXT",
             "raw_fields": "TEXT",
+            "markdown_path": "TEXT",
+            "is_chunked": "INTEGER NOT NULL DEFAULT 0",
         }
         for col_name, col_def in col_defs.items():
             if col_name not in existing_cols:
@@ -120,7 +124,7 @@ class DatabaseManager:
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_pub_status ON publications(download_status)")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_pub_is_ojs ON publications(is_ojs)")
 
-        # Create FTS5 virtual table
+        # Create FTS5 virtual table for publications
         try:
             cursor.execute(
                 """
@@ -137,6 +141,39 @@ class DatabaseManager:
             )
         except sqlite3.OperationalError as e:
             logger.debug(f"FTS5 not enabled or already initialized: {e}")
+
+        # Create chunks table and chunks_fts
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS chunks (
+                chunk_id TEXT PRIMARY KEY,
+                cite_key TEXT NOT NULL,
+                paper_title TEXT NOT NULL,
+                section_title TEXT,
+                section_level INTEGER,
+                page_start INTEGER,
+                page_end INTEGER,
+                content TEXT NOT NULL,
+                FOREIGN KEY (cite_key) REFERENCES publications(cite_key) ON DELETE CASCADE
+            )
+            """
+        )
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_chunks_cite_key ON chunks(cite_key)")
+
+        try:
+            cursor.execute(
+                """
+                CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts USING fts5(
+                    chunk_id UNINDEXED,
+                    cite_key UNINDEXED,
+                    paper_title,
+                    section_title,
+                    content
+                )
+                """
+            )
+        except sqlite3.OperationalError as e:
+            logger.debug(f"chunks_fts already initialized or FTS5 error: {e}")
 
         conn.commit()
 
@@ -179,8 +216,9 @@ class DatabaseManager:
                 cite_key, entry_type, title, authors, journal, year, volume,
                 number, pages, doi, url, abstract, sources, pdf_url, is_ojs,
                 download_status, download_path, download_error, downloaded_at,
-                file_size, file_hash, content_type, full_metadata, raw_fields
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                file_size, file_hash, content_type, full_metadata, raw_fields,
+                markdown_path, is_chunked
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 rec.cite_key,
@@ -207,6 +245,8 @@ class DatabaseManager:
                 rec.content_type,
                 json.dumps(rec.full_metadata, ensure_ascii=False),
                 json.dumps(rec.raw_fields, ensure_ascii=False),
+                rec.markdown_path,
+                1 if rec.is_chunked else 0,
             ),
         )
         conn.commit()
@@ -309,7 +349,7 @@ class DatabaseManager:
             "pages", "doi", "url", "abstract", "sources", "pdf_url",
             "is_ojs", "download_status", "download_path", "download_error",
             "downloaded_at", "file_size", "file_hash", "content_type",
-            "full_metadata", "raw_fields",
+            "full_metadata", "raw_fields", "markdown_path", "is_chunked",
         }
 
         set_clauses: list[str] = []
@@ -410,3 +450,138 @@ class DatabaseManager:
         cursor = conn.cursor()
         cursor.execute("SELECT download_status, COUNT(*) FROM publications GROUP BY download_status")
         return dict(cursor.fetchall())
+
+    def insert_chunks(self, chunks: list[dict[str, Any]]) -> int:
+        """Insert a batch of document chunks and sync to FTS5."""
+        if not chunks:
+            return 0
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        count = 0
+        for c in chunks:
+            cursor.execute(
+                """
+                INSERT OR REPLACE INTO chunks (
+                    chunk_id, cite_key, paper_title, section_title,
+                    section_level, page_start, page_end, content
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    c["chunk_id"],
+                    c["cite_key"],
+                    c["paper_title"],
+                    c.get("section_title"),
+                    c.get("section_level"),
+                    c.get("page_start"),
+                    c.get("page_end"),
+                    c["content"],
+                ),
+            )
+            # Sync to chunks_fts
+            cursor.execute(
+                """
+                INSERT OR REPLACE INTO chunks_fts(chunk_id, cite_key, paper_title, section_title, content)
+                VALUES (?, ?, ?, ?, ?)
+                """,
+                (
+                    c["chunk_id"],
+                    c["cite_key"],
+                    c["paper_title"],
+                    c.get("section_title") or "",
+                    c["content"],
+                ),
+            )
+            count += 1
+        conn.commit()
+        return count
+
+    def delete_chunks(self, cite_key: str) -> int:
+        """Delete all chunks for a publication."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM chunks WHERE cite_key = ?", (cite_key,))
+        deleted = cursor.rowcount
+        try:
+            cursor.execute("DELETE FROM chunks_fts WHERE cite_key = ?", (cite_key,))
+        except sqlite3.OperationalError:
+            pass
+        conn.commit()
+        return deleted
+
+    def search_chunks(
+        self,
+        query: str,
+        *,
+        limit: int = 10,
+        cite_key: str | None = None,
+    ) -> list[dict[str, Any]]:
+        """Full-text search across all indexed chunks using FTS5 BM25 ranking."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        try:
+            if cite_key:
+                cursor.execute(
+                    """
+                    SELECT c.*, bm25(chunks_fts) as rank
+                    FROM chunks c
+                    JOIN chunks_fts f ON c.chunk_id = f.chunk_id
+                    WHERE chunks_fts MATCH ? AND c.cite_key = ?
+                    ORDER BY rank
+                    LIMIT ?
+                    """,
+                    (query, cite_key, limit),
+                )
+            else:
+                cursor.execute(
+                    """
+                    SELECT c.*, bm25(chunks_fts) as rank
+                    FROM chunks c
+                    JOIN chunks_fts f ON c.chunk_id = f.chunk_id
+                    WHERE chunks_fts MATCH ?
+                    ORDER BY rank
+                    LIMIT ?
+                    """,
+                    (query, limit),
+                )
+            rows = cursor.fetchall()
+            return [dict(r) for r in rows]
+        except sqlite3.OperationalError:
+            pattern = f"%{query}%"
+            if cite_key:
+                cursor.execute(
+                    """
+                    SELECT *, 0.0 as rank FROM chunks
+                    WHERE content LIKE ? AND cite_key = ?
+                    LIMIT ?
+                    """,
+                    (pattern, cite_key, limit),
+                )
+            else:
+                cursor.execute(
+                    """
+                    SELECT *, 0.0 as rank FROM chunks
+                    WHERE content LIKE ? OR section_title LIKE ? OR paper_title LIKE ?
+                    LIMIT ?
+                    """,
+                    (pattern, pattern, pattern, limit),
+                )
+            return [dict(r) for r in cursor.fetchall()]
+
+    def get_stats(self) -> dict[str, int]:
+        """Return high-level summary counts of database contents."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        total_pubs = cursor.execute("SELECT COUNT(*) FROM publications").fetchone()[0]
+        downloaded = cursor.execute(
+            "SELECT COUNT(*) FROM publications WHERE download_status = 'downloaded'"
+        ).fetchone()[0]
+        converted = cursor.execute(
+            "SELECT COUNT(*) FROM publications WHERE markdown_path IS NOT NULL"
+        ).fetchone()[0]
+        total_chunks = cursor.execute("SELECT COUNT(*) FROM chunks").fetchone()[0]
+        return {
+            "total_publications": total_pubs,
+            "downloaded": downloaded,
+            "converted": converted,
+            "total_chunks": total_chunks,
+        }

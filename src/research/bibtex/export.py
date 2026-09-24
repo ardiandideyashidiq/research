@@ -3,8 +3,68 @@ from __future__ import annotations
 import json
 import sqlite3
 from pathlib import Path
+from typing import Any
 
 from research.bibtex.models import BibEntry
+
+
+def format_bibtex_entry(entry: Any) -> str:
+    """Format a BibEntry or PublicationRecord into a clean BibTeX string."""
+    cite_key = getattr(entry, "cite_key", "unknown")
+    entry_type = getattr(entry, "entry_type", "article") or "article"
+    fields: list[str] = []
+
+    title = getattr(entry, "title", None)
+    if title:
+        fields.append(f"  title = {{{title}}}")
+
+    authors = getattr(entry, "authors", None)
+    if authors:
+        if isinstance(authors, list):
+            fields.append(f"  author = {{{' and '.join(authors)}}}")
+        else:
+            fields.append(f"  author = {{{authors}}}")
+
+    journal = getattr(entry, "journal", None)
+    if journal:
+        fields.append(f"  journal = {{{journal}}}")
+
+    year = getattr(entry, "year", None)
+    if year:
+        fields.append(f"  year = {{{year}}}")
+
+    volume = getattr(entry, "volume", None)
+    if volume:
+        fields.append(f"  volume = {{{volume}}}")
+
+    number = getattr(entry, "number", None)
+    if number:
+        fields.append(f"  number = {{{number}}}")
+
+    pages = getattr(entry, "pages", None)
+    if pages:
+        fields.append(f"  pages = {{{pages}}}")
+
+    doi = getattr(entry, "doi", None)
+    if doi:
+        fields.append(f"  doi = {{{doi}}}")
+
+    url = getattr(entry, "url", None)
+    if url:
+        fields.append(f"  url = {{{url}}}")
+
+    abstract = getattr(entry, "abstract", None)
+    if abstract:
+        clean_abs = " ".join(abstract.split())
+        fields.append(f"  abstract = {{{clean_abs}}}")
+
+    fields_str = ",\n".join(fields)
+    return f"@{entry_type}{{{cite_key},\n{fields_str}\n}}"
+
+
+def export_to_bibtex_str(entries: list[Any]) -> str:
+    """Format a list of BibEntry or PublicationRecord objects into a BibTeX string."""
+    return "\n\n".join(format_bibtex_entry(e) for e in entries) + "\n"
 
 
 def export_to_json(

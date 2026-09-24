@@ -31,6 +31,8 @@ class PublicationRecord:
     content_type: str | None = None
     full_metadata: dict[str, Any] = field(default_factory=dict)
     raw_fields: dict[str, str] = field(default_factory=dict)
+    markdown_path: str | None = None
+    is_chunked: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -103,4 +105,6 @@ class PublicationRecord:
             content_type=row.get("content_type"),
             full_metadata=full_meta,
             raw_fields=raw_f,
+            markdown_path=row.get("markdown_path"),
+            is_chunked=bool(row.get("is_chunked", 0)),
         )
