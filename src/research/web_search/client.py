@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import time
+from pathlib import Path
 from types import TracebackType
 from typing import TYPE_CHECKING, Literal, Self
 
@@ -17,8 +18,6 @@ from research.web_search.models import (
 )
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from research.db.manager import DatabaseManager
 
 SearchTopic = Literal["general", "news"]
@@ -38,15 +37,26 @@ class WebSearchEngine:
         self.tavily = TavilyClient(api_keys=tavily_keys, timeout=timeout)
         self.ddgs = DDGSClient(timeout=timeout)
         self._db = db
-        self.output_dir = output_dir
+        self._output_dir = Path(output_dir)
         self._indexer: WebSearchIndexer | None = None
         if self._db is not None:
-            self._indexer = WebSearchIndexer(self._db, output_dir=output_dir)
+            self._indexer = WebSearchIndexer(self._db, output_dir=self._output_dir)
+
+    @property
+    def output_dir(self) -> Path:
+        return self._output_dir
+
+    @output_dir.setter
+    def output_dir(self, val: str | Path) -> None:
+        self._output_dir = Path(val)
+        if self._indexer is not None:
+            self._indexer.output_dir = self._output_dir
+            self._indexer.output_dir.mkdir(parents=True, exist_ok=True)
 
     def set_db(self, db: DatabaseManager) -> None:
         """Set or update DatabaseManager instance for auto-indexing."""
         self._db = db
-        self._indexer = WebSearchIndexer(db, output_dir=self.output_dir)
+        self._indexer = WebSearchIndexer(db, output_dir=self._output_dir)
 
     async def close(self) -> None:
         """Close underlying HTTP clients."""
