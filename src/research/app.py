@@ -8,7 +8,7 @@ from typing import Any, Self
 from loguru import logger
 
 from research.bibliography.manager import BibliographyManager
-from research.bibtex.parser import parse_bib_files
+from research.bibtex.parser import expand_bib_paths, parse_bib_files
 from research.cache.manager import HttpCache
 from research.cache.models import CachePolicy
 from research.cards.manager import CardManager
@@ -119,9 +119,9 @@ class ResearchApp:
         deduplicate: bool = True,
         auto_normalize: bool = False,
     ) -> int:
-        """Parse BibTeX files and populate database."""
-        path_list = [Path(paths)] if isinstance(paths, (str, Path)) else [Path(p) for p in paths]
-        entries = parse_bib_files(path_list, deduplicate=deduplicate)
+        """Parse BibTeX files or whole directories and populate database."""
+        file_paths = expand_bib_paths(paths)
+        entries = parse_bib_files(file_paths, deduplicate=deduplicate)
 
         indexed = 0
         for e in entries:
@@ -169,7 +169,7 @@ class ResearchApp:
             self.db.create(rec)
             indexed += 1
 
-        logger.info(f"Loaded and indexed {indexed} entries from {[p.name for p in path_list]}")
+        logger.info(f"Loaded and indexed {indexed} entries from {[p.name for p in file_paths]}")
         return indexed
 
     async def search_academic(

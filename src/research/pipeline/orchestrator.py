@@ -175,56 +175,64 @@ class ResearchPipeline:
             # Step 0: BibTeX Seed Ingestion
             bib_records: list[PublicationRecord] = []
             if cfg.bib_path:
-                logger.info("Pipeline Step 0: Ingesting BibTeX seed from {}", cfg.bib_path)
                 try:
-                    from research.bibtex.parser import parse_bib_files
+                    from research.bibtex.parser import expand_bib_paths, parse_bib_files
 
-                    path_list = (
-                        [Path(cfg.bib_path)]
-                        if isinstance(cfg.bib_path, (str, Path))
-                        else [Path(p) for p in cfg.bib_path]
-                    )
-                    bib_count = self.app.load_bib_files(path_list, auto_normalize=False)
-                    stats["bib_count"] = bib_count
+                    bib_files = expand_bib_paths(cfg.bib_path)
+                    if not bib_files:
+                        logger.warning("Pipeline Step 0: No .bib files found at {}", cfg.bib_path)
+                    else:
+                        if len(bib_files) == 1 and Path(cfg.bib_path).is_file():
+                            logger.info("Pipeline Step 0: Ingesting BibTeX seed from {}", cfg.bib_path)
+                        else:
+                            logger.info(
+                                "Pipeline Step 0: Ingesting BibTeX seeds from {} ({} .bib files found)",
+                                cfg.bib_path,
+                                len(bib_files),
+                            )
 
-                    parsed_entries = parse_bib_files(path_list)
-                    already_dl = 0
-                    already_unavail = 0
-                    pending_dl = 0
-                    for e in parsed_entries:
-                        rec = self.app.db.get(e.cite_key)
-                        if rec:
-                            bib_records.append(rec)
-                            if rec.download_status == "downloaded":
-                                already_dl += 1
-                                md_exists = (
-                                    Path(rec.download_path).with_suffix(".md").exists()
-                                    if rec.download_path
-                                    else False
-                                )
-                                has_chunks = rec.is_chunked or self.app.db.has_chunks(rec.cite_key)
-                                if cfg.force or not md_exists or (cfg.index_rag and not has_chunks):
-                                    await convert_queue.put(rec)
-                            elif rec.download_status in (
-                                "no_pdf_found",
-                                "failed_not_pdf",
-                                "dead_link",
-                                "failed_blocked",
-                            ):
-                                already_unavail += 1
-                                if cfg.force:
+                        bib_count = self.app.load_bib_files(bib_files, auto_normalize=False)
+                        stats["bib_count"] = bib_count
+
+                        parsed_entries = parse_bib_files(bib_files)
+                        already_dl = 0
+                        already_unavail = 0
+                        pending_dl = 0
+                        for e in parsed_entries:
+                            rec = self.app.db.get(e.cite_key)
+                            if rec:
+                                bib_records.append(rec)
+                                if rec.download_status == "downloaded":
+                                    already_dl += 1
+                                    md_exists = (
+                                        Path(rec.download_path).with_suffix(".md").exists()
+                                        if rec.download_path
+                                        else False
+                                    )
+                                    has_chunks = rec.is_chunked or self.app.db.has_chunks(rec.cite_key)
+                                    if cfg.force or not md_exists or (cfg.index_rag and not has_chunks):
+                                        await convert_queue.put(rec)
+                                elif rec.download_status in (
+                                    "no_pdf_found",
+                                    "failed_not_pdf",
+                                    "dead_link",
+                                    "failed_blocked",
+                                ):
+                                    already_unavail += 1
+                                    if cfg.force:
+                                        await _enqueue_download(rec)
+                                else:
+                                    pending_dl += 1
                                     await _enqueue_download(rec)
-                            else:
-                                pending_dl += 1
-                                await _enqueue_download(rec)
 
-                    logger.info(
-                        "Pipeline Step 0: Ingested {} BibTeX seed papers ({} downloaded, {} unavailable, {} pending download)",
-                        len(bib_records),
-                        already_dl,
-                        already_unavail,
-                        pending_dl,
-                    )
+                        logger.info(
+                            "Pipeline Step 0: Ingested {} BibTeX seed papers from {} file(s) ({} downloaded, {} unavailable, {} pending download)",
+                            len(bib_records),
+                            len(bib_files),
+                            already_dl,
+                            already_unavail,
+                            pending_dl,
+                        )
                 except (asyncio.CancelledError, KeyboardInterrupt):
                     raise
                 except Exception as exc:  # noqa: BLE001
@@ -379,26 +387,33 @@ class ResearchPipeline:
         bib_records: list[PublicationRecord] = []
         bib_count = 0
         if cfg.bib_path:
-            logger.info("Pipeline Step 0: Ingesting BibTeX seed from {}", cfg.bib_path)
             try:
-                from research.bibtex.parser import parse_bib_files
+                from research.bibtex.parser import expand_bib_paths, parse_bib_files
 
-                path_list = (
-                    [Path(cfg.bib_path)]
-                    if isinstance(cfg.bib_path, (str, Path))
-                    else [Path(p) for p in cfg.bib_path]
-                )
-                bib_count = self.app.load_bib_files(path_list, auto_normalize=False)
+                bib_files = expand_bib_paths(cfg.bib_path)
+                if not bib_files:
+                    logger.warning("Pipeline Step 0: No .bib files found at {}", cfg.bib_path)
+                else:
+                    if len(bib_files) == 1 and Path(cfg.bib_path).is_file():
+                        logger.info("Pipeline Step 0: Ingesting BibTeX seed from {}", cfg.bib_path)
+                    else:
+                        logger.info(
+                            "Pipeline Step 0: Ingesting BibTeX seeds from {} ({} .bib files found)",
+                            cfg.bib_path,
+                            len(bib_files),
+                        )
 
-                parsed_entries = parse_bib_files(path_list)
-                for e in parsed_entries:
-                    rec = self.app.db.get(e.cite_key)
-                    if rec:
-                        bib_records.append(rec)
-                logger.info(
-                    "Pipeline Step 0: Ingested and enriched {} BibTeX seed papers",
-                    len(bib_records),
-                )
+                    bib_count = self.app.load_bib_files(bib_files, auto_normalize=False)
+                    parsed_entries = parse_bib_files(bib_files)
+                    for e in parsed_entries:
+                        rec = self.app.db.get(e.cite_key)
+                        if rec:
+                            bib_records.append(rec)
+                    logger.info(
+                        "Pipeline Step 0: Ingested and enriched {} BibTeX seed papers from {} file(s)",
+                        len(bib_records),
+                        len(bib_files),
+                    )
             except Exception as exc:  # noqa: BLE001
                 logger.warning("BibTeX seed ingestion issue: {}", exc)
 

@@ -152,16 +152,63 @@ def parse_bib_file(path: str | Path) -> list[BibEntry]:
     return parse_bib_str(text, source=str(p))
 
 
+def expand_bib_paths(
+    paths: list[str | Path] | list[str] | list[Path] | str | Path,
+    *,
+    recursive: bool = True,
+) -> list[Path]:
+    """Expand a path or collection of file and directory paths into a sorted list of unique .bib file paths.
+
+    If a path is a directory, searches for all *.bib files (recursively if recursive=True).
+    If a path is an existing file, it is included directly.
+    """
+    raw_paths: list[str | Path]
+    if isinstance(paths, (str, Path)):
+        if isinstance(paths, str) and "," in paths:
+            raw_paths = [p.strip() for p in paths.split(",") if p.strip()]
+        else:
+            raw_paths = [paths]
+    else:
+        raw_paths = list(paths)
+
+    bib_files: list[Path] = []
+    seen: set[Path] = set()
+
+    for p in raw_paths:
+        path_obj = Path(p)
+        if path_obj.is_dir():
+            pattern = "**/*.bib" if recursive else "*.bib"
+            for f in sorted(path_obj.glob(pattern)):
+                if f.is_file():
+                    resolved = f.resolve()
+                    if resolved not in seen:
+                        seen.add(resolved)
+                        bib_files.append(f)
+        elif path_obj.is_file():
+            resolved = path_obj.resolve()
+            if resolved not in seen:
+                seen.add(resolved)
+                bib_files.append(path_obj)
+        elif path_obj.exists():
+            continue
+        else:
+            bib_files.append(path_obj)
+
+    return bib_files
+
+
 def parse_bib_files(
-    paths: list[str | Path] | list[str] | list[Path],
+    paths: list[str | Path] | list[str] | list[Path] | str | Path,
     *,
     deduplicate: bool = True,
+    recursive: bool = True,
 ) -> list[BibEntry]:
-    """Parse multiple BibTeX files, optionally deduplicating entries by cite_key."""
+    """Parse multiple BibTeX files or directories, optionally deduplicating entries by cite_key."""
+    file_paths = expand_bib_paths(paths, recursive=recursive)
     all_entries: list[BibEntry] = []
     seen: dict[str, BibEntry] = {}
 
-    for path in paths:
+    for path in file_paths:
         entries = parse_bib_file(path)
         for entry in entries:
             if not deduplicate:
@@ -178,3 +225,4 @@ def parse_bib_files(
                 all_entries.append(entry)
 
     return all_entries
+

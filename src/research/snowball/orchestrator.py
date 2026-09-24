@@ -5,7 +5,7 @@ from pathlib import Path
 
 from loguru import logger
 
-from research.bibtex.parser import parse_bib_files
+from research.bibtex.parser import expand_bib_paths, parse_bib_files
 from research.cache.manager import HttpCache
 from research.db.manager import DatabaseManager
 from research.db.models import PublicationRecord
@@ -160,12 +160,8 @@ class SnowballOrchestrator:
         deduplicate_seeds: bool = True,
         max_seeds: int | None = None,
     ) -> list[SnowballResult]:
-        """Orchestrate end-to-end snowballing starting from .bib file(s)."""
-        paths: list[Path]
-        if isinstance(bib_paths, (str, Path)):
-            paths = [Path(bib_paths)]
-        else:
-            paths = [Path(p) for p in bib_paths]
+        """Orchestrate end-to-end snowballing starting from .bib file(s) or whole directory."""
+        paths = expand_bib_paths(bib_paths)
 
         # 1. Parse .bib files
         bib_entries = parse_bib_files(paths, deduplicate=deduplicate_seeds)

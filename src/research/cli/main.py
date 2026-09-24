@@ -110,8 +110,15 @@ async def _async_main(args: Any) -> int:
 
         if cmd == "pipeline":
             if not args.query and not args.bib:
-                print("\n[-] Error: Please specify a search query or a --bib seed file.\n")
+                print("\n[-] Error: Please specify a search query or a --bib seed file/directory.\n")
                 return 1
+
+            if args.bib:
+                raw_paths = [p.strip() for p in args.bib.split(",") if p.strip()] if "," in args.bib else [args.bib]
+                for bp in raw_paths:
+                    if not Path(bp).exists():
+                        print(f"\n[-] Error: Specified --bib path does not exist: '{bp}'\n", file=sys.stderr)
+                        return 1
 
             provs = [p.strip() for p in args.providers.split(",")] if args.providers else None
             cfg = PipelineConfig(
@@ -134,7 +141,8 @@ async def _async_main(args: Any) -> int:
             )
             desc = f"query='{args.query}'" if args.query else ""
             if args.bib:
-                desc += f" (bib seed='{args.bib}')" if desc else f"bib seed='{args.bib}'"
+                bib_type = "dir" if Path(args.bib).is_dir() else "seed"
+                desc += f" (bib {bib_type}='{args.bib}')" if desc else f"bib {bib_type}='{args.bib}'"
             mode_desc = "streaming parallel" if cfg.streaming else "staged parallel"
             print(f"\n[+] Executing end-to-end research pipeline [{mode_desc}] for: {desc}...")
             res = await app.pipeline.run(cfg)
