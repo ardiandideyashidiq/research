@@ -98,14 +98,23 @@ class ResearchPipeline:
 
                     # 1. Fast-path: already converted and already indexed in RAG
                     if not cfg.force and is_already_converted and (not cfg.index_rag or is_already_chunked):
-                        logger.debug("Paper '{}' already converted and indexed in RAG. Skipping.", pub.cite_key)
+                        c_cnt = self.app.db.count_chunks_for(pub.cite_key) if cfg.index_rag and is_already_chunked else 0
+                        logger.info(
+                            "Paper '{}': Reusing existing Markdown and {} indexed RAG chunks",
+                            pub.cite_key,
+                            c_cnt,
+                        )
                         stats["converted_count"] += 1
                         if cfg.index_rag and is_already_chunked:
-                            stats["indexed_chunks_count"] += self.app.db.count_chunks_for(pub.cite_key)
+                            stats["indexed_chunks_count"] += c_cnt
                         continue
 
                     # 2. Markdown exists, but not yet indexed in RAG: index directly without PyMuPDF re-conversion
                     if not cfg.force and is_already_converted and cfg.index_rag and not is_already_chunked:
+                        logger.info(
+                            "Paper '{}': Reusing existing Markdown, indexing RAG chunks directly...",
+                            pub.cite_key,
+                        )
                         md_text = md_path.read_text(encoding="utf-8")
                         chunks = await asyncio.to_thread(
                             self.app.retriever.index_markdown,
@@ -118,6 +127,7 @@ class ResearchPipeline:
                         continue
 
                     # 3. Full conversion & RAG chunking
+                    logger.info("Paper '{}': Converting PDF to Markdown ({})...", pub.cite_key, pdf_path.name)
                     out_path, conv_doc = await self.app.pdf.convert_file_async(pdf_path, md_path)
                     self.app.db.update(pub.cite_key, markdown_path=str(out_path))
                     stats["converted_count"] += 1
@@ -178,19 +188,43 @@ class ResearchPipeline:
                     stats["bib_count"] = bib_count
 
                     parsed_entries = parse_bib_files(path_list)
+                    already_dl = 0
+                    already_unavail = 0
+                    pending_dl = 0
                     for e in parsed_entries:
                         rec = self.app.db.get(e.cite_key)
                         if rec:
                             bib_records.append(rec)
-                            if rec.download_status == "downloaded" and rec.download_path and cfg.convert:
-                                md_exists = Path(rec.download_path).with_suffix(".md").exists()
+                            if rec.download_status == "downloaded":
+                                already_dl += 1
+                                md_exists = (
+                                    Path(rec.download_path).with_suffix(".md").exists()
+                                    if rec.download_path
+                                    else False
+                                )
                                 has_chunks = rec.is_chunked or self.app.db.has_chunks(rec.cite_key)
                                 if cfg.force or not md_exists or (cfg.index_rag and not has_chunks):
                                     await convert_queue.put(rec)
-                            elif rec.download_status != "downloaded":
+                            elif rec.download_status in (
+                                "no_pdf_found",
+                                "failed_not_pdf",
+                                "dead_link",
+                                "failed_blocked",
+                            ):
+                                already_unavail += 1
+                                if cfg.force:
+                                    await _enqueue_download(rec)
+                            else:
+                                pending_dl += 1
                                 await _enqueue_download(rec)
 
-                    logger.info("Pipeline Step 0: Ingested and enriched {} BibTeX seed papers", len(bib_records))
+                    logger.info(
+                        "Pipeline Step 0: Ingested {} BibTeX seed papers ({} downloaded, {} unavailable, {} pending download)",
+                        len(bib_records),
+                        already_dl,
+                        already_unavail,
+                        pending_dl,
+                    )
                 except (asyncio.CancelledError, KeyboardInterrupt):
                     raise
                 except Exception as exc:  # noqa: BLE001
@@ -249,7 +283,13 @@ class ResearchPipeline:
                         await _enqueue_download(rec)
 
                 stats["discovered_count"] = len(discovered)
-                logger.info("Pipeline Step 1: Discovered and indexed {} papers", len(discovered))
+                already_in_db = sum(1 for r in discovered if r.download_status == "downloaded")
+                logger.info(
+                    "Pipeline Step 1: Discovered and indexed {} papers ({} already downloaded, {} queued)",
+                    len(discovered),
+                    already_in_db,
+                    len(discovered) - already_in_db,
+                )
 
             # Step 2: Parallel Citation Graph Snowballing
             if cfg.snowball:
@@ -279,6 +319,10 @@ class ResearchPipeline:
                     await download_queue.put(None)
                 if download_task:
                     await download_task
+                logger.info(
+                    "Pipeline Step 3: Paper download phase finished ({} PDFs downloaded/verified)",
+                    stats["downloaded_count"],
+                )
 
             # Downloads are complete -> close convert queue
             if cfg.convert:
@@ -286,6 +330,11 @@ class ResearchPipeline:
                     await convert_queue.put(None)
                 if convert_workers:
                     await asyncio.gather(*convert_workers)
+                logger.info(
+                    "Pipeline Step 4 & 5: Converted/verified {} documents and indexed {} total semantic chunks",
+                    stats["converted_count"],
+                    stats["indexed_chunks_count"],
+                )
 
         except (asyncio.CancelledError, KeyboardInterrupt):
             logger.warning("Pipeline streaming execution interrupted. Cancelling worker tasks...")

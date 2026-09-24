@@ -210,7 +210,7 @@ class DownloadManager:
                 if db_rec.download_status == "downloaded" and db_rec.download_path:
                     local_path = Path(db_rec.download_path)
                     if local_path.is_file() and local_path.stat().st_size > 0:
-                        logger.debug(f"Paper {record.cite_key} already downloaded at {local_path}. Skipping.")
+                        logger.info(f"Paper {record.cite_key}: Reusing verified local PDF: {local_path}")
                         return db_rec
                 elif db_rec.download_status in (
                     "no_pdf_found",
@@ -228,7 +228,7 @@ class DownloadManager:
         if not force and record.download_status == "downloaded" and record.download_path:
             local_path = Path(record.download_path)
             if local_path.is_file() and local_path.stat().st_size > 0:
-                logger.debug(f"Paper {record.cite_key} already downloaded at {local_path}. Skipping.")
+                logger.info(f"Paper {record.cite_key}: Reusing verified local PDF: {local_path}")
                 return record
 
         # Tier 2: Cross-record DOI lookup - check if ANY record with this DOI is downloaded
