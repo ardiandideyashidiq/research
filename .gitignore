@@ -1,0 +1,25 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv/
+
+# SQLite databases
+*.sqlite
+*.sqlite3
+*.db
+
+# Downloads and local test artifacts
+data/downloads/
+tmp/*.pdf
+tmp/*.sqlite
+tmp/*.json
+tmp/*.md
+
+# Agent sessions
+sessions/
