@@ -174,7 +174,7 @@ class ResearchPipeline:
                         if isinstance(cfg.bib_path, (str, Path))
                         else [Path(p) for p in cfg.bib_path]
                     )
-                    bib_count = self.app.load_bib_files(path_list, auto_normalize=True)
+                    bib_count = self.app.load_bib_files(path_list, auto_normalize=False)
                     stats["bib_count"] = bib_count
 
                     parsed_entries = parse_bib_files(path_list)
@@ -183,7 +183,9 @@ class ResearchPipeline:
                         if rec:
                             bib_records.append(rec)
                             if rec.download_status == "downloaded" and rec.download_path and cfg.convert:
-                                if not Path(rec.download_path).with_suffix(".md").exists():
+                                md_exists = Path(rec.download_path).with_suffix(".md").exists()
+                                has_chunks = rec.is_chunked or self.app.db.has_chunks(rec.cite_key)
+                                if cfg.force or not md_exists or (cfg.index_rag and not has_chunks):
                                     await convert_queue.put(rec)
                             elif rec.download_status != "downloaded":
                                 await _enqueue_download(rec)
@@ -337,7 +339,7 @@ class ResearchPipeline:
                     if isinstance(cfg.bib_path, (str, Path))
                     else [Path(p) for p in cfg.bib_path]
                 )
-                bib_count = self.app.load_bib_files(path_list, auto_normalize=True)
+                bib_count = self.app.load_bib_files(path_list, auto_normalize=False)
 
                 parsed_entries = parse_bib_files(path_list)
                 for e in parsed_entries:
