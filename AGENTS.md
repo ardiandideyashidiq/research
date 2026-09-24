@@ -11,13 +11,13 @@ Key capabilities:
 - **Open Access Retrieval**: Direct open-access PDF resolution via **Unpaywall** and OpenAlex metadata.
 - **Citation Graph Snowballing**: Automated forward (citing) and backward (referenced) graph traversal starting from `.bib` seed files or database records.
 - **Idempotent Parallel Downloader**: Queued concurrent downloading with content inspection (`%PDF` magic byte verification) and granular error auditing (preventing false positives for dead links).
-- **Web Search Integration**: Multi-API-key load balancing and automatic failover for **Tavily Search** and **DuckDuckGo (ddgs)**.
+- **Web Search Integration & Auto-Indexing**: Multi-API-key load balancing and automatic failover for **Tavily Search** and **DuckDuckGo (ddgs)** with automatic sanitization into clean Markdown documents (YAML frontmatter) and instant semantic chunking into SQLite FTS5 RAG.
 - **Anti-Bot Scraping Engine**: `curl-cffi` browser TLS impersonation (`impersonate="chrome"`) for Google Scholar, arXiv, and Cloudflare-protected academic repositories.
 - **PDF to Markdown & Layout Normalization**: High-performance conversion with **PyMuPDF** & **PyMuPDF4LLM**, dehyphenation, heading normalization, running header/footer removal, prose reflow, and YAML frontmatter metadata.
 - **Semantic Chunking & SQLite FTS5 BM25 RAG**: Heading- and page-aware chunking preserving academic citation context, with zero-dependency SQLite BM25 ranking and LLM prompt context formatting.
 - **End-to-End Autonomous Pipeline**: One-command complete lifecycle orchestration (`search -> snowball -> download -> convert -> RAG chunking`).
 - **Indonesian Court Judgment Engine (Putusan)**: Context-preserving conversion and chunking for court decisions across all jurisdictions (MA, MK, MKMK, PN, PT, PA, PM, PTUN, DKPP, KIP) with legal typography unspacing, watermark/disclaimer stripping, section segmentation (`KEPALA`, `IDENTITAS`, `DUDUK_PERKARA`, `PERTIMBANGAN_HUKUM`, `AMAR_PUTUSAN`, `PENUTUP`), context header injection, and Tesseract OCR fallback for scanned decisions.
-- **Production CLI Suite**: Ergonomic subcommands (`pipeline`, `search`, `snowball`, `download`, `convert`, `query`, `export`, `stats`, `putusan`).
+- **Production CLI Suite**: Ergonomic subcommands (`pipeline`, `search`, `snowball`, `download`, `convert`, `query`, `export`, `stats`, `putusan`, `web-search`).
 
 ## Commands
 
@@ -29,6 +29,7 @@ uv run research --help  # view all CLI subcommands
 uv run research stats   # show database publications, downloads, RAG chunks
 uv run research pipeline "artificial intelligence copyright" --limit 10
 uv run research search "quantum computing" --providers arxiv,openalex --limit 5
+uv run research web-search "pertanggungjawaban pidana kecerdasan buatan" --provider all --limit 5
 uv run research snowball <cite_key> --direction both --limit 10
 uv run research download --concurrency 4
 uv run research convert data/downloads/paper.pdf --index-rag
@@ -84,7 +85,15 @@ src/research/
 │   └── downloader.py     # DownloadManager (queue/semaphore concurrency, DB auto-indexing)
 ├── tavily/               # Multi-key load-balanced web search engine
 │   ├── models.py         # TavilySearchResponse, APIKeyStatus
-│   ├── pool.py           # APIKeyPool (round-robin / least-used, auto-failover)
+│   └── pool.py           # APIKeyPool (round-robin / least-used, auto-failover)
+├── ddgs/                 # DuckDuckGo search client (text and news async scraper)
+│   ├── models.py         # DDGSSearchResult, DDGSSearchResponse
+│   └── client.py         # DDGSClient (text and news async execution)
+├── web_search/           # Unified Tavily & DDGS search with Markdown extraction & auto-indexing
+│   ├── models.py         # WebSearchResult, WebSearchResponse
+│   ├── normalizer.py     # HTML/web content cleaner, YAML frontmatter Markdown formatter
+│   ├── indexer.py        # WebSearchIndexer (Markdown disk export, SQLite CRUD, RAG FTS5 sync)
+│   └── client.py         # WebSearchEngine (dual-engine orchestrator with auto-failover)
 ├── google_scholar/       # Google Scholar client (TLS impersonation, metadata & citations extraction)
 │   ├── models.py         # Publication, SearchResult (.to_publication_record())
 │   └── client.py         # GoogleScholarClient (search, publication landing resolver)

@@ -86,4 +86,31 @@ def build_parser() -> argparse.ArgumentParser:
         help="Target max characters per chunk (default: 1500)",
     )
 
+    # 10. web-search
+    p_web = subparsers.add_parser(
+        "web-search",
+        help="Search web via Tavily and/or DuckDuckGo (ddgs), extract to clean Markdown, and auto-index into RAG",
+    )
+    p_web.add_argument("query", help="Web search query string")
+    p_web.add_argument(
+        "--provider",
+        choices=["all", "tavily", "ddgs"],
+        default="all",
+        help="Search provider to use (default: all)",
+    )
+    p_web.add_argument(
+        "--topic",
+        choices=["general", "news"],
+        default="general",
+        help="Search topic: general web or news (default: general)",
+    )
+    p_web.add_argument("--limit", type=int, default=5, help="Number of results to retrieve (default: 5)")
+    p_web.add_argument("--no-index", action="store_true", help="Do not save and index into SQLite RAG database")
+    p_web.add_argument(
+        "--output-dir",
+        default="data/web_searches",
+        help="Directory to save extracted markdown files (default: data/web_searches)",
+    )
+
     return parser
+

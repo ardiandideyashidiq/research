@@ -24,6 +24,8 @@ from research.rag.retriever import RAGRetriever
 from research.snowball.models import SnowballConfig, SnowballResult
 from research.snowball.orchestrator import SnowballOrchestrator
 from research.tavily.client import TavilyClient
+from research.web_search.client import WebSearchEngine
+from research.web_search.models import WebSearchProvider, WebSearchResponse
 
 
 class ResearchApp:
@@ -34,6 +36,7 @@ class ResearchApp:
         *,
         db_path: str | Path = "tmp/publications.sqlite",
         download_dir: str | Path = "data/downloads",
+        web_search_dir: str | Path = "data/web_searches",
         tavily_keys: list[str] | None = None,
         scholar_proxy: str | Proxy | None = None,
         proxy_pool: ProxyPool | None = None,
@@ -43,6 +46,11 @@ class ResearchApp:
         self.downloader = DownloadManager(self.db, download_dir=download_dir)
         self.snowball = SnowballOrchestrator(self.db, config=SnowballConfig())
         self.tavily = TavilyClient(api_keys=tavily_keys)
+        self.web_search = WebSearchEngine(
+            db=self.db,
+            tavily_keys=tavily_keys,
+            output_dir=web_search_dir,
+        )
         self.scholar = GoogleScholarClient(proxy=scholar_proxy, proxy_pool=proxy_pool)
         self.pdf = PDFConverter()
         self.retriever = RAGRetriever(self.db)
@@ -51,6 +59,7 @@ class ResearchApp:
     async def close(self) -> None:
         await self.providers.close()
         await self.tavily.close()
+        await self.web_search.close()
         await self.scholar.close()
         self.db.close()
 
@@ -211,3 +220,21 @@ class ResearchApp:
     ) -> list[RetrievalResult]:
         """Search full-text indexed document chunks via FTS5 BM25."""
         return self.retriever.search(query, limit=limit, cite_key=cite_key)
+
+    async def search_web(
+        self,
+        query: str,
+        *,
+        provider: WebSearchProvider = "all",
+        topic: str = "general",
+        limit: int = 5,
+        auto_index: bool = True,
+    ) -> WebSearchResponse:
+        """Search web via Tavily and/or DuckDuckGo (ddgs), extract to clean Markdown, and auto-index into SQLite RAG."""
+        return await self.web_search.search(
+            query,
+            provider=provider,
+            topic=topic,  # type: ignore[arg-type]
+            limit=limit,
+            auto_index=auto_index,
+        )

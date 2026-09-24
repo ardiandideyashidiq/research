@@ -254,6 +254,37 @@ async def _async_main(args: Any) -> int:
             print(f"  - Consolidated Chunks:   {all_chunks_path}\n")
             return 0
 
+        if cmd == "web-search":
+            print(
+                f"\n[+] Searching web for: '{args.query}' "
+                f"(provider={args.provider}, topic={args.topic}, limit={args.limit})..."
+            )
+            app.web_search.output_dir = Path(args.output_dir)
+            resp = await app.search_web(
+                args.query,
+                provider=args.provider,
+                topic=args.topic,
+                limit=args.limit,
+                auto_index=not args.no_index,
+            )
+            print(f"\n[+] Found {len(resp.results)} web results ({resp.response_time}s):")
+            for i, r in enumerate(resp.results):
+                print(f"\n  [{i + 1}] ({r.provider}) {r.title}")
+                print(f"      URL:      {r.url}")
+                print(f"      Cite Key: {r.cite_key}")
+                snippet = r.content[:150].replace("\n", " ")
+                print(f"      Snippet:  {snippet}...")
+
+            if not args.no_index and resp.results:
+                print(
+                    f"\n[+] Automatically indexed {resp.indexed_documents} documents and "
+                    f"{resp.indexed_chunks} semantic chunks into SQLite RAG."
+                )
+                print(f"    Markdown files saved to: {args.output_dir}/\n")
+            else:
+                print()
+            return 0
+
     finally:
         await app.close()
 
