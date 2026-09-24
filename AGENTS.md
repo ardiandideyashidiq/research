@@ -20,7 +20,8 @@ Key capabilities:
 - **End-to-End Autonomous Pipeline**: One-command complete lifecycle orchestration (`search -> snowball -> download -> convert -> RAG chunking`).
 - **Indonesian Court Judgment Engine (Putusan)**: Context-preserving conversion and chunking for court decisions across all jurisdictions (MA, MK, MKMK, PN, PT, PA, PM, PTUN, DKPP, KIP) with legal typography unspacing, watermark/disclaimer stripping, section segmentation (`KEPALA`, `IDENTITAS`, `DUDUK_PERKARA`, `PERTIMBANGAN_HUKUM`, `AMAR_PUTUSAN`, `PENUTUP`), context header injection, and direct SQLite RAG indexing.
 - **Literature Review Card System & Matrix Synthesis**: Heuristic & milestone-aware extraction across literature and court rulings into structured research cards (*Isu Hukum*, *Teori/Dasar Hukum*, *Metodologi*, *Temuan Utama/Amar*, *Research Gap*, *Positioning*), persistent SQLite FTS5 storage, researcher annotation/tagging, and multi-format matrix export (GFM table + detailed cards in Markdown, UTF-8 BOM CSV for Excel, and JSON).
-- **Production CLI Suite**: Ergonomic subcommands (`pipeline`, `search`, `snowball`, `download`, `convert`, `query`, `export`, `stats`, `putusan`, `web-search`, `embed`, `cards`).
+- **Full CRUD Bibliography Manager & Multi-CSL Engine**: Comprehensive reference CRUD (create, import from BibTeX/CSL-JSON/RIS/DOI, update, delete, FTS search), with instant citation generation across 12 CSL & data formats (APA 7th, IEEE, Harvard, Chicago Author-Date & Note, MLA 9th, Vancouver, OSCOLA, Indonesian Legal, BibTeX, RIS, CSL-JSON) for in-text and full bibliography lists.
+- **Production CLI Suite**: Ergonomic subcommands (`pipeline`, `search`, `snowball`, `download`, `convert`, `query`, `export`, `stats`, `putusan`, `web-search`, `embed`, `cards`, `bib`).
 
 ## Commands
 
@@ -47,6 +48,13 @@ uv run research cards show <cite_key> # view full card details & synthesis
 uv run research cards edit <cite_key> --notes "Wajib dikutip Bab 3" --tags "deepfake,strict-liability"
 uv run research cards export --format markdown --output data/literature_matrix.md
 uv run research cards export --format csv --output data/literature_matrix.csv
+uv run research bib list --style ieee --limit 20
+uv run research bib show <cite_key> --style all # preview APA, IEEE, Harvard, Chicago, MLA, OSCOLA, etc.
+uv run research bib add --title "Judul Riset" --author "Nama Penulis" --year 2025 --journal "Jurnal Hukum"
+uv run research bib update <cite_key> --doi "10.1234/xyz"
+uv run research bib delete <cite_key> --yes
+uv run research bib import <file_or_doi> # supports BibTeX, CSL-JSON, RIS, or DOI
+uv run research bib export --output data/daftar_pustaka.md --style apa --format markdown
 uv run research export --format bibtex --output tmp/export.bib
 uv run ruff check .     # lint
 uv run ruff check --fix .
@@ -66,6 +74,10 @@ src/research/
 │   ├── models.py         # BibEntry dataclass with .to_publication() mapping
 │   ├── parser.py         # parse_bib_file, parse_bib_files, parse_bib_str
 │   └── export.py         # export_to_json, export_to_sqlite, export_to_bibtex_str
+├── bibliography/         # Full CRUD bibliography manager & multi-CSL formatting engine
+│   ├── models.py         # Author & CSLItem models, CSL-JSON & RIS converters
+│   ├── csl.py            # CSLEngine (APA, IEEE, Harvard, Chicago, MLA, Vancouver, OSCOLA, Indonesian)
+│   └── manager.py        # BibliographyManager (CRUD, multi-source import, export, FTS search)
 ├── db/                   # SQLite storage & full CRUD
 │   ├── models.py         # PublicationRecord dataclass
 │   └── manager.py        # DatabaseManager (CRUD, auto-migrations, FTS5 sync, chunks table)

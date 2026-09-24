@@ -6,6 +6,7 @@ from typing import Any, Self
 
 from loguru import logger
 
+from research.bibliography.manager import BibliographyManager
 from research.bibtex.parser import parse_bib_files
 from research.cards.manager import CardManager
 from research.db.manager import DatabaseManager
@@ -56,6 +57,7 @@ class ResearchApp:
         self.pdf = PDFConverter()
         self.retriever = RAGRetriever(self.db)
         self.cards = CardManager(self.db)
+        self.bib = BibliographyManager(self.db)
         self.pipeline = ResearchPipeline(app=self)
 
     async def close(self) -> None:

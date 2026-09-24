@@ -231,5 +231,109 @@ def build_parser() -> argparse.ArgumentParser:
         help="Exclude detail cards (table only in markdown)",
     )
 
+    # bib (Full CRUD Bibliography & Multi-CSL Manager)
+    p_bib = subparsers.add_parser("bib", help="Full CRUD bibliography manager with multi-CSL citation styling")
+    bib_subs = p_bib.add_subparsers(dest="bib_action", help="Bibliography action")
+
+    # bib list
+    p_blist = bib_subs.add_parser("list", help="List and format bibliography entries in CSL style")
+    p_blist.add_argument(
+        "--style",
+        choices=["apa", "ieee", "harvard", "chicago", "chicago-note", "mla", "vancouver", "oscola", "indonesia", "bibtex", "ris", "csl-json"],
+        default="apa",
+        help="Citation Style Language (default: apa)",
+    )
+    p_blist.add_argument(
+        "--corpus",
+        choices=["all", "literature", "putusan", "web"],
+        default="all",
+        help="Filter by corpus (default: all)",
+    )
+    p_blist.add_argument("--query", help="Full-text search query across bibliography")
+    p_blist.add_argument("--author", help="Filter by author name substring")
+    p_blist.add_argument("--journal", help="Filter by journal / venue substring")
+    p_blist.add_argument("--year", type=int, help="Filter by publication year")
+    p_blist.add_argument("--limit", type=int, default=20, help="Maximum entries to list (default: 20)")
+    p_blist.add_argument("--offset", type=int, default=0, help="Offset for pagination (default: 0)")
+
+    # bib show
+    p_bshow = bib_subs.add_parser("show", help="Show reference formatted in one or all CSL styles")
+    p_bshow.add_argument("cite_key", help="Citation key of the publication")
+    p_bshow.add_argument(
+        "--style",
+        choices=["all", "apa", "ieee", "harvard", "chicago", "chicago-note", "mla", "vancouver", "oscola", "indonesia", "bibtex", "ris", "csl-json"],
+        default="all",
+        help="CSL style to format (default: all)",
+    )
+    p_bshow.add_argument("--in-text", action="store_true", help="Also display in-text citation format")
+
+    # bib add
+    p_badd = bib_subs.add_parser("add", help="Manually add a new reference to the bibliography")
+    p_badd.add_argument("--title", required=True, help="Publication title")
+    p_badd.add_argument("--author", action="append", help="Author name (can be repeated or comma-separated)")
+    p_badd.add_argument("--year", type=int, help="Publication year")
+    p_badd.add_argument("--journal", help="Journal, book, or venue name")
+    p_badd.add_argument("--volume", help="Volume number")
+    p_badd.add_argument("--issue", help="Issue / number")
+    p_badd.add_argument("--pages", help="Page range (e.g. 100-125)")
+    p_badd.add_argument("--doi", help="Digital Object Identifier (DOI)")
+    p_badd.add_argument("--url", help="URL / Link to paper")
+    p_badd.add_argument("--abstract", help="Abstract text")
+    p_badd.add_argument("--entry-type", default="article", help="Entry type: article, book, inproceedings, putusan, etc. (default: article)")
+    p_badd.add_argument("--cite-key", help="Custom citation key (auto-generated if omitted)")
+
+    # bib update
+    p_bupdate = bib_subs.add_parser("update", help="Update fields of an existing bibliography entry")
+    p_bupdate.add_argument("cite_key", help="Citation key of reference to update")
+    p_bupdate.add_argument("--title", help="New title")
+    p_bupdate.add_argument("--author", action="append", help="New author name(s)")
+    p_bupdate.add_argument("--year", type=int, help="New publication year")
+    p_bupdate.add_argument("--journal", help="New journal/venue name")
+    p_bupdate.add_argument("--volume", help="New volume")
+    p_bupdate.add_argument("--issue", help="New issue/number")
+    p_bupdate.add_argument("--pages", help="New pages")
+    p_bupdate.add_argument("--doi", help="New DOI")
+    p_bupdate.add_argument("--url", help="New URL")
+    p_bupdate.add_argument("--abstract", help="New abstract")
+
+    # bib delete
+    p_bdel = bib_subs.add_parser("delete", help="Delete a reference from the bibliography")
+    p_bdel.add_argument("cite_key", help="Citation key of reference to delete")
+    p_bdel.add_argument("-y", "--yes", action="store_true", help="Skip confirmation prompt")
+
+    # bib import
+    p_bimp = bib_subs.add_parser("import", help="Import references from BibTeX, CSL-JSON, RIS, or DOI")
+    p_bimp.add_argument("source", help="File path, DOI string, or raw content")
+    p_bimp.add_argument(
+        "--format",
+        choices=["auto", "bibtex", "csl-json", "ris", "doi"],
+        default="auto",
+        help="Format of source (default: auto)",
+    )
+
+    # bib export
+    p_bexp = bib_subs.add_parser("export", help="Export bibliography formatted in selected CSL style and format")
+    p_bexp.add_argument("--output", required=True, help="Destination output file path")
+    p_bexp.add_argument(
+        "--style",
+        choices=["apa", "ieee", "harvard", "chicago", "chicago-note", "mla", "vancouver", "oscola", "indonesia", "bibtex", "ris", "csl-json"],
+        default="apa",
+        help="Citation style (default: apa)",
+    )
+    p_bexp.add_argument(
+        "--format",
+        choices=["markdown", "text", "html", "json", "bibtex", "ris"],
+        default="markdown",
+        help="Output document format (default: markdown)",
+    )
+    p_bexp.add_argument(
+        "--corpus",
+        choices=["all", "literature", "putusan", "web"],
+        default="all",
+        help="Filter by corpus (default: all)",
+    )
+    p_bexp.add_argument("--query", help="Filter by search query")
+    p_bexp.add_argument("--limit", type=int, default=500, help="Maximum entries to export (default: 500)")
+
     return parser
 

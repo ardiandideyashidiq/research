@@ -10,6 +10,7 @@ from loguru import logger
 
 from research.app import ResearchApp
 from research.cli.parser import build_parser
+from research.db.models import PublicationRecord
 from research.pipeline.models import PipelineConfig
 
 
@@ -429,6 +430,216 @@ async def _async_main(args: Any) -> int:
                 )
                 cards_count = len(app.cards.list_cards(corpus=args.corpus, tag=args.tag))
                 print(f"[+] Exported {cards_count} review cards -> {out_path} ({len(content):,} bytes)\n")
+                return 0
+
+        if cmd == "bib":
+            sub = getattr(args, "bib_action", None)
+            if not sub:
+                print("\n[-] Error: Please specify a bib action: list, show, add, update, delete, import, export.")
+                print("    Run 'research bib --help' for details.\n")
+                return 1
+
+            if sub == "list":
+                records = app.bib.list(
+                    corpus=args.corpus,
+                    year=args.year,
+                    author=args.author,
+                    journal=args.journal,
+                    query=args.query,
+                    limit=args.limit,
+                    offset=args.offset,
+                )
+                if not records:
+                    print(f"\n[-] No publications found matching criteria (corpus={args.corpus}, query={args.query or 'none'}).\n")
+                    return 0
+
+                print(f"\n[+] Bibliography ({len(records)} entries, style={args.style.upper()}):\n")
+                for i, r in enumerate(records, 1):
+                    citation = app.bib.format_citation(r, style=args.style, index=i)
+                    print(f"[{i}] [{r.cite_key}] ({r.entry_type})")
+                    print(f"    {citation}")
+                    if args.style not in ("bibtex", "ris", "csl-json"):
+                        in_text = app.bib.format_in_text(r, style=args.style, index=i)
+                        print(f"    In-text: {in_text}")
+                    print()
+                return 0
+
+            if sub == "show":
+                rec = app.bib.get(args.cite_key)
+                if not rec:
+                    print(f"\n[-] Publication '{args.cite_key}' not found in database.\n")
+                    return 1
+
+                print(f"\n=== Reference: {rec.cite_key} ===")
+                print(f"Title:       {rec.title}")
+                print(f"Authors:     {', '.join(rec.authors) if rec.authors else 'Anonymous'}")
+                print(f"Year:        {rec.year or 'n.d.'}")
+                print(f"Type:        {rec.entry_type}")
+                print(f"Journal:     {rec.journal or 'N/A'}")
+                if rec.volume or rec.number or rec.pages:
+                    print(f"Details:     Vol. {rec.volume or '-'}, No. {rec.number or '-'}, pp. {rec.pages or '-'}")
+                if rec.doi:
+                    print(f"DOI:         {rec.doi}")
+                if rec.url:
+                    print(f"URL:         {rec.url}")
+                print("==================================\n")
+
+                if args.style == "all":
+                    styles = ["apa", "ieee", "harvard", "chicago", "chicago-note", "mla", "vancouver", "oscola", "indonesia"]
+                    print("--- Formatted Citations (Multi-CSL) ---")
+                    for st in styles:
+                        cite_str = app.bib.format_citation(rec, style=st)
+                        in_text = app.bib.format_in_text(rec, style=st)
+                        print(f"[{st.upper(): <12}] {cite_str}")
+                        print(f"  └ In-text:   {in_text}\n")
+
+                    print("--- Raw BibTeX ---")
+                    print(app.bib.format_citation(rec, style="bibtex"))
+                    print()
+                else:
+                    cite_str = app.bib.format_citation(rec, style=args.style)
+                    print(f"[{args.style.upper()}] {cite_str}")
+                    if args.in_text:
+                        in_text = app.bib.format_in_text(rec, style=args.style)
+                        print(f"In-text:     {in_text}")
+                    print()
+                return 0
+
+            if sub == "add":
+                authors_list: list[str] = []
+                if args.author:
+                    for a_arg in args.author:
+                        for a_item in a_arg.split(";"):
+                            if a_item.strip():
+                                authors_list.append(a_item.strip())
+
+                rec = PublicationRecord(
+                    cite_key=args.cite_key or "",
+                    entry_type=args.entry_type,
+                    title=args.title,
+                    authors=authors_list,
+                    journal=args.journal,
+                    year=args.year,
+                    volume=args.volume,
+                    number=args.issue,
+                    pages=args.pages,
+                    doi=args.doi,
+                    url=args.url,
+                    abstract=args.abstract,
+                    sources=["manual_cli_add"],
+                )
+                saved = app.bib.create(rec)
+                print(f"\n[+] Successfully added reference: `{saved.cite_key}`")
+                print(f"    APA: {app.bib.format_citation(saved, style='apa')}\n")
+                return 0
+
+            if sub == "update":
+                updates: dict[str, Any] = {}
+                if args.title:
+                    updates["title"] = args.title
+                if args.year:
+                    updates["year"] = args.year
+                if args.journal:
+                    updates["journal"] = args.journal
+                if args.volume:
+                    updates["volume"] = args.volume
+                if args.issue:
+                    updates["number"] = args.issue
+                if args.pages:
+                    updates["pages"] = args.pages
+                if args.doi:
+                    updates["doi"] = args.doi
+                if args.url:
+                    updates["url"] = args.url
+                if args.abstract:
+                    updates["abstract"] = args.abstract
+                if args.author:
+                    authors_list = []
+                    for a_arg in args.author:
+                        for a_item in a_arg.split(";"):
+                            if a_item.strip():
+                                authors_list.append(a_item.strip())
+                    updates["authors"] = authors_list
+
+                if not updates:
+                    print("\n[-] Error: No fields specified to update.\n")
+                    return 1
+
+                updated = app.bib.update(args.cite_key, **updates)
+                if not updated:
+                    print(f"\n[-] Error: Reference '{args.cite_key}' not found in database.\n")
+                    return 1
+
+                print(f"\n[+] Reference '{args.cite_key}' updated successfully:")
+                print(f"    APA: {app.bib.format_citation(updated, style='apa')}\n")
+                return 0
+
+            if sub == "delete":
+                existing = app.bib.get(args.cite_key)
+                if not existing:
+                    print(f"\n[-] Error: Reference '{args.cite_key}' not found in database.\n")
+                    return 1
+
+                if not args.yes:
+                    confirm = input(f"Are you sure you want to delete '{args.cite_key}'? [y/N]: ").strip().lower()
+                    if confirm not in ("y", "yes"):
+                        print("[*] Aborted.")
+                        return 0
+
+                deleted = app.bib.delete(args.cite_key)
+                if deleted:
+                    print(f"\n[+] Reference '{args.cite_key}' deleted from database and FTS indexes.\n")
+                else:
+                    print(f"\n[-] Failed to delete '{args.cite_key}'.\n")
+                return 0
+
+            if sub == "import":
+                src = args.source.strip()
+                fmt = args.format
+
+                # Auto-detect format if requested
+                if fmt == "auto":
+                    if src.startswith("10.") or "doi.org/" in src:
+                        fmt = "doi"
+                    elif src.endswith(".ris"):
+                        fmt = "ris"
+                    elif src.endswith(".json"):
+                        fmt = "csl-json"
+                    elif src.endswith(".bib") or "@" in src:
+                        fmt = "bibtex"
+                    else:
+                        fmt = "bibtex"
+
+                print(f"\n[+] Importing references (format={fmt}, source={src})...")
+                if fmt == "doi":
+                    rec = app.bib.import_doi(src)
+                    if rec:
+                        print(f"[+] Successfully imported DOI: `{rec.cite_key}` - {rec.title}")
+                    else:
+                        print(f"[-] Failed to import DOI '{src}'.")
+                elif fmt == "bibtex":
+                    imported = app.bib.import_bibtex(src)
+                    print(f"[+] Successfully imported {len(imported)} references from BibTeX.")
+                elif fmt == "csl-json":
+                    imported = app.bib.import_csl_json(src)
+                    print(f"[+] Successfully imported {len(imported)} references from CSL-JSON.")
+                elif fmt == "ris":
+                    imported = app.bib.import_ris(src)
+                    print(f"[+] Successfully imported {len(imported)} references from RIS.")
+                print()
+                return 0
+
+            if sub == "export":
+                print(f"\n[+] Exporting bibliography (style={args.style}, format={args.format}, corpus={args.corpus})...")
+                out_path = app.bib.export_bibliography(
+                    args.output,
+                    style=args.style,
+                    output_format=args.format,
+                    corpus=args.corpus,
+                    query=args.query,
+                    limit=args.limit,
+                )
+                print(f"[+] Export complete -> {out_path}\n")
                 return 0
 
     finally:
