@@ -18,6 +18,7 @@
 - **Cross-Corpus Unified Retrieval & Hybrid RRF**: Simultaneous semantic search across academic literature (`literature`), court decisions (`putusan`), and web findings (`web`) fusing SQLite FTS5 BM25 and ONNX dense multilingual embeddings (`paraphrase-multilingual-MiniLM-L12-v2`) via Reciprocal Rank Fusion ($k=60$).
 - **Literature Review Card System & Matrix Synthesis**: Heuristic & milestone-aware extraction across papers and court rulings into structured research cards (*Isu Hukum*, *Teori/Dasar Hukum*, *Metodologi*, *Temuan Utama/Amar*, *Research Gap*, *Positioning*), researcher tagging/annotations, and multi-format matrix export (GFM table + detailed cards in Markdown, UTF-8 BOM CSV for Excel, and JSON).
 - **Full CRUD Bibliography Manager & Multi-CSL Engine**: Comprehensive reference CRUD (create, import from BibTeX/CSL-JSON/RIS/DOI, update, delete, FTS search), with instant citation generation across 12 CSL & data formats (APA 7th, IEEE, Harvard, Chicago Author-Date & Note, MLA 9th, Vancouver, OSCOLA, Indonesian Legal, BibTeX, RIS, CSL-JSON) for in-text and bibliography lists.
+- **Normative Legal Research Toolkit (`workflow`, `irac`, `scaffold`, `audit-traceability`)**: End-to-end operationalization of the 20-stage normative legal research methodology (`workflow.md`) with 7-phase gate-check tracking, formal deductive syllogism (IRAC) building with criminal law analogy guards, automated 5-chapter thesis scaffolding, and citation traceability auditing.
 - **End-to-End Autonomous Pipeline**: One-command streaming or staged pipeline orchestrating discovery, snowballing, downloading, conversion, and RAG indexing.
 
 ---
@@ -640,6 +641,139 @@ asyncio.run(main())
 
 ---
 
+### 14. Normative Legal Research Workflow Tracker (`workflow`)
+
+Operates the 20-stage, 7-phase methodology defined in `workflow.md`. Manages project state, gate-check validations, theoretical frameworks, and exports methodological audit trails.
+
+#### CLI Usage
+```bash
+# Initialize a new normative thesis research project
+uv run research workflow init "Pertanggungjawaban Pidana AI" \
+  --author "Budi Santoso" \
+  --typology wet_vacuum \
+  --approaches "statute,conceptual,comparative" \
+  --questions "Bagaimana kualifikasi perbuatan AI?;Bagaimana preskripsi de lege ferenda?"
+
+# Display the 20-stage interactive progress dashboard
+uv run research workflow status
+
+# Update stage gate check and record notes / theoretical framework
+uv run research workflow check 1 --pass --notes "Isu murni norma hukum mengenai ketiadaan subjek hukum AI"
+uv run research workflow check 6 --grand "Keadilan Substantif" --middle "Kebijakan Kriminal" --applied "Strict Liability"
+
+# Export complete methodological audit trail to Markdown
+uv run research workflow export --output logs/metodologi_audit.md
+```
+
+#### Python API
+```python
+from research.app import ResearchApp
+
+app = ResearchApp()
+proj = app.workflow.init_project(
+    title="Pertanggungjawaban Pidana AI",
+    typology="wet_vacuum",
+    approaches=["statute", "conceptual"],
+)
+app.workflow.check_stage(stage_num=1, passed=True, notes="Das sollen vs das sein valid.")
+print(app.workflow.render_status_dashboard())
+app.close_sync()
+```
+
+---
+
+### 15. Deductive Legal Syllogism & IRAC Builder (`irac`)
+
+Constructs formal legal syllogisms ($p$: Premis Mayor, $q$: Premis Minor, $r$: Konklusi) formatted in IRAC (*Issue, Rule, Analysis, Conclusion*) with automatic logic validation and criminal law analogy violation guard per Tahap 15.
+
+#### CLI Usage
+```bash
+# Add a deductive legal syllogism
+uv run research irac add \
+  --issue "Apakah penyedia sistem AI dapat dipidana atas kelalaian algoritma?" \
+  --rule "Pasal 359 KUHP jo. UU ITE" \
+  --facts "Pengembang X lalai memvalidasi dataset kendali kemudi hingga menimbulkan kecelakaan" \
+  --conclusion "Pengembang X memenuhi unsur kealpaan (culpa) yang mengakibatkan matinya orang" \
+  --domain pidana \
+  --method interpretasi_teleologis \
+  --cite-keys "Santoso2025AI"
+
+# List registered syllogisms
+uv run research irac list
+
+# Validate all syllogisms for logic fallacies & criminal analogy violations
+uv run research irac validate
+
+# Export IRAC blocks directly to Markdown for insertion into Bab III / Bab IV
+uv run research irac export --output data/bab3_analisis.md
+```
+
+#### Python API
+```python
+from research.app import ResearchApp
+
+app = ResearchApp()
+syl = app.irac.add_syllogism(
+    issue="Status hukum AI",
+    rule_major="Pasal 362 KUHP",
+    facts_minor="Terdakwa mengambil kode digital secara tanpa hak",
+    conclusion="Kode digital terkualifikasi sebagai barang imateriel",
+    legal_domain="pidana",
+    method_type="interpretasi_teleologis",
+)
+warnings = syl.validate_logic()
+print("Logic warnings:", warnings)
+app.close_sync()
+```
+
+---
+
+### 16. Skripsi 5-Chapter Thesis Scaffolder (`scaffold`)
+
+Generates the standard 5-chapter thesis Markdown skeleton (`BAB_I_PENDAHULUAN.md`, `BAB_II_TINJAUAN_PUSTAKA.md`, `BAB_III_PEMBAHASAN_1.md`, `BAB_IV_PEMBAHASAN_2.md`, `BAB_V_PENUTUP.md`, `DAFTAR_PUSTAKA.md`) linked dynamically to the active project state, theoretical framework, and IRAC arguments.
+
+#### CLI Usage
+```bash
+# Generate complete 5-chapter thesis draft directory
+uv run research scaffold --output-dir draft_skripsi/ --style indonesia
+```
+
+#### Python API
+```python
+from research.app import ResearchApp
+
+app = ResearchApp()
+files = app.scaffolder.generate_draft(output_dir="draft_skripsi", style="indonesia")
+for chapter, path in files.items():
+    print(f"- {chapter.upper()}: {path}")
+app.close_sync()
+```
+
+---
+
+### 17. Citation Traceability Auditor (`audit-traceability`)
+
+Scans thesis draft chapters, verifies in-text citations and statutory mentions against the database, catches ghost citations (*no fabrication* rule per Tahap 20), and builds an audit report.
+
+#### CLI Usage
+```bash
+# Audit draft skripsi directory against database citations
+uv run research audit-traceability --draft-dir draft_skripsi/ --output draft_skripsi/audit_report.md
+```
+
+#### Python API
+```python
+from research.app import ResearchApp
+
+app = ResearchApp()
+report = app.auditor.audit_drafts("draft_skripsi")
+print(f"Verified keys: {len(report.verified_cite_keys)}, Ghost keys: {len(report.ghost_cite_keys)}")
+print(report.to_markdown())
+app.close_sync()
+```
+
+---
+
 ## Code Organization
 
 ```
@@ -647,8 +781,14 @@ src/research/
 ├── __init__.py           # Lazy app loader (get_app) & CLI entry point (research:main)
 ├── app.py                # ResearchApp unified application facade
 ├── cli/                  # Production CLI subcommands and runner
-│   ├── parser.py         # Argument parser specification with 13 subcommands
+│   ├── parser.py         # Argument parser specification with 17 subcommands
 │   └── main.py           # Async CLI execution handlers & signal management
+├── normative/            # Normative legal research toolkit supporting workflow.md
+│   ├── models.py         # NormativeProject, LegalSyllogism, AuditReport, STAGE_DEFINITIONS (1-20)
+│   ├── workflow.py       # WorkflowManager (20-stage state tracker, gate-checks, audit export)
+│   ├── irac.py           # IRACManager (deductive legal syllogisms, logic fallacies & analogy guard)
+│   ├── scaffold.py       # ThesisScaffolder (5-chapter skripsi markdown generator linked to DB)
+│   └── traceability.py   # TraceabilityAuditor (draft citation scanner, ghost detector, primary sources)
 ├── bibtex/               # BibTeX parser, normalizer, and SQLite/JSON exporter
 │   ├── models.py         # BibEntry dataclass with .to_publication() mapping
 │   ├── parser.py         # parse_bib_file, parse_bib_files, expand_bib_paths

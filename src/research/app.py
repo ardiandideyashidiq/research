@@ -17,6 +17,10 @@ from research.db.models import PublicationRecord
 from research.downloader.downloader import DownloadManager
 from research.google_scholar.client import GoogleScholarClient
 from research.normalizer.normalizer import normalize_record
+from research.normative.irac import IRACManager
+from research.normative.scaffold import ThesisScaffolder
+from research.normative.traceability import TraceabilityAuditor
+from research.normative.workflow import WorkflowManager
 from research.pdf.converter import PDFConverter
 from research.pdf.models import ConversionOptions, ConvertedDocument
 from research.pipeline.models import PipelineConfig, PipelineResult
@@ -58,19 +62,29 @@ class ResearchApp:
         self.db = DatabaseManager(db_path)
         self.cache = HttpCache(db_path=cache_db_path or db_path, policy=cache_policy)
         self.providers = ProviderRegistry(db=self.db, cache=self.cache)
-        self.downloader = DownloadManager(self.db, download_dir=download_dir, cache=self.cache)
-        self.snowball = SnowballOrchestrator(self.db, config=SnowballConfig(), cache=self.cache)
+        self.downloader = DownloadManager(
+            self.db, download_dir=download_dir, cache=self.cache
+        )
+        self.snowball = SnowballOrchestrator(
+            self.db, config=SnowballConfig(), cache=self.cache
+        )
         self.tavily = TavilyClient(api_keys=tavily_keys)
         self.web_search = WebSearchEngine(
             db=self.db,
             tavily_keys=tavily_keys,
             output_dir=web_search_dir,
         )
-        self.scholar = GoogleScholarClient(proxy=scholar_proxy, proxy_pool=proxy_pool, cache=self.cache)
+        self.scholar = GoogleScholarClient(
+            proxy=scholar_proxy, proxy_pool=proxy_pool, cache=self.cache
+        )
         self.pdf = PDFConverter()
         self.retriever = RAGRetriever(self.db)
         self.cards = CardManager(self.db)
         self.bib = BibliographyManager(self.db)
+        self.workflow = WorkflowManager(self.db)
+        self.irac = IRACManager(self.db)
+        self.scaffolder = ThesisScaffolder(self.db, self.workflow, self.irac, self.bib)
+        self.auditor = TraceabilityAuditor(self.db)
         self.pipeline = ResearchPipeline(app=self)
 
     async def close(self) -> None:
@@ -101,7 +115,20 @@ class ResearchApp:
         except Exception as e:  # noqa: BLE001
             logger.debug("Error closing cache: {}", e)
 
+    def close_sync(self) -> None:
+        """Synchronously close all network clients, background pools, and database connections."""
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            loop = None
+
+        if loop and loop.is_running():
+            loop.create_task(self.close())
+        else:
+            asyncio.run(self.close())
+
     async def __aenter__(self) -> Self:
+
         return self
 
     async def __aexit__(
@@ -169,7 +196,9 @@ class ResearchApp:
             self.db.create(rec)
             indexed += 1
 
-        logger.info(f"Loaded and indexed {indexed} entries from {[p.name for p in file_paths]}")
+        logger.info(
+            f"Loaded and indexed {indexed} entries from {[p.name for p in file_paths]}"
+        )
         return indexed
 
     async def search_academic(

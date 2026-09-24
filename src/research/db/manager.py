@@ -98,7 +98,10 @@ class DatabaseManager:
         )
 
         # Auto-migrate missing columns for existing tables
-        existing_cols = {row[1] for row in cursor.execute("PRAGMA table_info(publications)").fetchall()}
+        existing_cols = {
+            row[1]
+            for row in cursor.execute("PRAGMA table_info(publications)").fetchall()
+        }
         col_defs = {
             "entry_type": "TEXT NOT NULL DEFAULT 'article'",
             "title": "TEXT NOT NULL DEFAULT ''",
@@ -128,16 +131,28 @@ class DatabaseManager:
         }
         for col_name, col_def in col_defs.items():
             if col_name not in existing_cols:
-                cursor.execute(f"ALTER TABLE publications ADD COLUMN {col_name} {col_def}")
+                cursor.execute(
+                    f"ALTER TABLE publications ADD COLUMN {col_name} {col_def}"
+                )
 
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_pub_year ON publications(year)")
-        cursor.execute("CREATE INDEX IF NOT EXISTS idx_pub_journal ON publications(journal)")
+        cursor.execute(
+            "CREATE INDEX IF NOT EXISTS idx_pub_journal ON publications(journal)"
+        )
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_pub_doi ON publications(doi)")
-        cursor.execute("CREATE INDEX IF NOT EXISTS idx_pub_status ON publications(download_status)")
-        cursor.execute("CREATE INDEX IF NOT EXISTS idx_pub_is_ojs ON publications(is_ojs)")
-        cursor.execute("CREATE INDEX IF NOT EXISTS idx_pub_file_hash ON publications(file_hash)")
+        cursor.execute(
+            "CREATE INDEX IF NOT EXISTS idx_pub_status ON publications(download_status)"
+        )
+        cursor.execute(
+            "CREATE INDEX IF NOT EXISTS idx_pub_is_ojs ON publications(is_ojs)"
+        )
+        cursor.execute(
+            "CREATE INDEX IF NOT EXISTS idx_pub_file_hash ON publications(file_hash)"
+        )
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_pub_url ON publications(url)")
-        cursor.execute("CREATE INDEX IF NOT EXISTS idx_pub_pdf_url ON publications(pdf_url)")
+        cursor.execute(
+            "CREATE INDEX IF NOT EXISTS idx_pub_pdf_url ON publications(pdf_url)"
+        )
 
         # Create FTS5 virtual table for publications
         try:
@@ -175,11 +190,17 @@ class DatabaseManager:
             """
         )
         # Auto-migrate corpus in chunks if missing
-        chunk_cols = {row[1] for row in cursor.execute("PRAGMA table_info(chunks)").fetchall()}
+        chunk_cols = {
+            row[1] for row in cursor.execute("PRAGMA table_info(chunks)").fetchall()
+        }
         if "corpus" not in chunk_cols:
-            cursor.execute("ALTER TABLE chunks ADD COLUMN corpus TEXT NOT NULL DEFAULT 'literature'")
+            cursor.execute(
+                "ALTER TABLE chunks ADD COLUMN corpus TEXT NOT NULL DEFAULT 'literature'"
+            )
 
-        cursor.execute("CREATE INDEX IF NOT EXISTS idx_chunks_cite_key ON chunks(cite_key)")
+        cursor.execute(
+            "CREATE INDEX IF NOT EXISTS idx_chunks_cite_key ON chunks(cite_key)"
+        )
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_chunks_corpus ON chunks(corpus)")
 
         # Create chunk_embeddings table for dense vectors
@@ -208,6 +229,52 @@ class DatabaseManager:
         except sqlite3.OperationalError as e:
             logger.debug(f"chunks_fts already initialized or FTS5 error: {e}")
 
+        # Create normative_projects and legal_syllogisms tables
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS normative_projects (
+                project_id TEXT PRIMARY KEY,
+                title TEXT NOT NULL,
+                author TEXT,
+                typology TEXT,
+                approaches TEXT,
+                research_questions TEXT,
+                grand_theory TEXT,
+                middle_theory TEXT,
+                applied_theory TEXT,
+                principles TEXT,
+                current_stage INTEGER NOT NULL DEFAULT 1,
+                gate_checks TEXT NOT NULL DEFAULT '{}',
+                stage_notes TEXT NOT NULL DEFAULT '{}',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """
+        )
+
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS legal_syllogisms (
+                syllogism_id TEXT PRIMARY KEY,
+                project_id TEXT,
+                research_question_idx INTEGER DEFAULT 1,
+                issue TEXT NOT NULL,
+                rule_major TEXT NOT NULL,
+                facts_minor TEXT NOT NULL,
+                legal_domain TEXT DEFAULT 'umum',
+                method_type TEXT NOT NULL,
+                conclusion TEXT NOT NULL,
+                cite_keys TEXT DEFAULT '[]',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                FOREIGN KEY (project_id) REFERENCES normative_projects(project_id) ON DELETE CASCADE
+            )
+            """
+        )
+        cursor.execute(
+            "CREATE INDEX IF NOT EXISTS idx_syllogisms_proj ON legal_syllogisms(project_id)"
+        )
+
         conn.commit()
 
     def _sync_fts_entry(self, cite_key: str) -> None:
@@ -225,15 +292,26 @@ class DatabaseManager:
                     INSERT OR REPLACE INTO publications_fts(rowid, cite_key, title, authors, journal, abstract)
                     VALUES (?, ?, ?, ?, ?, ?)
                     """,
-                    (row["rowid"], row["cite_key"], row["title"], row["authors"], row["journal"] or "", row["abstract"] or ""),
+                    (
+                        row["rowid"],
+                        row["cite_key"],
+                        row["title"],
+                        row["authors"],
+                        row["journal"] or "",
+                        row["abstract"] or "",
+                    ),
                 )
             else:
-                cursor.execute("DELETE FROM publications_fts WHERE cite_key = ?", (cite_key,))
+                cursor.execute(
+                    "DELETE FROM publications_fts WHERE cite_key = ?", (cite_key,)
+                )
             conn.commit()
         except sqlite3.OperationalError:
             pass
 
-    def create(self, record: PublicationRecord | dict[str, Any], *, merge: bool = True) -> PublicationRecord:
+    def create(
+        self, record: PublicationRecord | dict[str, Any], *, merge: bool = True
+    ) -> PublicationRecord:
         """Insert or replace a publication record (Create/Upsert)."""
         if isinstance(record, dict):
             rec = PublicationRecord.from_row(record)
@@ -244,7 +322,10 @@ class DatabaseManager:
         if merge:
             existing = self.get(rec.cite_key)
             if existing:
-                if rec.download_status == "pending" and existing.download_status != "pending":
+                if (
+                    rec.download_status == "pending"
+                    and existing.download_status != "pending"
+                ):
                     rec.download_status = existing.download_status
                     rec.download_path = existing.download_path
                     rec.download_error = existing.download_error
@@ -334,7 +415,10 @@ class DatabaseManager:
             return None
         conn = self.get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM publications WHERE LOWER(doi) = LOWER(?) LIMIT 1", (doi.strip(),))
+        cursor.execute(
+            "SELECT * FROM publications WHERE LOWER(doi) = LOWER(?) LIMIT 1",
+            (doi.strip(),),
+        )
         row = cursor.fetchone()
         return PublicationRecord.from_row(dict(row)) if row else None
 
@@ -344,7 +428,9 @@ class DatabaseManager:
             return None
         conn = self.get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM publications WHERE url = ? LIMIT 1", (url.strip(),))
+        cursor.execute(
+            "SELECT * FROM publications WHERE url = ? LIMIT 1", (url.strip(),)
+        )
         row = cursor.fetchone()
         return PublicationRecord.from_row(dict(row)) if row else None
 
@@ -354,7 +440,9 @@ class DatabaseManager:
             return None
         conn = self.get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM publications WHERE pdf_url = ? LIMIT 1", (pdf_url.strip(),))
+        cursor.execute(
+            "SELECT * FROM publications WHERE pdf_url = ? LIMIT 1", (pdf_url.strip(),)
+        )
         row = cursor.fetchone()
         return PublicationRecord.from_row(dict(row)) if row else None
 
@@ -364,13 +452,20 @@ class DatabaseManager:
             return None
         conn = self.get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM publications WHERE file_hash = ? LIMIT 1", (file_hash.strip(),))
+        cursor.execute(
+            "SELECT * FROM publications WHERE file_hash = ? LIMIT 1",
+            (file_hash.strip(),),
+        )
         row = cursor.fetchone()
         return PublicationRecord.from_row(dict(row)) if row else None
 
-    def find_existing(self, record: PublicationRecord | dict[str, Any]) -> PublicationRecord | None:
+    def find_existing(
+        self, record: PublicationRecord | dict[str, Any]
+    ) -> PublicationRecord | None:
         """Hierarchically find an existing publication record by cite_key, DOI, PDF URL, URL, or normalized title."""
-        cite_key = record.get("cite_key") if isinstance(record, dict) else record.cite_key
+        cite_key = (
+            record.get("cite_key") if isinstance(record, dict) else record.cite_key
+        )
         if cite_key:
             rec = self.get(cite_key)
             if rec:
@@ -490,11 +585,30 @@ class DatabaseManager:
         cursor = conn.cursor()
 
         allowed_fields = {
-            "title", "authors", "journal", "year", "volume", "number",
-            "pages", "doi", "url", "abstract", "sources", "pdf_url",
-            "is_ojs", "download_status", "download_path", "download_error",
-            "downloaded_at", "file_size", "file_hash", "content_type",
-            "full_metadata", "raw_fields", "markdown_path", "is_chunked",
+            "title",
+            "authors",
+            "journal",
+            "year",
+            "volume",
+            "number",
+            "pages",
+            "doi",
+            "url",
+            "abstract",
+            "sources",
+            "pdf_url",
+            "is_ojs",
+            "download_status",
+            "download_path",
+            "download_error",
+            "downloaded_at",
+            "file_size",
+            "file_hash",
+            "content_type",
+            "full_metadata",
+            "raw_fields",
+            "markdown_path",
+            "is_chunked",
         }
 
         set_clauses: list[str] = []
@@ -504,7 +618,12 @@ class DatabaseManager:
             if k not in allowed_fields:
                 continue
             set_clauses.append(f"{k} = ?")
-            if k in {"authors", "sources", "full_metadata", "raw_fields"} and not isinstance(v, str):
+            if k in {
+                "authors",
+                "sources",
+                "full_metadata",
+                "raw_fields",
+            } and not isinstance(v, str):
                 values.append(json.dumps(v, ensure_ascii=False))
             elif k == "is_ojs" and v is not None:
                 values.append(1 if v else 0)
@@ -560,7 +679,9 @@ class DatabaseManager:
         conn.commit()
         if deleted:
             try:
-                cursor.execute("DELETE FROM publications_fts WHERE cite_key = ?", (cite_key,))
+                cursor.execute(
+                    "DELETE FROM publications_fts WHERE cite_key = ?", (cite_key,)
+                )
                 conn.commit()
             except sqlite3.OperationalError:
                 pass
@@ -584,7 +705,9 @@ class DatabaseManager:
         conn = self.get_connection()
         cursor = conn.cursor()
         if status is not None:
-            cursor.execute("SELECT COUNT(*) FROM publications WHERE download_status = ?", (status,))
+            cursor.execute(
+                "SELECT COUNT(*) FROM publications WHERE download_status = ?", (status,)
+            )
         else:
             cursor.execute("SELECT COUNT(*) FROM publications")
         return cursor.fetchone()[0]
@@ -593,7 +716,9 @@ class DatabaseManager:
         """Return counts broken down by download_status."""
         conn = self.get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT download_status, COUNT(*) FROM publications GROUP BY download_status")
+        cursor.execute(
+            "SELECT download_status, COUNT(*) FROM publications GROUP BY download_status"
+        )
         return dict(cursor.fetchall())
 
     def insert_chunks(self, chunks: list[dict[str, Any]]) -> int:
@@ -801,7 +926,9 @@ class DatabaseManager:
             return [dict(r) for r in rows]
         except sqlite3.OperationalError:
             pattern = f"%{query}%"
-            fallback_conditions = ["(c.content LIKE ? OR c.section_title LIKE ? OR c.paper_title LIKE ?)"]
+            fallback_conditions = [
+                "(c.content LIKE ? OR c.section_title LIKE ? OR c.paper_title LIKE ?)"
+            ]
             fallback_params: list[Any] = [pattern, pattern, pattern]
             if cite_key:
                 fallback_conditions.append("c.cite_key = ?")
@@ -813,7 +940,7 @@ class DatabaseManager:
 
             sql = f"""
                 SELECT c.*, 0.0 as rank FROM chunks c
-                WHERE {' AND '.join(fallback_conditions)}
+                WHERE {" AND ".join(fallback_conditions)}
                 LIMIT ?
             """
             cursor.execute(sql, fallback_params)
@@ -833,7 +960,9 @@ class DatabaseManager:
         total_chunks = cursor.execute("SELECT COUNT(*) FROM chunks").fetchone()[0]
         total_embeddings = 0
         try:
-            total_embeddings = cursor.execute("SELECT COUNT(*) FROM chunk_embeddings").fetchone()[0]
+            total_embeddings = cursor.execute(
+                "SELECT COUNT(*) FROM chunk_embeddings"
+            ).fetchone()[0]
         except sqlite3.OperationalError:
             pass
 

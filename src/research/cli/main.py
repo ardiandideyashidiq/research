@@ -93,7 +93,9 @@ async def _async_main(args: Any) -> int:
                     d_cnt = corpus_docs.get(c_name, 0)
                     unit = "court judgments" if c_name == "putusan" else "documents"
                     if d_cnt:
-                        print(f"    - {c_name: <16}: {c_cnt} chunks (from {d_cnt} {unit})")
+                        print(
+                            f"    - {c_name: <16}: {c_cnt} chunks (from {d_cnt} {unit})"
+                        )
                     else:
                         print(f"    - {c_name: <16}: {c_cnt} chunks")
             print(f"  Dense Embeddings:    {stats.get('total_embeddings', 0)}")
@@ -105,7 +107,9 @@ async def _async_main(args: Any) -> int:
                     f"  HTTP Cached Entries: {cache_info.get('total_cached', 0)} "
                     f"({cache_info.get('active_cached', 0)} active)"
                 )
-                print(f"  HTTP Cache Storage:  {cache_info.get('total_bytes', 0) / 1024:.1f} KB")
+                print(
+                    f"  HTTP Cache Storage:  {cache_info.get('total_bytes', 0) / 1024:.1f} KB"
+                )
             if statuses:
                 print("  Status breakdown:")
                 for st, cnt in sorted(statuses.items()):
@@ -115,17 +119,30 @@ async def _async_main(args: Any) -> int:
 
         if cmd == "pipeline":
             if not args.query and not args.bib:
-                print("\n[-] Error: Please specify a search query or a --bib seed file/directory.\n")
+                print(
+                    "\n[-] Error: Please specify a search query or a --bib seed file/directory.\n"
+                )
                 return 1
 
             if args.bib:
-                raw_paths = [p.strip() for p in args.bib.split(",") if p.strip()] if "," in args.bib else [args.bib]
+                raw_paths = (
+                    [p.strip() for p in args.bib.split(",") if p.strip()]
+                    if "," in args.bib
+                    else [args.bib]
+                )
                 for bp in raw_paths:
                     if not Path(bp).exists():
-                        print(f"\n[-] Error: Specified --bib path does not exist: '{bp}'\n", file=sys.stderr)
+                        print(
+                            f"\n[-] Error: Specified --bib path does not exist: '{bp}'\n",
+                            file=sys.stderr,
+                        )
                         return 1
 
-            provs = [p.strip() for p in args.providers.split(",")] if args.providers else None
+            provs = (
+                [p.strip() for p in args.providers.split(",")]
+                if args.providers
+                else None
+            )
             cfg = PipelineConfig(
                 query=args.query or "",
                 bib_path=args.bib,
@@ -148,15 +165,25 @@ async def _async_main(args: Any) -> int:
             desc = f"query='{args.query}'" if args.query else ""
             if args.bib:
                 bib_type = "dir" if Path(args.bib).is_dir() else "seed"
-                desc += f" (bib {bib_type}='{args.bib}')" if desc else f"bib {bib_type}='{args.bib}'"
+                desc += (
+                    f" (bib {bib_type}='{args.bib}')"
+                    if desc
+                    else f"bib {bib_type}='{args.bib}'"
+                )
             mode_desc = "streaming parallel" if cfg.streaming else "staged parallel"
-            print(f"\n[+] Executing end-to-end research pipeline [{mode_desc}] for: {desc}...")
+            print(
+                f"\n[+] Executing end-to-end research pipeline [{mode_desc}] for: {desc}..."
+            )
             res = await app.pipeline.run(cfg)
             print("\n" + res.summary() + "\n")
             return 0
 
         if cmd == "search":
-            provs = [p.strip() for p in args.providers.split(",")] if args.providers else None
+            provs = (
+                [p.strip() for p in args.providers.split(",")]
+                if args.providers
+                else None
+            )
             print(f"\n[+] Searching for: '{args.query}' (limit={args.limit})...")
             results = []
 
@@ -178,8 +205,10 @@ async def _async_main(args: Any) -> int:
                 results.extend(scholar_res)
 
             print(f"[+] Found {len(results)} publications:\n")
-            for i, r in enumerate(results[:args.limit], start=1):
-                authors_str = ", ".join(r.authors[:3]) + (" et al." if len(r.authors) > 3 else "")
+            for i, r in enumerate(results[: args.limit], start=1):
+                authors_str = ", ".join(r.authors[:3]) + (
+                    " et al." if len(r.authors) > 3 else ""
+                )
                 year_str = f"({r.year})" if r.year else ""
                 print(f"  [{i}] {r.title} {year_str}")
                 print(f"      Cite Key: {r.cite_key} | Authors: {authors_str}")
@@ -190,21 +219,29 @@ async def _async_main(args: Any) -> int:
             return 0
 
         if cmd == "snowball":
-            print(f"\n[+] Snowballing citations for: '{args.cite_key}' (direction={args.direction})...")
+            print(
+                f"\n[+] Snowballing citations for: '{args.cite_key}' (direction={args.direction})..."
+            )
             res = await app.run_snowball(
                 args.cite_key,
                 direction=args.direction,
                 limit_forward=args.limit,
                 limit_backward=args.limit,
             )
-            print(f"\nSnowballing Complete for {res.seed_cite_key} ('{res.seed_title}'):")
+            print(
+                f"\nSnowballing Complete for {res.seed_cite_key} ('{res.seed_title}'):"
+            )
             print(f"  - Forward (Citing):      {res.forward_count} papers")
             print(f"  - Backward (References):  {res.backward_count} papers")
             print(f"  - Newly Indexed to DB:    {res.newly_indexed_count} records\n")
             return 0
 
         if cmd == "download":
-            c_keys = [k.strip() for k in args.cite_keys.split(",")] if args.cite_keys else None
+            c_keys = (
+                [k.strip() for k in args.cite_keys.split(",")]
+                if args.cite_keys
+                else None
+            )
             app.downloader.concurrency = args.concurrency
             if hasattr(args, "timeout") and args.timeout is not None:
                 app.downloader.timeout = args.timeout
@@ -228,13 +265,19 @@ async def _async_main(args: Any) -> int:
                 return 1
 
             concurrency = getattr(args, "concurrency", 4)
-            print(f"\n[+] Concurrently converting {len(files)} PDF document(s) to normalized Markdown (workers={concurrency})...")
+            print(
+                f"\n[+] Concurrently converting {len(files)} PDF document(s) to normalized Markdown (workers={concurrency})..."
+            )
             out_dir = Path(args.output_dir) if args.output_dir else None
 
             sem = asyncio.Semaphore(concurrency)
 
             async def _worker(pdf_file: Path) -> tuple[bool, int, str]:
-                out_md = (out_dir / pdf_file.with_suffix(".md").name) if out_dir else pdf_file.with_suffix(".md")
+                out_md = (
+                    (out_dir / pdf_file.with_suffix(".md").name)
+                    if out_dir
+                    else pdf_file.with_suffix(".md")
+                )
                 async with sem:
                     try:
                         _, conv_doc = await app.pdf.convert_file_async(pdf_file, out_md)
@@ -269,17 +312,23 @@ async def _async_main(args: Any) -> int:
                     converted_count += 1
                     chunks_count += c_count
 
-            print(f"\n[+] Successfully converted {converted_count} files ({chunks_count} RAG chunks indexed).\n")
+            print(
+                f"\n[+] Successfully converted {converted_count} files ({chunks_count} RAG chunks indexed).\n"
+            )
             return 0
 
         if cmd == "query":
             if getattr(args, "embed", False):
-                print("\n[+] Checking and generating missing dense vector embeddings...")
+                print(
+                    "\n[+] Checking and generating missing dense vector embeddings..."
+                )
                 app.retriever.embed_all_chunks()
 
             corpus_str = f" [corpus: {args.corpus}]" if args.corpus != "all" else ""
             mode_str = f" [mode: {args.mode}]"
-            print(f"\n[+] Searching indexed database for: '{args.query}'{mode_str}{corpus_str}...")
+            print(
+                f"\n[+] Searching indexed database for: '{args.query}'{mode_str}{corpus_str}..."
+            )
             results = await app.query_rag(
                 args.query,
                 limit=args.limit,
@@ -298,7 +347,9 @@ async def _async_main(args: Any) -> int:
                 print(f"\n[+] Top {len(results)} Ranked Excerpts:\n")
                 for i, r in enumerate(results, start=1):
                     citation = r.formatted_citation()
-                    print(f"--- [{i}] {citation} (Match: {r.retrieval_mode}, Score: {r.score:.4f}) ---")
+                    print(
+                        f"--- [{i}] {citation} (Match: {r.retrieval_mode}, Score: {r.score:.4f}) ---"
+                    )
                     print(r.chunk.content.strip())
                     print()
             return 0
@@ -315,6 +366,7 @@ async def _async_main(args: Any) -> int:
             else:
                 # BibTeX export
                 from research.bibtex.export import export_to_bibtex_str
+
                 content = export_to_bibtex_str(records)
                 default_file = "tmp/publications_export.bib"
 
@@ -372,7 +424,9 @@ async def _async_main(args: Any) -> int:
             if args.sample and args.sample > 0:
                 pdf_files = pdf_files[: args.sample]
 
-            print(f"\n[+] Processing {len(pdf_files)} Putusan PDF documents (workers={args.concurrency})...")
+            print(
+                f"\n[+] Processing {len(pdf_files)} Putusan PDF documents (workers={args.concurrency})..."
+            )
             results = converter.batch_convert(pdf_files, max_workers=args.concurrency)
 
             total_chunks = sum(len(d.chunks) for d in results)
@@ -397,19 +451,25 @@ async def _async_main(args: Any) -> int:
             converter.export_chunks_json(all_chunks, all_chunks_path)
 
             print("\n[+] Batch Putusan Processing Completed:")
-            print(f"  - Successfully processed: {len(results)} / {len(pdf_files)} documents")
+            print(
+                f"  - Successfully processed: {len(results)} / {len(pdf_files)} documents"
+            )
             print(f"  - Total Pages parsed:    {total_pages:,}")
             print(f"  - Total Semantic Chunks: {total_chunks:,}")
             print(f"  - Output directory:      {out_dir}")
             print(f"  - Consolidated Chunks:   {all_chunks_path}")
             if getattr(args, "index_rag", False):
-                print(f"  - RAG Indexing:          {total_chunks:,} chunks indexed into SQLite")
+                print(
+                    f"  - RAG Indexing:          {total_chunks:,} chunks indexed into SQLite"
+                )
             print()
             return 0
 
         if cmd == "embed":
             print("\n[+] Generating dense vector embeddings for unembedded chunks...")
-            count = app.retriever.embed_all_chunks(batch_size=getattr(args, "batch_size", 64))
+            count = app.retriever.embed_all_chunks(
+                batch_size=getattr(args, "batch_size", 64)
+            )
             print(f"\n[+] Finished! Generated and stored {count} chunk embeddings.\n")
             return 0
 
@@ -426,7 +486,9 @@ async def _async_main(args: Any) -> int:
                 limit=args.limit,
                 auto_index=not args.no_index,
             )
-            print(f"\n[+] Found {len(resp.results)} web results ({resp.response_time}s):")
+            print(
+                f"\n[+] Found {len(resp.results)} web results ({resp.response_time}s):"
+            )
             for i, r in enumerate(resp.results):
                 print(f"\n  [{i + 1}] ({r.provider}) {r.title}")
                 print(f"      URL:      {r.url}")
@@ -452,17 +514,25 @@ async def _async_main(args: Any) -> int:
                 print(f"  Total Cards: {counts['total_cards']}")
                 for c_name, c_cnt in counts.get("corpus_breakdown", {}).items():
                     print(f"    - {c_name:<12}: {c_cnt}")
-                print("\nRun 'research cards --help' to view actions: extract, list, show, edit, export.\n")
+                print(
+                    "\nRun 'research cards --help' to view actions: extract, list, show, edit, export.\n"
+                )
                 return 0
 
             if sub == "extract":
                 if args.cite_key:
-                    print(f"\n[+] Extracting literature review card for: '{args.cite_key}'...")
+                    print(
+                        f"\n[+] Extracting literature review card for: '{args.cite_key}'..."
+                    )
                     card = app.cards.extract_and_save(args.cite_key, force=args.force)
                     if not card:
-                        print(f"[-] Publication '{args.cite_key}' not found in database.\n")
+                        print(
+                            f"[-] Publication '{args.cite_key}' not found in database.\n"
+                        )
                         return 1
-                    print(f"\n[+] Successfully extracted card: [{card.corpus.upper()}] {card.title}")
+                    print(
+                        f"\n[+] Successfully extracted card: [{card.corpus.upper()}] {card.title}"
+                    )
                     print(f"  Isu Hukum:   {card.legal_issue[:100]}...")
                     print(f"  Dasar/Teori: {card.theory[:100]}...")
                     print(f"  Temuan:      {card.findings[:100]}...")
@@ -480,17 +550,23 @@ async def _async_main(args: Any) -> int:
                     limit=args.limit,
                     concurrency=concurrency,
                 )
-                print(f"\n[+] Batch extraction finished: {len(cards)} review cards processed and saved into SQLite.\n")
+                print(
+                    f"\n[+] Batch extraction finished: {len(cards)} review cards processed and saved into SQLite.\n"
+                )
                 return 0
 
             if sub == "list":
-                cards = app.cards.list_cards(corpus=args.corpus, tag=args.tag, query=args.query, limit=args.limit)
+                cards = app.cards.list_cards(
+                    corpus=args.corpus, tag=args.tag, query=args.query, limit=args.limit
+                )
                 if not cards:
                     print("\n  No matching review cards found in database.\n")
                     return 0
 
                 print(f"\n[+] Found {len(cards)} Literature Review Cards:\n")
-                print(f"{'No':<3} | {'Corpus':<10} | {'Tahun':<5} | {'Cite Key':<35} | {'Judul'}")
+                print(
+                    f"{'No':<3} | {'Corpus':<10} | {'Tahun':<5} | {'Cite Key':<35} | {'Judul'}"
+                )
                 print("-" * 90)
                 for i, c in enumerate(cards, start=1):
                     yr = str(c.year) if c.year else "—"
@@ -524,9 +600,13 @@ async def _async_main(args: Any) -> int:
                     notes=args.notes,
                 )
                 if not card:
-                    print(f"[-] Could not find or create review card for '{args.cite_key}'.\n")
+                    print(
+                        f"[-] Could not find or create review card for '{args.cite_key}'.\n"
+                    )
                     return 1
-                print(f"\n[+] Review card for '{card.cite_key}' updated successfully.\n")
+                print(
+                    f"\n[+] Review card for '{card.cite_key}' updated successfully.\n"
+                )
                 return 0
 
             if sub == "export":
@@ -534,7 +614,9 @@ async def _async_main(args: Any) -> int:
                 default_file = f"data/literature_matrix.{out_ext}"
                 out_path = Path(args.output or default_file)
 
-                print(f"\n[+] Exporting literature review matrix (format={args.format}, corpus={args.corpus})...")
+                print(
+                    f"\n[+] Exporting literature review matrix (format={args.format}, corpus={args.corpus})..."
+                )
                 content = app.cards.export_matrix(
                     format=args.format,
                     output_path=out_path,
@@ -542,14 +624,20 @@ async def _async_main(args: Any) -> int:
                     tag=args.tag,
                     include_details=not args.no_details,
                 )
-                cards_count = len(app.cards.list_cards(corpus=args.corpus, tag=args.tag))
-                print(f"[+] Exported {cards_count} review cards -> {out_path} ({len(content):,} bytes)\n")
+                cards_count = len(
+                    app.cards.list_cards(corpus=args.corpus, tag=args.tag)
+                )
+                print(
+                    f"[+] Exported {cards_count} review cards -> {out_path} ({len(content):,} bytes)\n"
+                )
                 return 0
 
         if cmd == "bib":
             sub = getattr(args, "bib_action", None)
             if not sub:
-                print("\n[-] Error: Please specify a bib action: list, show, add, update, delete, import, export.")
+                print(
+                    "\n[-] Error: Please specify a bib action: list, show, add, update, delete, import, export."
+                )
                 print("    Run 'research bib --help' for details.\n")
                 return 1
 
@@ -564,10 +652,14 @@ async def _async_main(args: Any) -> int:
                     offset=args.offset,
                 )
                 if not records:
-                    print(f"\n[-] No publications found matching criteria (corpus={args.corpus}, query={args.query or 'none'}).\n")
+                    print(
+                        f"\n[-] No publications found matching criteria (corpus={args.corpus}, query={args.query or 'none'}).\n"
+                    )
                     return 0
 
-                print(f"\n[+] Bibliography ({len(records)} entries, style={args.style.upper()}):\n")
+                print(
+                    f"\n[+] Bibliography ({len(records)} entries, style={args.style.upper()}):\n"
+                )
                 for i, r in enumerate(records, 1):
                     citation = app.bib.format_citation(r, style=args.style, index=i)
                     print(f"[{i}] [{r.cite_key}] ({r.entry_type})")
@@ -581,17 +673,23 @@ async def _async_main(args: Any) -> int:
             if sub == "show":
                 rec = app.bib.get(args.cite_key)
                 if not rec:
-                    print(f"\n[-] Publication '{args.cite_key}' not found in database.\n")
+                    print(
+                        f"\n[-] Publication '{args.cite_key}' not found in database.\n"
+                    )
                     return 1
 
                 print(f"\n=== Reference: {rec.cite_key} ===")
                 print(f"Title:       {rec.title}")
-                print(f"Authors:     {', '.join(rec.authors) if rec.authors else 'Anonymous'}")
+                print(
+                    f"Authors:     {', '.join(rec.authors) if rec.authors else 'Anonymous'}"
+                )
                 print(f"Year:        {rec.year or 'n.d.'}")
                 print(f"Type:        {rec.entry_type}")
                 print(f"Journal:     {rec.journal or 'N/A'}")
                 if rec.volume or rec.number or rec.pages:
-                    print(f"Details:     Vol. {rec.volume or '-'}, No. {rec.number or '-'}, pp. {rec.pages or '-'}")
+                    print(
+                        f"Details:     Vol. {rec.volume or '-'}, No. {rec.number or '-'}, pp. {rec.pages or '-'}"
+                    )
                 if rec.doi:
                     print(f"DOI:         {rec.doi}")
                 if rec.url:
@@ -599,7 +697,17 @@ async def _async_main(args: Any) -> int:
                 print("==================================\n")
 
                 if args.style == "all":
-                    styles = ["apa", "ieee", "harvard", "chicago", "chicago-note", "mla", "vancouver", "oscola", "indonesia"]
+                    styles = [
+                        "apa",
+                        "ieee",
+                        "harvard",
+                        "chicago",
+                        "chicago-note",
+                        "mla",
+                        "vancouver",
+                        "oscola",
+                        "indonesia",
+                    ]
                     print("--- Formatted Citations (Multi-CSL) ---")
                     for st in styles:
                         cite_str = app.bib.format_citation(rec, style=st)
@@ -681,7 +789,9 @@ async def _async_main(args: Any) -> int:
 
                 updated = app.bib.update(args.cite_key, **updates)
                 if not updated:
-                    print(f"\n[-] Error: Reference '{args.cite_key}' not found in database.\n")
+                    print(
+                        f"\n[-] Error: Reference '{args.cite_key}' not found in database.\n"
+                    )
                     return 1
 
                 print(f"\n[+] Reference '{args.cite_key}' updated successfully:")
@@ -691,18 +801,28 @@ async def _async_main(args: Any) -> int:
             if sub == "delete":
                 existing = app.bib.get(args.cite_key)
                 if not existing:
-                    print(f"\n[-] Error: Reference '{args.cite_key}' not found in database.\n")
+                    print(
+                        f"\n[-] Error: Reference '{args.cite_key}' not found in database.\n"
+                    )
                     return 1
 
                 if not args.yes:
-                    confirm = input(f"Are you sure you want to delete '{args.cite_key}'? [y/N]: ").strip().lower()
+                    confirm = (
+                        input(
+                            f"Are you sure you want to delete '{args.cite_key}'? [y/N]: "
+                        )
+                        .strip()
+                        .lower()
+                    )
                     if confirm not in ("y", "yes"):
                         print("[*] Aborted.")
                         return 0
 
                 deleted = app.bib.delete(args.cite_key)
                 if deleted:
-                    print(f"\n[+] Reference '{args.cite_key}' deleted from database and FTS indexes.\n")
+                    print(
+                        f"\n[+] Reference '{args.cite_key}' deleted from database and FTS indexes.\n"
+                    )
                 else:
                     print(f"\n[-] Failed to delete '{args.cite_key}'.\n")
                 return 0
@@ -728,23 +848,33 @@ async def _async_main(args: Any) -> int:
                 if fmt == "doi":
                     rec = app.bib.import_doi(src)
                     if rec:
-                        print(f"[+] Successfully imported DOI: `{rec.cite_key}` - {rec.title}")
+                        print(
+                            f"[+] Successfully imported DOI: `{rec.cite_key}` - {rec.title}"
+                        )
                     else:
                         print(f"[-] Failed to import DOI '{src}'.")
                 elif fmt == "bibtex":
                     imported = app.bib.import_bibtex(src)
-                    print(f"[+] Successfully imported {len(imported)} references from BibTeX.")
+                    print(
+                        f"[+] Successfully imported {len(imported)} references from BibTeX."
+                    )
                 elif fmt == "csl-json":
                     imported = app.bib.import_csl_json(src)
-                    print(f"[+] Successfully imported {len(imported)} references from CSL-JSON.")
+                    print(
+                        f"[+] Successfully imported {len(imported)} references from CSL-JSON."
+                    )
                 elif fmt == "ris":
                     imported = app.bib.import_ris(src)
-                    print(f"[+] Successfully imported {len(imported)} references from RIS.")
+                    print(
+                        f"[+] Successfully imported {len(imported)} references from RIS."
+                    )
                 print()
                 return 0
 
             if sub == "export":
-                print(f"\n[+] Exporting bibliography (style={args.style}, format={args.format}, corpus={args.corpus})...")
+                print(
+                    f"\n[+] Exporting bibliography (style={args.style}, format={args.format}, corpus={args.corpus})..."
+                )
                 out_path = app.bib.export_bibliography(
                     args.output,
                     style=args.style,
@@ -756,8 +886,177 @@ async def _async_main(args: Any) -> int:
                 print(f"[+] Export complete -> {out_path}\n")
                 return 0
 
+        # 14. workflow
+        elif args.command == "workflow":
+            w_sub = getattr(args, "workflow_action", None)
+            if not w_sub or w_sub == "status":
+                print("\n" + app.workflow.render_status_dashboard() + "\n")
+                return 0
+
+            if w_sub == "init":
+                approaches = (
+                    [a.strip() for a in args.approaches.split(",") if a.strip()]
+                    if args.approaches
+                    else []
+                )
+                questions = (
+                    [q.strip() for q in args.questions.split(";") if q.strip()]
+                    if args.questions
+                    else []
+                )
+                proj = app.workflow.init_project(
+                    title=args.title,
+                    author=args.author,
+                    typology=args.typology,
+                    approaches=approaches,
+                    research_questions=questions,
+                )
+                print(f"\n[+] Inisialisasi Proyek Riset Berhasil: '{proj.title}'")
+                print(f"    Peneliti : {proj.author or '—'}")
+                print(f"    Tipologi : {proj.typology or '—'}")
+                print("\n" + app.workflow.render_status_dashboard() + "\n")
+                return 0
+
+            if w_sub == "check":
+                metadata = {}
+                if args.typology:
+                    metadata["typology"] = args.typology
+                if args.approaches:
+                    metadata["approaches"] = [
+                        a.strip() for a in args.approaches.split(",") if a.strip()
+                    ]
+                if args.questions:
+                    metadata["research_questions"] = [
+                        q.strip() for q in args.questions.split(";") if q.strip()
+                    ]
+                if args.grand:
+                    metadata["grand_theory"] = args.grand
+                if args.middle:
+                    metadata["middle_theory"] = args.middle
+                if args.applied:
+                    metadata["applied_theory"] = args.applied
+                if args.principles:
+                    metadata["principles"] = [
+                        p.strip() for p in args.principles.split(",") if p.strip()
+                    ]
+
+                status_text = "PASSED (Selesai)" if args.passed else "FAILED / PENDING"
+                app.workflow.check_stage(
+                    stage_num=args.stage,
+                    passed=args.passed,
+                    notes=args.notes,
+                    metadata=metadata,
+                )
+                print(f"\n[+] Tahap {args.stage} diperbarui -> Status: {status_text}")
+                if args.notes:
+                    print(f"    Catatan: {args.notes}")
+                print("\n" + app.workflow.render_status_dashboard() + "\n")
+                return 0
+
+            if w_sub == "export":
+                out = app.workflow.export_methodology_audit(output_path=args.output)
+                print(f"\n[+] Laporan audit metodologi berhasil diekspor -> {out}\n")
+                return 0
+
+        # 15. irac
+        elif args.command == "irac":
+            i_sub = getattr(args, "irac_action", None)
+            if i_sub == "add":
+                cite_keys = (
+                    [k.strip() for k in args.cite_keys.split(",") if k.strip()]
+                    if args.cite_keys
+                    else []
+                )
+                syl = app.irac.add_syllogism(
+                    issue=args.issue,
+                    rule_major=args.rule,
+                    facts_minor=args.facts,
+                    conclusion=args.conclusion,
+                    research_question_idx=args.question_idx,
+                    legal_domain=args.domain,
+                    method_type=args.method,
+                    cite_keys=cite_keys,
+                )
+                print(
+                    f"\n[+] Silogisme IRAC berhasil disimpan (ID: {syl.syllogism_id})"
+                )
+                warns = syl.validate_logic()
+                if warns:
+                    print("    ⚠️ PERINGATAN LOGIKA HUKUM:")
+                    for w in warns:
+                        print(f"       - {w}")
+                print("\n" + syl.to_irac_markdown())
+                return 0
+
+            if i_sub == "list":
+                syls = app.irac.list_syllogisms(question_idx=args.question_idx)
+                print(f"\n[+] Menampilkan {len(syls)} unit silogisme IRAC terdaftar:\n")
+                for s in syls:
+                    print(s.to_irac_markdown())
+                    print("-" * 50)
+                return 0
+
+            if i_sub == "validate":
+                report = app.irac.validate_all()
+                if not report:
+                    print(
+                        "\n[+] ✅ Seluruh silogisme IRAC teruji konsisten dan bebas dari cacat logika formal.\n"
+                    )
+                else:
+                    print(
+                        f"\n[!] ⚠️ Ditemukan {len(report)} unit silogisme yang memerlukan perhatian logika:"
+                    )
+                    for s_id, warns in report.items():
+                        print(f"\n  • Silogisme `{s_id}`:")
+                        for w in warns:
+                            print(f"    - {w}")
+                    print()
+                return 0
+
+            if i_sub == "export":
+                md = app.irac.export_irac_markdown(
+                    question_idx=args.question_idx, output_path=args.output
+                )
+                if not args.output:
+                    print("\n" + md)
+                else:
+                    print(f"\n[+] IRAC blocks berhasil diekspor -> {args.output}\n")
+                return 0
+
+        # 16. scaffold
+        elif args.command == "scaffold":
+            print(
+                f"\n[+] Menghasilkan kerangka draf skripsi 5 Bab (output_dir='{args.output_dir}', style='{args.style}')..."
+            )
+            files = app.scaffolder.generate_draft(
+                output_dir=args.output_dir,
+                style=args.style,
+                overwrite=args.overwrite,
+            )
+            print(f"[+] Berhasil membuat {len(files)} file draf skripsi:")
+            for key, p in files.items():
+                print(f"    - [{key.upper()}]: {p}")
+            print(
+                "\nSilakan lengkapi draf bab sesuai instruksi operasional di dalam komentar setiap file.\n"
+            )
+            return 0
+
+        # 17. audit-traceability
+        elif args.command == "audit-traceability":
+            print(
+                f"\n[+] Memindai direktori draf '{args.draft_dir}' dan memverifikasi keterlacakan referensi ke database..."
+            )
+            rep = app.auditor.audit_drafts(
+                draft_dir=args.draft_dir,
+                output_report_path=args.output,
+            )
+            print("\n" + rep.to_markdown() + "\n")
+            return 0
+
     except (asyncio.CancelledError, KeyboardInterrupt):
-        logger.warning("\n[!] Execution interrupted by user (Ctrl+C). Performing graceful cleanup...")
+        logger.warning(
+            "\n[!] Execution interrupted by user (Ctrl+C). Performing graceful cleanup..."
+        )
         return 130
     finally:
         try:
