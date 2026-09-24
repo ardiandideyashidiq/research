@@ -16,7 +16,8 @@ Key capabilities:
 - **PDF to Markdown & Layout Normalization**: High-performance conversion with **PyMuPDF** & **PyMuPDF4LLM**, dehyphenation, heading normalization, running header/footer removal, prose reflow, and YAML frontmatter metadata.
 - **Semantic Chunking & SQLite FTS5 BM25 RAG**: Heading- and page-aware chunking preserving academic citation context, with zero-dependency SQLite BM25 ranking and LLM prompt context formatting.
 - **End-to-End Autonomous Pipeline**: One-command complete lifecycle orchestration (`search -> snowball -> download -> convert -> RAG chunking`).
-- **Production CLI Suite**: Ergonomic subcommands (`pipeline`, `search`, `snowball`, `download`, `convert`, `query`, `export`, `stats`).
+- **Indonesian Court Judgment Engine (Putusan)**: Context-preserving conversion and chunking for court decisions across all jurisdictions (MA, MK, MKMK, PN, PT, PA, PM, PTUN, DKPP, KIP) with legal typography unspacing, watermark/disclaimer stripping, section segmentation (`KEPALA`, `IDENTITAS`, `DUDUK_PERKARA`, `PERTIMBANGAN_HUKUM`, `AMAR_PUTUSAN`, `PENUTUP`), context header injection, and Tesseract OCR fallback for scanned decisions.
+- **Production CLI Suite**: Ergonomic subcommands (`pipeline`, `search`, `snowball`, `download`, `convert`, `query`, `export`, `stats`, `putusan`).
 
 ## Commands
 
@@ -32,6 +33,8 @@ uv run research snowball <cite_key> --direction both --limit 10
 uv run research download --concurrency 4
 uv run research convert data/downloads/paper.pdf --index-rag
 uv run research query "criminal liability deepfake" --format-context
+uv run research putusan /path/to/putusan.pdf --output-dir data/putusan_processed
+uv run research putusan /path/to/putusan_dir/ --sample 50 --concurrency 6
 uv run research export --format bibtex --output tmp/export.bib
 uv run ruff check .     # lint
 uv run ruff check --fix .
@@ -96,9 +99,16 @@ src/research/
 │   ├── models.py         # DocumentChunk, RetrievalResult
 │   ├── chunker.py        # SemanticChunker (heading/page boundary-aware chunking)
 │   └── retriever.py      # RAGRetriever (BM25 ranking, prompt context builder)
-└── pipeline/             # Autonomous end-to-end research orchestration
-    ├── models.py         # PipelineConfig, PipelineResult
-    └── orchestrator.py   # ResearchPipeline (search -> snowball -> download -> convert -> RAG)
+├── pipeline/             # Autonomous end-to-end research orchestration
+│   ├── models.py         # PipelineConfig, PipelineResult
+│   └── orchestrator.py   # ResearchPipeline (search -> snowball -> download -> convert -> RAG)
+└── putusan/              # Indonesian Court Judgment conversion & context-preserving chunking
+    ├── models.py         # PutusanMetadata, PutusanSection, PutusanChunk, PutusanDocument
+    ├── normalizer.py     # Watermark/disclaimer stripping, spaced typography unspacing, table reflow
+    ├── extractor.py      # Regex & heuristic metadata extraction (case number, court, parties, dates)
+    ├── segmenter.py      # Legal milestones segmenter (Kepala, Identitas, Duduk Perkara, Pertimbangan, Amar, Penutup)
+    ├── chunker.py        # Context-preserving semantic chunker with injected legal context banners
+    └── converter.py      # PutusanConverter (batch processing, Tesseract OCR fallback, JSON/MD export)
 ```
 
 Import packages using absolute `src/` layout: `from research.db import DatabaseManager`, never relative imports.

@@ -66,4 +66,24 @@ def build_parser() -> argparse.ArgumentParser:
     # 8. stats
     subparsers.add_parser("stats", help="Show database metrics (publications, downloads, conversions, RAG chunks)")
 
+    # 9. putusan
+    p_putusan = subparsers.add_parser(
+        "putusan",
+        help="Convert and chunk Indonesian court decisions (Putusan) preserving legal context",
+    )
+    p_putusan.add_argument("path", help="Path to Putusan PDF or directory containing Putusan PDFs")
+    p_putusan.add_argument(
+        "--output-dir",
+        default="data/putusan_processed",
+        help="Directory to save converted markdown and chunks JSON (default: data/putusan_processed)",
+    )
+    p_putusan.add_argument("--sample", type=int, default=None, help="Process only N sample PDFs if path is a directory")
+    p_putusan.add_argument("--concurrency", type=int, default=4, help="Concurrent workers for batch conversion (default: 4)")
+    p_putusan.add_argument(
+        "--max-chunk-chars",
+        type=int,
+        default=1500,
+        help="Target max characters per chunk (default: 1500)",
+    )
+
     return parser

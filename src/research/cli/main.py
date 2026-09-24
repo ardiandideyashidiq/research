@@ -189,6 +189,71 @@ async def _async_main(args: Any) -> int:
             print(f"\n[+] Exported {len(records)} records ({out_format}) -> {target}\n")
             return 0
 
+        if cmd == "putusan":
+            import glob
+
+            from research.putusan import PutusanConverter
+
+            in_path = Path(args.path)
+            out_dir = Path(args.output_dir)
+            out_dir.mkdir(parents=True, exist_ok=True)
+            converter = PutusanConverter(
+                max_chunk_chars=args.max_chunk_chars,
+            )
+
+            if in_path.is_file():
+                doc = converter.convert_pdf(in_path)
+                md_path = out_dir / f"{doc.doc_id}.md"
+                json_path = out_dir / f"{doc.doc_id}_chunks.json"
+                converter.export_markdown(doc, md_path)
+                converter.export_chunks_json(doc.chunks, json_path)
+                print(f"\n[+] Converted Putusan: {doc.metadata.nomor_putusan}")
+                print(f"  Pengadilan:  {doc.metadata.pengadilan}")
+                print(f"  Tingkat:     {doc.metadata.tingkat_peradilan}")
+                print(f"  Klasifikasi: {doc.metadata.klasifikasi}")
+                print(f"  Pihak:       {doc.metadata.pihak_utama}")
+                print(f"  Halaman:     {doc.metadata.total_halaman}")
+                print(f"  Bagian:      {len(doc.sections)} sections")
+                print(f"  Chunks:      {len(doc.chunks)} context-preserving chunks")
+                print(f"  Output MD:   {md_path}")
+                print(f"  Output JSON: {json_path}\n")
+                return 0
+
+            # Directory batch processing
+            pdf_files = sorted(glob.glob(f"{in_path}/**/*.pdf", recursive=True))
+            if not pdf_files:
+                print(f"\n[-] No PDF files found in: {in_path}\n")
+                return 1
+
+            if args.sample and args.sample > 0:
+                pdf_files = pdf_files[: args.sample]
+
+            print(f"\n[+] Processing {len(pdf_files)} Putusan PDF documents (workers={args.concurrency})...")
+            results = converter.batch_convert(pdf_files, max_workers=args.concurrency)
+
+            total_chunks = sum(len(d.chunks) for d in results)
+            total_pages = sum(d.metadata.total_halaman for d in results)
+
+            # Export individual files and consolidated index
+            all_chunks = []
+            for d in results:
+                m_path = out_dir / f"{d.doc_id}.md"
+                j_path = out_dir / f"{d.doc_id}_chunks.json"
+                converter.export_markdown(d, m_path)
+                converter.export_chunks_json(d.chunks, j_path)
+                all_chunks.extend(d.chunks)
+
+            all_chunks_path = out_dir / "all_chunks.json"
+            converter.export_chunks_json(all_chunks, all_chunks_path)
+
+            print("\n[+] Batch Putusan Processing Completed:")
+            print(f"  - Successfully processed: {len(results)} / {len(pdf_files)} documents")
+            print(f"  - Total Pages parsed:    {total_pages:,}")
+            print(f"  - Total Semantic Chunks: {total_chunks:,}")
+            print(f"  - Output directory:      {out_dir}")
+            print(f"  - Consolidated Chunks:   {all_chunks_path}\n")
+            return 0
+
     finally:
         await app.close()
 
