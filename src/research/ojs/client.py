@@ -8,6 +8,7 @@ import httpx
 from curl_cffi.requests import AsyncSession, Session
 from loguru import logger
 
+from research.cache.manager import HttpCache
 from research.ojs.extractor import extract_ojs_metadata
 from research.ojs.models import OJSMetadata
 
@@ -24,11 +25,13 @@ class OJSClient:
         impersonate: str = "chrome",
         timeout: float = 15.0,
         verify_ssl: bool = False,
+        cache: HttpCache | None = None,
     ) -> None:
         self.engine = engine
         self.impersonate = impersonate
         self.timeout = timeout
         self.verify_ssl = verify_ssl
+        self.cache = cache
 
         # curl-cffi sessions
         self._async_session: AsyncSession | None = None
@@ -125,6 +128,14 @@ class OJSClient:
         retries: int = 2,
     ) -> OJSMetadata:
         """Fetch article page and extract OJS metadata asynchronously."""
+        if self.cache is not None:
+            cached = self.cache.get(url)
+            if cached is not None:
+                logger.debug(f"OJS metadata cache hit for {url}")
+                if cached.status_code >= 400:
+                    return OJSMetadata(url=url, is_ojs=False)
+                return extract_ojs_metadata(cached.text, url)
+
         session = await self._get_async_session()
         to = timeout or self.timeout
         last_err: Exception | None = None
@@ -138,10 +149,14 @@ class OJSClient:
 
                 final_url = str(resp.url)
                 if resp.status_code >= 400:
+                    if self.cache is not None:
+                        self.cache.set(url, resp.status_code, b"", content_type="text/html")
                     logger.debug(f"HTTP {resp.status_code} for {url}")
                     return OJSMetadata(url=final_url, is_ojs=False)
 
                 html = resp.text
+                if self.cache is not None:
+                    self.cache.set(url, resp.status_code, html, content_type="text/html")
                 return extract_ojs_metadata(html, final_url)
             except Exception as e:  # noqa: BLE001 - network/ssl/timeout errors
                 last_err = e
@@ -160,6 +175,14 @@ class OJSClient:
         retries: int = 2,
     ) -> OJSMetadata:
         """Fetch article page and extract OJS metadata synchronously."""
+        if self.cache is not None:
+            cached = self.cache.get(url)
+            if cached is not None:
+                logger.debug(f"OJS metadata cache hit for {url}")
+                if cached.status_code >= 400:
+                    return OJSMetadata(url=url, is_ojs=False)
+                return extract_ojs_metadata(cached.text, url)
+
         session = self._get_sync_session()
         to = timeout or self.timeout
         last_err: Exception | None = None
@@ -173,10 +196,14 @@ class OJSClient:
 
                 final_url = str(resp.url)
                 if resp.status_code >= 400:
+                    if self.cache is not None:
+                        self.cache.set(url, resp.status_code, b"", content_type="text/html")
                     logger.debug(f"HTTP {resp.status_code} for {url}")
                     return OJSMetadata(url=final_url, is_ojs=False)
 
                 html = resp.text
+                if self.cache is not None:
+                    self.cache.set(url, resp.status_code, html, content_type="text/html")
                 return extract_ojs_metadata(html, final_url)
             except Exception as e:  # noqa: BLE001 - network/ssl/timeout errors
                 last_err = e

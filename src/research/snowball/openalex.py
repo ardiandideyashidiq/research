@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 from datetime import UTC, datetime
 from types import TracebackType
@@ -8,6 +9,7 @@ from typing import Any, Self
 import httpx
 from loguru import logger
 
+from research.cache.manager import HttpCache
 from research.db.models import PublicationRecord
 from research.normalizer.crossref import normalize_doi
 from research.normalizer.normalizer import (
@@ -54,9 +56,16 @@ HARDCODED_EMAIL = "rdndds@gmail.com"
 class OpenAlexClient:
     """HTTPX-based client for OpenAlex literature graph and citation network."""
 
-    def __init__(self, *, email: str = HARDCODED_EMAIL, timeout: float = 15.0) -> None:
+    def __init__(
+        self,
+        *,
+        email: str = HARDCODED_EMAIL,
+        timeout: float = 15.0,
+        cache: HttpCache | None = None,
+    ) -> None:
         self.email = email
         self.timeout = timeout
+        self.cache = cache
         self.base_url = "https://api.openalex.org"
         self._client: httpx.AsyncClient | None = None
 
@@ -96,9 +105,19 @@ class OpenAlexClient:
         if doi:
             norm_doi = normalize_doi(doi)
             if norm_doi:
+                url = f"{self.base_url}/works/doi:{norm_doi}"
+                if self.cache is not None:
+                    cached = self.cache.get(url)
+                    if cached is not None and cached.status_code == 200:
+                        try:
+                            return cached.json()
+                        except (json.JSONDecodeError, TypeError):
+                            pass
                 try:
-                    resp = await client.get(f"{self.base_url}/works/doi:{norm_doi}")
+                    resp = await client.get(url)
                     if resp.status_code == 200:
+                        if self.cache is not None:
+                            self.cache.set(url, 200, resp.content, content_type="application/json")
                         return resp.json()
                 except httpx.HTTPError as e:
                     logger.debug(f"OpenAlex DOI lookup failed for {norm_doi}: {e}")
@@ -107,9 +126,21 @@ class OpenAlexClient:
         if title:
             clean_t = normalize_title(title)
             if len(clean_t) > 10:
+                url = f"{self.base_url}/works?search={clean_t}&per_page=1"
+                if self.cache is not None:
+                    cached = self.cache.get(url)
+                    if cached is not None and cached.status_code == 200:
+                        try:
+                            results = cached.json().get("results", [])
+                            if results:
+                                return results[0]
+                        except (json.JSONDecodeError, TypeError):
+                            pass
                 try:
                     resp = await client.get(f"{self.base_url}/works", params={"search": clean_t, "per_page": 1})
                     if resp.status_code == 200:
+                        if self.cache is not None:
+                            self.cache.set(url, 200, resp.content, content_type="application/json")
                         results = resp.json().get("results", [])
                         if results:
                             return results[0]
@@ -127,12 +158,23 @@ class OpenAlexClient:
         """Forward snowballing: fetch papers that cite the specified work."""
         client = await self.get_client()
         work_id = openalex_id.split("/")[-1]
+        cache_url = f"{self.base_url}/works?filter=cites:{work_id}&limit={limit}"
+        if self.cache is not None:
+            cached = self.cache.get(cache_url)
+            if cached is not None and cached.status_code == 200:
+                try:
+                    return cached.json().get("results", [])
+                except (json.JSONDecodeError, TypeError):
+                    pass
+
         try:
             resp = await client.get(
                 f"{self.base_url}/works",
                 params={"filter": f"cites:{work_id}", "per_page": min(limit, 100), "sort": "-publication_date"},
             )
             if resp.status_code == 200:
+                if self.cache is not None:
+                    self.cache.set(cache_url, 200, resp.content, content_type="application/json")
                 return resp.json().get("results", [])
         except httpx.HTTPError as e:
             logger.warning(f"Error fetching citing works for {openalex_id}: {e}")
@@ -151,6 +193,14 @@ class OpenAlexClient:
         client = await self.get_client()
         clean_ids = [ref.split("/")[-1] for ref in referenced_ids[:limit]]
         filter_str = "openalex:" + "|".join(clean_ids)
+        cache_url = f"{self.base_url}/works?filter={filter_str}&limit={len(clean_ids)}"
+        if self.cache is not None:
+            cached = self.cache.get(cache_url)
+            if cached is not None and cached.status_code == 200:
+                try:
+                    return cached.json().get("results", [])
+                except (json.JSONDecodeError, TypeError):
+                    pass
 
         try:
             resp = await client.get(
@@ -158,6 +208,8 @@ class OpenAlexClient:
                 params={"filter": filter_str, "per_page": len(clean_ids)},
             )
             if resp.status_code == 200:
+                if self.cache is not None:
+                    self.cache.set(cache_url, 200, resp.content, content_type="application/json")
                 return resp.json().get("results", [])
         except httpx.HTTPError as e:
             logger.warning(f"Error batch-fetching referenced works: {e}")

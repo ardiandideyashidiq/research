@@ -135,6 +135,9 @@ class DatabaseManager:
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_pub_doi ON publications(doi)")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_pub_status ON publications(download_status)")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_pub_is_ojs ON publications(is_ojs)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_pub_file_hash ON publications(file_hash)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_pub_url ON publications(url)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_pub_pdf_url ON publications(pdf_url)")
 
         # Create FTS5 virtual table for publications
         try:
@@ -300,6 +303,94 @@ class DatabaseManager:
         if not row:
             return None
         return PublicationRecord.from_row(dict(row))
+
+    def get_by_doi(self, doi: str | None) -> PublicationRecord | None:
+        """Fetch a single record by DOI (case-insensitive indexed search)."""
+        if not doi:
+            return None
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM publications WHERE LOWER(doi) = LOWER(?) LIMIT 1", (doi.strip(),))
+        row = cursor.fetchone()
+        return PublicationRecord.from_row(dict(row)) if row else None
+
+    def get_by_url(self, url: str | None) -> PublicationRecord | None:
+        """Fetch a single record by landing page URL."""
+        if not url:
+            return None
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM publications WHERE url = ? LIMIT 1", (url.strip(),))
+        row = cursor.fetchone()
+        return PublicationRecord.from_row(dict(row)) if row else None
+
+    def get_by_pdf_url(self, pdf_url: str | None) -> PublicationRecord | None:
+        """Fetch a single record by direct PDF URL."""
+        if not pdf_url:
+            return None
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM publications WHERE pdf_url = ? LIMIT 1", (pdf_url.strip(),))
+        row = cursor.fetchone()
+        return PublicationRecord.from_row(dict(row)) if row else None
+
+    def get_by_file_hash(self, file_hash: str | None) -> PublicationRecord | None:
+        """Fetch a single record by SHA-256 file hash."""
+        if not file_hash:
+            return None
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM publications WHERE file_hash = ? LIMIT 1", (file_hash.strip(),))
+        row = cursor.fetchone()
+        return PublicationRecord.from_row(dict(row)) if row else None
+
+    def find_existing(self, record: PublicationRecord | dict[str, Any]) -> PublicationRecord | None:
+        """Hierarchically find an existing publication record by cite_key, DOI, PDF URL, URL, or normalized title."""
+        cite_key = record.get("cite_key") if isinstance(record, dict) else record.cite_key
+        if cite_key:
+            rec = self.get(cite_key)
+            if rec:
+                return rec
+
+        doi = record.get("doi") if isinstance(record, dict) else record.doi
+        if doi:
+            rec = self.get_by_doi(doi)
+            if rec:
+                return rec
+
+        pdf_url = record.get("pdf_url") if isinstance(record, dict) else record.pdf_url
+        if pdf_url:
+            rec = self.get_by_pdf_url(pdf_url)
+            if rec:
+                return rec
+
+        url = record.get("url") if isinstance(record, dict) else record.url
+        if url:
+            rec = self.get_by_url(url)
+            if rec:
+                return rec
+
+        title = record.get("title") if isinstance(record, dict) else record.title
+        year = record.get("year") if isinstance(record, dict) else record.year
+        if title and len(title.strip()) > 8:
+            conn = self.get_connection()
+            cursor = conn.cursor()
+            cleaned_title = title.strip().lower()
+            if year:
+                cursor.execute(
+                    "SELECT * FROM publications WHERE LOWER(TRIM(title)) = ? AND year = ? LIMIT 1",
+                    (cleaned_title, year),
+                )
+            else:
+                cursor.execute(
+                    "SELECT * FROM publications WHERE LOWER(TRIM(title)) = ? LIMIT 1",
+                    (cleaned_title,),
+                )
+            row = cursor.fetchone()
+            if row:
+                return PublicationRecord.from_row(dict(row))
+
+        return None
 
     def list(
         self,

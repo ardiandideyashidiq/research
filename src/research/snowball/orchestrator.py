@@ -6,6 +6,7 @@ from pathlib import Path
 from loguru import logger
 
 from research.bibtex.parser import parse_bib_files
+from research.cache.manager import HttpCache
 from research.db.manager import DatabaseManager
 from research.db.models import PublicationRecord
 from research.snowball.models import SnowballConfig, SnowballResult
@@ -20,9 +21,11 @@ class SnowballOrchestrator:
         db: DatabaseManager,
         *,
         config: SnowballConfig | None = None,
+        cache: HttpCache | None = None,
     ) -> None:
         self.db = db
         self.config = config or SnowballConfig()
+        self.cache = cache
 
     async def snowball_record(
         self,
@@ -39,7 +42,7 @@ class SnowballOrchestrator:
         should_close = False
         oa_client = client
         if oa_client is None:
-            oa_client = OpenAlexClient(email=self.config.email, timeout=self.config.timeout)
+            oa_client = OpenAlexClient(email=self.config.email, timeout=self.config.timeout, cache=self.cache)
             should_close = True
 
         try:
@@ -89,15 +92,8 @@ class SnowballOrchestrator:
                     relation=relation,
                 )
 
-                # Check if already present in DB by cite_key or DOI
-                existing: PublicationRecord | None = self.db.get(discovered_rec.cite_key)
-                if not existing and discovered_rec.doi:
-                    # Look up by DOI
-                    candidates = self.db.list(limit=500)
-                    for c in candidates:
-                        if c.doi and c.doi.lower() == discovered_rec.doi.lower():
-                            existing = c
-                            break
+                # Check if already present in DB by cite_key, DOI, or title
+                existing: PublicationRecord | None = self.db.find_existing(discovered_rec)
 
                 source_tag = f"snowball:{relation}:{record.cite_key}"
 

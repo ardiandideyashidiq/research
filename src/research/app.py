@@ -9,6 +9,8 @@ from loguru import logger
 
 from research.bibliography.manager import BibliographyManager
 from research.bibtex.parser import parse_bib_files
+from research.cache.manager import HttpCache
+from research.cache.models import CachePolicy
 from research.cards.manager import CardManager
 from research.db.manager import DatabaseManager
 from research.db.models import PublicationRecord
@@ -43,6 +45,8 @@ class ResearchApp:
         tavily_keys: list[str] | None = None,
         scholar_proxy: str | Proxy | None = None,
         proxy_pool: ProxyPool | None = None,
+        cache_policy: CachePolicy | None = None,
+        cache_db_path: str | Path | None = None,
         log_dir: str | Path | None = None,
         auto_log: bool = False,
     ) -> None:
@@ -52,16 +56,17 @@ class ResearchApp:
             setup_logging(log_dir=log_dir or "logs")
 
         self.db = DatabaseManager(db_path)
-        self.providers = ProviderRegistry(db=self.db)
-        self.downloader = DownloadManager(self.db, download_dir=download_dir)
-        self.snowball = SnowballOrchestrator(self.db, config=SnowballConfig())
+        self.cache = HttpCache(db_path=cache_db_path or db_path, policy=cache_policy)
+        self.providers = ProviderRegistry(db=self.db, cache=self.cache)
+        self.downloader = DownloadManager(self.db, download_dir=download_dir, cache=self.cache)
+        self.snowball = SnowballOrchestrator(self.db, config=SnowballConfig(), cache=self.cache)
         self.tavily = TavilyClient(api_keys=tavily_keys)
         self.web_search = WebSearchEngine(
             db=self.db,
             tavily_keys=tavily_keys,
             output_dir=web_search_dir,
         )
-        self.scholar = GoogleScholarClient(proxy=scholar_proxy, proxy_pool=proxy_pool)
+        self.scholar = GoogleScholarClient(proxy=scholar_proxy, proxy_pool=proxy_pool, cache=self.cache)
         self.pdf = PDFConverter()
         self.retriever = RAGRetriever(self.db)
         self.cards = CardManager(self.db)
@@ -90,6 +95,11 @@ class ResearchApp:
             self.db.close()
         except Exception as e:  # noqa: BLE001
             logger.debug("Error closing database: {}", e)
+
+        try:
+            self.cache.close()
+        except Exception as e:  # noqa: BLE001
+            logger.debug("Error closing cache: {}", e)
 
     async def __aenter__(self) -> Self:
         return self
@@ -155,7 +165,7 @@ class ResearchApp:
                     raw_fields=e.raw_fields,
                 )
             if auto_normalize:
-                rec = normalize_record(rec)
+                rec = normalize_record(rec, cache=self.cache)
             self.db.create(rec)
             indexed += 1
 
@@ -218,11 +228,13 @@ class ResearchApp:
         cite_keys: list[str] | None = None,
         *,
         skip_already_downloaded: bool = True,
+        force: bool = False,
     ) -> dict[str, int]:
         """Download papers in parallel with content and magic byte verification."""
         return await self.downloader.download_all(
             cite_keys=cite_keys,
             skip_already_downloaded=skip_already_downloaded,
+            force=force,
         )
 
     def convert_pdf(
@@ -313,3 +325,10 @@ class ResearchApp:
             limit=limit,
             auto_index=auto_index,
         )
+
+    def get_stats(self) -> dict[str, Any]:
+        """Return combined statistics from database, download directory, and HTTP cache."""
+        db_stats = self.db.get_stats()
+        cache_stats = self.cache.stats()
+        db_stats["cache"] = cache_stats
+        return db_stats

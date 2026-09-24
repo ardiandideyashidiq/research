@@ -10,6 +10,7 @@ from typing import Any
 from loguru import logger
 
 from research.app import ResearchApp
+from research.cache.models import CachePolicy
 from research.cli.parser import build_parser
 from research.db.models import PublicationRecord
 from research.pipeline.models import PipelineConfig
@@ -67,12 +68,17 @@ _setup_logging = setup_logging
 
 
 async def _async_main(args: Any) -> int:
-    app = ResearchApp(db_path=args.db, download_dir=args.downloads)
+    policy = CachePolicy(enabled=not getattr(args, "no_cache", False))
+    app = ResearchApp(db_path=args.db, download_dir=args.downloads, cache_policy=policy)
     cmd = args.command
+
+    if getattr(args, "clear_cache", False):
+        cleared = app.cache.clear()
+        print(f"[*] Cleared {cleared} entries from HTTP cache.\n")
 
     try:
         if cmd == "stats":
-            stats = app.db.get_stats()
+            stats = app.get_stats()
             statuses = app.db.get_status_summary()
             print("\n=== Research Database Status ===")
             print(f"  Database path:       {args.db}")
@@ -83,6 +89,13 @@ async def _async_main(args: Any) -> int:
             print(f"  Dense Embeddings:    {stats.get('total_embeddings', 0)}")
             cards_stats = app.cards.count_cards()
             print(f"  Review Cards:        {cards_stats['total_cards']}")
+            cache_info = stats.get("cache", {})
+            if cache_info:
+                print(
+                    f"  HTTP Cached Entries: {cache_info.get('total_cached', 0)} "
+                    f"({cache_info.get('active_cached', 0)} active)"
+                )
+                print(f"  HTTP Cache Storage:  {cache_info.get('total_bytes', 0) / 1024:.1f} KB")
             corpus_b = stats.get("corpus_breakdown", {})
             if corpus_b:
                 print("  Corpus breakdown:")
@@ -177,8 +190,9 @@ async def _async_main(args: Any) -> int:
         if cmd == "download":
             c_keys = [k.strip() for k in args.cite_keys.split(",")] if args.cite_keys else None
             app.downloader.concurrency = args.concurrency
+            force = getattr(args, "force", False)
             print("\n[+] Concurrently downloading open-access papers...")
-            stats = await app.download_papers(cite_keys=c_keys)
+            stats = await app.download_papers(cite_keys=c_keys, force=force)
             print("\nDownload Results:")
             for k, v in stats.items():
                 print(f"  - {k: <16}: {v}")

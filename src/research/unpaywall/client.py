@@ -7,6 +7,7 @@ from typing import Self
 import httpx
 from loguru import logger
 
+from research.cache.manager import HttpCache
 from research.unpaywall.models import HARDCODED_EMAIL, UnpaywallRecord
 
 
@@ -29,9 +30,10 @@ class UnpaywallClient:
     EMAIL = HARDCODED_EMAIL
     BASE_URL = "https://api.unpaywall.org/v2"
 
-    def __init__(self, *, timeout: float = 12.0) -> None:
+    def __init__(self, *, timeout: float = 12.0, cache: HttpCache | None = None) -> None:
         self.email = self.EMAIL
         self.timeout = timeout
+        self.cache = cache
         self._async_client: httpx.AsyncClient | None = None
         self._sync_client: httpx.Client | None = None
 
@@ -87,15 +89,26 @@ class UnpaywallClient:
         if not norm_doi:
             return None
 
-        client = await self._get_async_client()
         url = f"{self.BASE_URL}/{norm_doi}"
+        if self.cache is not None:
+            cached = self.cache.get(url)
+            if cached is not None:
+                if cached.status_code == 200:
+                    return UnpaywallRecord.from_api_response(cached.json())
+                return None
+
+        client = await self._get_async_client()
         params = {"email": self.email}
 
         try:
             resp = await client.get(url, params=params)
             if resp.status_code == 200:
+                if self.cache is not None:
+                    self.cache.set(url, 200, resp.content, content_type="application/json")
                 return UnpaywallRecord.from_api_response(resp.json())
             if resp.status_code == 404:
+                if self.cache is not None:
+                    self.cache.set(url, 404, b"{}", content_type="application/json")
                 logger.debug(f"Unpaywall: DOI not found {norm_doi}")
                 return None
             logger.debug(f"Unpaywall HTTP {resp.status_code} for {norm_doi}")
@@ -109,15 +122,26 @@ class UnpaywallClient:
         if not norm_doi:
             return None
 
-        client = self._get_sync_client()
         url = f"{self.BASE_URL}/{norm_doi}"
+        if self.cache is not None:
+            cached = self.cache.get(url)
+            if cached is not None:
+                if cached.status_code == 200:
+                    return UnpaywallRecord.from_api_response(cached.json())
+                return None
+
+        client = self._get_sync_client()
         params = {"email": self.email}
 
         try:
             resp = client.get(url, params=params)
             if resp.status_code == 200:
+                if self.cache is not None:
+                    self.cache.set(url, 200, resp.content, content_type="application/json")
                 return UnpaywallRecord.from_api_response(resp.json())
             if resp.status_code == 404:
+                if self.cache is not None:
+                    self.cache.set(url, 404, b"{}", content_type="application/json")
                 logger.debug(f"Unpaywall: DOI not found {norm_doi}")
                 return None
             logger.debug(f"Unpaywall HTTP {resp.status_code} for {norm_doi}")
@@ -137,9 +161,14 @@ class UnpaywallClient:
 
 
 # Top-level module helper functions
-def get_unpaywall_record(doi: str, *, timeout: float = 12.0) -> UnpaywallRecord | None:
+def get_unpaywall_record(
+    doi: str,
+    *,
+    timeout: float = 12.0,
+    cache: HttpCache | None = None,
+) -> UnpaywallRecord | None:
     """Fetch Unpaywall record synchronously using hardcoded email."""
-    client = UnpaywallClient(timeout=timeout)
+    client = UnpaywallClient(timeout=timeout, cache=cache)
     return client.get_record_sync(doi)
 
 

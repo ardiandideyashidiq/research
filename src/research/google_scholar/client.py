@@ -10,6 +10,7 @@ from curl_cffi.requests import AsyncSession
 from curl_cffi.requests.exceptions import RequestException
 from loguru import logger
 
+from research.cache.manager import HttpCache
 from research.google_scholar.models import Publication, SearchResult
 from research.proxy.models import Proxy
 from research.proxy.pool import ProxyPool
@@ -25,11 +26,13 @@ class GoogleScholarClient:
         proxy: str | Proxy | None = None,
         proxy_pool: ProxyPool | None = None,
         max_retries: int = 3,
+        cache: HttpCache | None = None,
     ) -> None:
         self.timeout = timeout
         self.proxy = proxy
         self.proxy_pool = proxy_pool
         self.max_retries = max_retries
+        self.cache = cache
         self._session: AsyncSession | None = None
 
     async def _get_session(self) -> AsyncSession:
@@ -164,6 +167,13 @@ class GoogleScholarClient:
     async def search(self, query: str, *, limit: int = 10, page: int = 1) -> SearchResult:
         """Search Google Scholar for publications matching query."""
         start = max(0, (page - 1) * 10)
+        cache_url = f"{self.BASE_URL}?q={query}&start={start}&limit={limit}"
+        if self.cache is not None:
+            cached = self.cache.get(cache_url)
+            if cached is not None and cached.status_code == 200:
+                logger.info("Google Scholar search cache hit for '{}' (page {})", query, page)
+                return self._parse_html_results(cached.text, query, limit)
+
         params = {
             "q": query,
             "hl": "en",
@@ -209,6 +219,10 @@ class GoogleScholarClient:
                             continue
                         raise RuntimeError("Google Scholar CAPTCHA / rate-limit encountered.")
 
+                    if self.cache is not None:
+                        ttl = self.cache.policy.dynamic_ttl
+                        self.cache.set(cache_url, 200, resp.text, content_type="text/html", ttl=ttl)
+
                     return self._parse_html_results(resp.text, query, limit)
 
                 if resp.status_code in (429, 403):
@@ -241,12 +255,26 @@ class GoogleScholarClient:
 
     async def publication(self, url: str) -> Publication:
         """Fetch details for a single publication directly from its landing page."""
+        if self.cache is not None:
+            cached = self.cache.get(url)
+            if cached is not None and cached.status_code == 200:
+                html = cached.text
+                return self._parse_publication_html(html, url)
+
         session = await self._get_session()
         proxy_url = await self._resolve_current_proxy()
 
         resp = await session.get(url, proxy=proxy_url)
         resp.raise_for_status()
         html = resp.text
+
+        if self.cache is not None:
+            self.cache.set(url, resp.status_code, html, content_type="text/html")
+
+        return self._parse_publication_html(html, url)
+
+    def _parse_publication_html(self, html: str, url: str) -> Publication:
+        """Parse publication metadata from raw HTML."""
 
         # Extract title
         title = ""

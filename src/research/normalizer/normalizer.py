@@ -8,6 +8,7 @@ from typing import Any
 
 from loguru import logger
 
+from research.cache.manager import HttpCache
 from research.db.models import PublicationRecord
 from research.normalizer.crossref import (
     fetch_crossref_metadata,
@@ -68,6 +69,7 @@ def normalize_record(
     enrich_ojs: bool = True,
     enrich_unpaywall: bool = True,
     ojs_client: OJSClient | None = None,
+    cache: HttpCache | None = None,
 ) -> PublicationRecord:
     """Normalize fields and enrich metadata for a single publication record synchronously."""
     rec = record if isinstance(record, PublicationRecord) else PublicationRecord.from_row(record)
@@ -81,7 +83,7 @@ def normalize_record(
 
     # 1. Enrich from Crossref if DOI is available
     if enrich_crossref and rec.doi:
-        crossref_data = fetch_crossref_metadata(rec.doi)
+        crossref_data = fetch_crossref_metadata(rec.doi, cache=cache)
         if crossref_data:
             enrichment["crossref"] = crossref_data
             if not rec.journal and crossref_data.get("container-title"):
@@ -102,7 +104,7 @@ def normalize_record(
 
     # 2. Enrich from OJS if URL is available
     if enrich_ojs and rec.url:
-        client = ojs_client or OJSClient()
+        client = ojs_client or OJSClient(cache=cache)
         ojs_meta = client.fetch_metadata_sync(rec.url)
         if ojs_meta.is_ojs:
             rec.is_ojs = True
@@ -120,7 +122,7 @@ def normalize_record(
 
     # 3. Enrich from Unpaywall for direct Open Access PDF if DOI is available
     if enrich_unpaywall and rec.doi:
-        up_rec = get_unpaywall_record(rec.doi)
+        up_rec = get_unpaywall_record(rec.doi, cache=cache)
         if up_rec and up_rec.is_oa:
             enrichment["unpaywall"] = up_rec.to_dict()
             if not rec.pdf_url and up_rec.best_pdf_url:
@@ -141,6 +143,7 @@ async def normalize_record_async(
     enrich_unpaywall: bool = True,
     ojs_client: OJSClient | None = None,
     unpaywall_client: UnpaywallClient | None = None,
+    cache: HttpCache | None = None,
 ) -> PublicationRecord:
     """Normalize fields and enrich metadata for a single publication record asynchronously."""
     rec = record if isinstance(record, PublicationRecord) else PublicationRecord.from_row(record)
@@ -154,7 +157,7 @@ async def normalize_record_async(
 
     # 1. Enrich from Crossref if DOI is available
     if enrich_crossref and rec.doi:
-        crossref_data = await fetch_crossref_metadata_async(rec.doi)
+        crossref_data = await fetch_crossref_metadata_async(rec.doi, cache=cache)
         if crossref_data:
             enrichment["crossref"] = crossref_data
             if not rec.journal and crossref_data.get("container-title"):
@@ -178,7 +181,7 @@ async def normalize_record_async(
         client = ojs_client
         should_close = False
         if client is None:
-            client = OJSClient()
+            client = OJSClient(cache=cache)
             should_close = True
 
         try:
@@ -205,7 +208,7 @@ async def normalize_record_async(
         up_client = unpaywall_client
         should_close_up = False
         if up_client is None:
-            up_client = UnpaywallClient()
+            up_client = UnpaywallClient(cache=cache)
             should_close_up = True
 
         try:
@@ -232,12 +235,13 @@ async def normalize_records_async(
     enrich_crossref: bool = True,
     enrich_ojs: bool = True,
     enrich_unpaywall: bool = True,
+    cache: HttpCache | None = None,
 ) -> list[PublicationRecord]:
     """Batch normalize multiple records concurrently with rate limiting."""
     sem = asyncio.Semaphore(concurrency)
     async with (
-        OJSClient() as ojs_client,
-        UnpaywallClient() as unpaywall_client,
+        OJSClient(cache=cache) as ojs_client,
+        UnpaywallClient(cache=cache) as unpaywall_client,
     ):
 
         async def _worker(rec: PublicationRecord) -> PublicationRecord:
@@ -250,6 +254,7 @@ async def normalize_records_async(
                         enrich_unpaywall=enrich_unpaywall,
                         ojs_client=ojs_client,
                         unpaywall_client=unpaywall_client,
+                        cache=cache,
                     )
                 except Exception as e:  # noqa: BLE001 - worker safeguard
                     logger.warning(f"Error normalizing record {rec.cite_key}: {e}")

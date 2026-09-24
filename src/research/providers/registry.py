@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import asyncio
+import json
 from types import TracebackType
 from typing import Self
 
 from loguru import logger
 
+from research.cache.manager import HttpCache
 from research.db.manager import DatabaseManager
 from research.db.models import PublicationRecord
 from research.providers.arxiv import ArxivProvider
@@ -19,8 +21,9 @@ from research.providers.openalex import OpenAlexProvider
 class ProviderRegistry:
     """Registry and federated search orchestrator across all academic providers."""
 
-    def __init__(self, *, db: DatabaseManager | None = None) -> None:
+    def __init__(self, *, db: DatabaseManager | None = None, cache: HttpCache | None = None) -> None:
         self.db = db
+        self.cache = cache
         self.providers: dict[str, BaseProvider] = {
             "arxiv": ArxivProvider(),
             "openalex": OpenAlexProvider(),
@@ -64,7 +67,35 @@ class ProviderRegistry:
 
         logger.info(f"Federated search for '{query}' across {len(active_providers)} providers: {[p.name for p in active_providers]}")
 
-        task_objs = [asyncio.create_task(p.search(query, limit=limit_per_provider)) for p in active_providers]
+        async def _fetch_provider(provider: BaseProvider) -> list[PublicationRecord]:
+            cache_key = f"academic_provider:{provider.name}:{query}:{limit_per_provider}"
+            if self.cache is not None:
+                cached = self.cache.get(cache_key)
+                if cached is not None and cached.status_code == 200:
+                    try:
+                        cached_items = cached.json()
+                        if isinstance(cached_items, list):
+                            logger.debug(f"Provider {provider.name} cache hit ({len(cached_items)} items)")
+                            return [PublicationRecord.from_row(d) for d in cached_items]
+                    except (json.JSONDecodeError, TypeError, KeyError) as e:
+                        logger.debug(f"Failed to decode cached provider records: {e}")
+
+            records = await provider.search(query, limit=limit_per_provider)
+            if self.cache is not None and records:
+                try:
+                    payload = json.dumps([r.to_dict() for r in records], ensure_ascii=False)
+                    self.cache.set(
+                        cache_key,
+                        200,
+                        payload,
+                        content_type="application/json",
+                        ttl=self.cache.policy.dynamic_ttl,
+                    )
+                except Exception as e:  # noqa: BLE001
+                    logger.debug(f"Failed to cache provider records for {provider.name}: {e}")
+            return records
+
+        task_objs = [asyncio.create_task(_fetch_provider(p)) for p in active_providers]
         try:
             nested_results = await asyncio.gather(*task_objs, return_exceptions=True)
         except (asyncio.CancelledError, KeyboardInterrupt):
@@ -106,19 +137,10 @@ class ProviderRegistry:
 
             # Auto-index into DatabaseManager if configured
             if auto_index and self.db is not None:
-                existing = self.db.get(rec.cite_key)
-                if not existing and rec.doi:
-                    candidates = self.db.list(limit=200)
-                    for c in candidates:
-                        if c.doi and c.doi.lower() == rec.doi.lower():
-                            existing = c
-                            break
-
+                existing = self.db.find_existing(rec)
                 if existing:
-                    for src in rec.sources:
-                        if src not in existing.sources:
-                            existing.sources.append(src)
-                    self.db.update(existing.cite_key, sources=existing.sources)
+                    updated_sources = list(dict.fromkeys(existing.sources + rec.sources))
+                    self.db.update(existing.cite_key, sources=updated_sources)
                 else:
                     self.db.create(rec)
 

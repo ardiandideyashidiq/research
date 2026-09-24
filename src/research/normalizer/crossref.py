@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 from typing import Any
 
@@ -30,6 +31,7 @@ def fetch_crossref_metadata(
     email: str = HARDCODED_EMAIL,
     timeout: float = 10.0,
     client: httpx.Client | None = None,
+    cache: Any | None = None,
 ) -> dict[str, Any] | None:
     """Fetch Crossref metadata for a DOI synchronously using HTTPX."""
     norm_doi = normalize_doi(doi)
@@ -37,6 +39,16 @@ def fetch_crossref_metadata(
         return None
 
     url = f"https://api.crossref.org/works/{norm_doi}"
+    if cache is not None:
+        cached = cache.get(url)
+        if cached is not None:
+            if cached.status_code == 200:
+                try:
+                    return cached.json().get("message", {})
+                except (json.JSONDecodeError, TypeError, AttributeError) as exc:
+                    logger.debug(f"Failed to decode cached Crossref json: {exc}")
+            return None
+
     headers = {"User-Agent": f"research-tool/0.1 (mailto:{email})"}
 
     try:
@@ -45,6 +57,9 @@ def fetch_crossref_metadata(
         else:
             with httpx.Client(timeout=timeout, follow_redirects=True) as s:
                 r = s.get(url, headers=headers)
+
+        if cache is not None:
+            cache.set(url, r.status_code, r.content, content_type="application/json")
 
         if r.status_code == 200:
             data = r.json()
@@ -63,6 +78,7 @@ async def fetch_crossref_metadata_async(
     client: httpx.AsyncClient | None = None,
     email: str = HARDCODED_EMAIL,
     timeout: float = 10.0,
+    cache: Any | None = None,
 ) -> dict[str, Any] | None:
     """Fetch Crossref metadata for a DOI asynchronously using HTTPX."""
     norm_doi = normalize_doi(doi)
@@ -70,6 +86,16 @@ async def fetch_crossref_metadata_async(
         return None
 
     url = f"https://api.crossref.org/works/{norm_doi}"
+    if cache is not None:
+        cached = cache.get(url)
+        if cached is not None:
+            if cached.status_code == 200:
+                try:
+                    return cached.json().get("message", {})
+                except (json.JSONDecodeError, TypeError, AttributeError) as exc:
+                    logger.debug(f"Failed to decode cached Crossref json: {exc}")
+            return None
+
     headers = {"User-Agent": f"research-tool/0.1 (mailto:{email})"}
 
     try:
@@ -78,6 +104,9 @@ async def fetch_crossref_metadata_async(
         else:
             async with httpx.AsyncClient(timeout=timeout, follow_redirects=True) as sess:
                 r = await sess.get(url, headers=headers)
+
+        if cache is not None:
+            cache.set(url, r.status_code, r.content, content_type="application/json")
 
         if r.status_code == 200:
             data = r.json()

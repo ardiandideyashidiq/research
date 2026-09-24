@@ -14,6 +14,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--log-dir", default="logs", help="Directory for auto-generated run log files (default: logs)")
     parser.add_argument("--no-log-file", action="store_true", help="Disable auto-generating log file under logs directory")
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose debug logging")
+    parser.add_argument("--no-cache", action="store_true", help="Disable persistent HTTP/page caching")
+    parser.add_argument("--clear-cache", action="store_true", help="Clear cached HTTP responses")
 
     subparsers = parser.add_subparsers(dest="command", required=True, help="Subcommand to execute")
 
@@ -45,6 +47,11 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Disable streaming producer-consumer mode and use staged execution",
     )
+    p_pipe.add_argument(
+        "--force-download",
+        action="store_true",
+        help="Force redownloading papers even if already downloaded or cached",
+    )
 
     # 2. search
     p_search = subparsers.add_parser("search", help="Search academic literature across federated providers and Google Scholar")
@@ -63,6 +70,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_dl = subparsers.add_parser("download", help="Concurrently download open-access PDFs with %%PDF magic byte verification")
     p_dl.add_argument("--cite-keys", help="Comma-separated cite_keys to download (default: all pending)")
     p_dl.add_argument("--concurrency", type=int, default=4, help="Concurrent download workers (default: 4)")
+    p_dl.add_argument("--force", action="store_true", help="Force redownloading papers even if already downloaded or cached")
 
     # 5. convert
     p_conv = subparsers.add_parser("convert", help="Convert PDF(s) to normalized Markdown with layout cleaning")
