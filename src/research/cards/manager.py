@@ -279,8 +279,11 @@ class CardManager:
         corpus: str | None = None,
         force: bool = False,
         limit: int = 200,
+        concurrency: int = 4,
     ) -> list[ReviewCard]:
-        """Extract literature review cards for publications in the database."""
+        """Extract literature review cards for publications in the database using parallel workers."""
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+
         conn = self.db.get_connection()
         cursor = conn.cursor()
 
@@ -308,23 +311,54 @@ class CardManager:
         rows = cursor.execute(sql, params).fetchall()
         pubs = [PublicationRecord.from_row(dict(r)) for r in rows]
         results: list[ReviewCard] = []
+        to_extract: list[PublicationRecord] = []
 
         for p in pubs:
             if not force and p.cite_key in existing_keys:
                 card = self.get_card(p.cite_key)
                 if card:
                     results.append(card)
-                continue
+            else:
+                to_extract.append(p)
 
-            try:
-                card = self.extractor.extract_from_record(p)
-                self.save_card(card)
-                results.append(card)
-            except Exception as exc:  # noqa: BLE001
-                logger.warning("Failed extracting review card for '{}': {}", p.cite_key, exc)
+        if to_extract:
+            def _worker(pub: PublicationRecord) -> ReviewCard | None:
+                try:
+                    c = self.extractor.extract_from_record(pub)
+                    self.save_card(c)
+                    return c
+                except Exception as exc:  # noqa: BLE001
+                    logger.warning("Failed extracting review card for '{}': {}", pub.cite_key, exc)
+                    return None
+
+            with ThreadPoolExecutor(max_workers=max(1, concurrency)) as executor:
+                futures = [executor.submit(_worker, pub) for pub in to_extract]
+                for fut in as_completed(futures):
+                    card_res = fut.result()
+                    if card_res is not None:
+                        results.append(card_res)
 
         logger.info("Batch extraction completed: processed {} review cards.", len(results))
         return results
+
+    async def batch_extract_async(
+        self,
+        *,
+        corpus: str | None = None,
+        force: bool = False,
+        limit: int = 200,
+        concurrency: int = 4,
+    ) -> list[ReviewCard]:
+        """Asynchronously extract literature review cards using background thread pool."""
+        import asyncio
+
+        return await asyncio.to_thread(
+            self.batch_extract,
+            corpus=corpus,
+            force=force,
+            limit=limit,
+            concurrency=concurrency,
+        )
 
     def export_matrix(
         self,

@@ -109,14 +109,19 @@ async def _async_main(args: Any) -> int:
                 include_scholar=not args.no_scholar,
                 snowball=not args.no_snowball,
                 snowball_seeds=args.snowball_seeds,
+                snowball_concurrency=getattr(args, "snowball_concurrency", 4),
                 download=not args.no_download,
+                download_concurrency=getattr(args, "download_concurrency", 6),
                 convert=not args.no_convert,
+                convert_concurrency=getattr(args, "convert_concurrency", 4),
                 index_rag=not args.no_rag,
+                streaming=not getattr(args, "no_streaming", False),
             )
             desc = f"query='{args.query}'" if args.query else ""
             if args.bib:
                 desc += f" (bib seed='{args.bib}')" if desc else f"bib seed='{args.bib}'"
-            print(f"\n[+] Executing end-to-end research pipeline for: {desc}...")
+            mode_desc = "streaming parallel" if cfg.streaming else "staged parallel"
+            print(f"\n[+] Executing end-to-end research pipeline [{mode_desc}] for: {desc}...")
             res = await app.pipeline.run(cfg)
             print("\n" + res.summary() + "\n")
             return 0
@@ -190,20 +195,40 @@ async def _async_main(args: Any) -> int:
                 print(f"Error: Path '{args.path}' does not exist.", file=sys.stderr)
                 return 1
 
-            print(f"\n[+] Converting {len(files)} PDF document(s) to normalized Markdown...")
+            concurrency = getattr(args, "concurrency", 4)
+            print(f"\n[+] Concurrently converting {len(files)} PDF document(s) to normalized Markdown (workers={concurrency})...")
             out_dir = Path(args.output_dir) if args.output_dir else None
+
+            sem = asyncio.Semaphore(concurrency)
+
+            async def _worker(pdf_file: Path) -> tuple[bool, int, str]:
+                out_md = (out_dir / pdf_file.with_suffix(".md").name) if out_dir else pdf_file.with_suffix(".md")
+                async with sem:
+                    try:
+                        _, conv_doc = await app.pdf.convert_file_async(pdf_file, out_md)
+                        c_count = 0
+                        if args.index_rag:
+                            chunks = await asyncio.to_thread(
+                                app.retriever.index_document,
+                                conv_doc,
+                                cite_key=pdf_file.stem,
+                            )
+                            c_count = len(chunks)
+                        msg = f"  - Converted {pdf_file.name} -> {out_md.name} ({conv_doc.total_pages} pages)"
+                        return True, c_count, msg
+                    except Exception as e:  # noqa: BLE001
+                        return False, 0, f"  - Failed {pdf_file.name}: {e}"
+
+            tasks = [_worker(f) for f in files]
+            results = await asyncio.gather(*tasks)
 
             converted_count = 0
             chunks_count = 0
-            for pdf_file in files:
-                out_md = (out_dir / pdf_file.with_suffix(".md").name) if out_dir else pdf_file.with_suffix(".md")
-                conv_doc = app.convert_pdf(pdf_file, output_md=out_md)
-                converted_count += 1
-                cite_key = pdf_file.stem
-                if args.index_rag:
-                    chunks = app.retriever.index_document(conv_doc, cite_key=cite_key)
-                    chunks_count += len(chunks)
-                print(f"  - Converted {pdf_file.name} -> {out_md.name} ({conv_doc.total_pages} pages)")
+            for success, c_count, msg in results:
+                print(msg)
+                if success:
+                    converted_count += 1
+                    chunks_count += c_count
 
             print(f"\n[+] Successfully converted {converted_count} files ({chunks_count} RAG chunks indexed).\n")
             return 0
@@ -406,8 +431,16 @@ async def _async_main(args: Any) -> int:
                     print(f"  Positioning: {card.positioning[:100]}...\n")
                     return 0
 
-                print(f"\n[+] Batch extracting literature review cards (corpus={args.corpus}, limit={args.limit})...")
-                cards = app.cards.batch_extract(corpus=args.corpus, force=args.force, limit=args.limit)
+                concurrency = getattr(args, "concurrency", 4)
+                print(
+                    f"\n[+] Batch extracting literature review cards (corpus={args.corpus}, limit={args.limit}, workers={concurrency})..."
+                )
+                cards = app.cards.batch_extract(
+                    corpus=args.corpus,
+                    force=args.force,
+                    limit=args.limit,
+                    concurrency=concurrency,
+                )
                 print(f"\n[+] Batch extraction finished: {len(cards)} review cards processed and saved into SQLite.\n")
                 return 0
 

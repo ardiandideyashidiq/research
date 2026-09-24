@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import threading
 from pathlib import Path
 from types import TracebackType
 from typing import Any, Self
@@ -17,14 +18,24 @@ class DatabaseManager:
     def __init__(self, db_path: str | Path = "tmp/publications.sqlite") -> None:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
-        self._conn: sqlite3.Connection | None = None
+        self._local = threading.local()
+        self._connections: list[sqlite3.Connection] = []
+        self._lock = threading.Lock()
         self.init_schema()
 
     def get_connection(self) -> sqlite3.Connection:
-        if self._conn is None:
-            self._conn = sqlite3.connect(self.db_path)
-            self._conn.row_factory = sqlite3.Row
-        return self._conn
+        conn = getattr(self._local, "conn", None)
+        if conn is None:
+            conn = sqlite3.connect(self.db_path, timeout=60.0, check_same_thread=False)
+            conn.row_factory = sqlite3.Row
+            conn.execute("PRAGMA journal_mode = WAL")
+            conn.execute("PRAGMA synchronous = NORMAL")
+            conn.execute("PRAGMA busy_timeout = 60000")
+            conn.execute("PRAGMA cache_size = -64000")
+            self._local.conn = conn
+            with self._lock:
+                self._connections.append(conn)
+        return conn
 
     def __enter__(self) -> Self:
         self.get_connection()
@@ -39,13 +50,14 @@ class DatabaseManager:
         self.close()
 
     def close(self) -> None:
-        if self._conn is not None:
-            try:
-                self._conn.close()
-            except sqlite3.Error as e:
-                logger.debug(f"Error closing DB connection: {e}")
-            finally:
-                self._conn = None
+        with self._lock:
+            for conn in self._connections:
+                try:
+                    conn.close()
+                except sqlite3.Error as e:
+                    logger.debug(f"Error closing DB connection: {e}")
+            self._connections.clear()
+        self._local = threading.local()
 
     def init_schema(self) -> None:
         """Create tables and FTS virtual table if they don't exist."""

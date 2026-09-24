@@ -98,22 +98,45 @@ class ResearchApp:
 
         indexed = 0
         for e in entries:
-            rec = PublicationRecord(
-                cite_key=e.cite_key,
-                entry_type=e.entry_type,
-                title=e.title,
-                authors=e.authors,
-                journal=e.journal,
-                year=e.year,
-                volume=e.volume,
-                number=e.number,
-                pages=e.pages,
-                doi=e.doi,
-                url=e.url,
-                abstract=e.abstract,
-                sources=e.sources,
-                raw_fields=e.raw_fields,
-            )
+            existing = self.db.get(e.cite_key)
+            if existing:
+                rec = PublicationRecord(
+                    cite_key=e.cite_key,
+                    entry_type=e.entry_type or existing.entry_type,
+                    title=e.title or existing.title,
+                    authors=e.authors if e.authors else existing.authors,
+                    journal=e.journal or existing.journal,
+                    year=e.year or existing.year,
+                    volume=e.volume or existing.volume,
+                    number=e.number or existing.number,
+                    pages=e.pages or existing.pages,
+                    doi=e.doi or existing.doi,
+                    url=e.url or existing.url,
+                    abstract=e.abstract or existing.abstract,
+                    sources=list(dict.fromkeys(existing.sources + e.sources)),
+                    raw_fields=e.raw_fields or existing.raw_fields,
+                    download_status=existing.download_status,
+                    download_path=existing.download_path,
+                    markdown_path=existing.markdown_path,
+                    is_chunked=existing.is_chunked,
+                )
+            else:
+                rec = PublicationRecord(
+                    cite_key=e.cite_key,
+                    entry_type=e.entry_type,
+                    title=e.title,
+                    authors=e.authors,
+                    journal=e.journal,
+                    year=e.year,
+                    volume=e.volume,
+                    number=e.number,
+                    pages=e.pages,
+                    doi=e.doi,
+                    url=e.url,
+                    abstract=e.abstract,
+                    sources=e.sources,
+                    raw_fields=e.raw_fields,
+                )
             if auto_normalize:
                 rec = normalize_record(rec)
             self.db.create(rec)
@@ -206,8 +229,12 @@ class ResearchApp:
         include_scholar: bool = True,
         snowball: bool = True,
         download: bool = True,
+        download_concurrency: int = 6,
         convert: bool = True,
+        convert_concurrency: int = 4,
+        snowball_concurrency: int = 4,
         index_rag: bool = True,
+        streaming: bool = True,
         **kwargs: Any,
     ) -> PipelineResult:
         """Execute the end-to-end research lifecycle for a query and/or seed .bib file."""
@@ -218,8 +245,12 @@ class ResearchApp:
             include_scholar=include_scholar,
             snowball=snowball,
             download=download,
+            download_concurrency=download_concurrency,
             convert=convert,
+            convert_concurrency=convert_concurrency,
+            snowball_concurrency=snowball_concurrency,
             index_rag=index_rag,
+            streaming=streaming,
             **kwargs,
         )
         return await self.pipeline.run(config)

@@ -18,10 +18,13 @@ class PipelineConfig:
     snowball: bool = True
     snowball_seeds: int = 2
     snowball_limit: int = 8
+    snowball_concurrency: int = 4
     download: bool = True
-    download_concurrency: int = 4
+    download_concurrency: int = 6
     convert: bool = True
+    convert_concurrency: int = 4
     index_rag: bool = True
+    streaming: bool = True
 
 
 @dataclass

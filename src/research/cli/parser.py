@@ -35,8 +35,16 @@ def build_parser() -> argparse.ArgumentParser:
     p_pipe.add_argument("--no-snowball", action="store_true", help="Skip citation graph snowballing")
     p_pipe.add_argument("--snowball-seeds", type=int, default=2, help="Number of top seed papers to snowball (default: 2)")
     p_pipe.add_argument("--no-download", action="store_true", help="Skip downloading PDFs")
+    p_pipe.add_argument("--download-concurrency", type=int, default=6, help="Concurrent download workers (default: 6)")
     p_pipe.add_argument("--no-convert", action="store_true", help="Skip converting PDFs to Markdown")
+    p_pipe.add_argument("--convert-concurrency", type=int, default=4, help="Concurrent conversion workers (default: 4)")
+    p_pipe.add_argument("--snowball-concurrency", type=int, default=4, help="Concurrent snowball workers (default: 4)")
     p_pipe.add_argument("--no-rag", action="store_true", help="Skip semantic chunking and RAG indexing")
+    p_pipe.add_argument(
+        "--no-streaming",
+        action="store_true",
+        help="Disable streaming producer-consumer mode and use staged execution",
+    )
 
     # 2. search
     p_search = subparsers.add_parser("search", help="Search academic literature across federated providers and Google Scholar")
@@ -60,6 +68,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_conv = subparsers.add_parser("convert", help="Convert PDF(s) to normalized Markdown with layout cleaning")
     p_conv.add_argument("path", help="Path to PDF file or directory containing PDFs")
     p_conv.add_argument("--output-dir", help="Directory to save converted .md files")
+    p_conv.add_argument("--concurrency", type=int, default=4, help="Concurrent conversion workers (default: 4)")
     p_conv.add_argument("--index-rag", action="store_true", help="Also chunk and index into RAG database")
 
     # 6. query (RAG)
@@ -181,6 +190,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Filter extraction by corpus (default: all)",
     )
     p_cextract.add_argument("--force", action="store_true", help="Re-extract and overwrite existing cards")
+    p_cextract.add_argument("--concurrency", type=int, default=4, help="Concurrent worker threads (default: 4)")
     p_cextract.add_argument("--limit", type=int, default=200, help="Maximum publications to process (default: 200)")
 
     # cards list

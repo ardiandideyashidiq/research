@@ -186,11 +186,70 @@ class DownloadManager:
         )
         return updated or record
 
+    async def download_stream(
+        self,
+        in_queue: asyncio.Queue[PublicationRecord | None],
+        out_queue: asyncio.Queue[PublicationRecord | None] | None = None,
+        *,
+        concurrency: int | None = None,
+        on_downloaded: Any | None = None,
+    ) -> dict[str, int]:
+        """Process incoming publication download requests from an async queue with parallel workers."""
+        worker_count = concurrency or self.concurrency
+        stats: dict[str, int] = {}
+        seen_keys: set[str] = set()
+
+        if self.engine == "httpx":
+            session_ctx = httpx.AsyncClient(verify=False, timeout=self.timeout, follow_redirects=True)
+        else:
+            session_ctx = AsyncSession(impersonate="chrome", verify=False, timeout=self.timeout)
+
+        async with (
+            session_ctx as session,
+            OJSClient(engine=self.engine, verify_ssl=False, timeout=self.timeout) as ojs_client,
+        ):
+
+            async def _worker() -> None:
+                while True:
+                    rec = await in_queue.get()
+                    if rec is None:
+                        in_queue.task_done()
+                        break
+
+                    if rec.cite_key in seen_keys:
+                        in_queue.task_done()
+                        continue
+                    seen_keys.add(rec.cite_key)
+
+                    try:
+                        result = await self.download_record(rec, session=session, ojs_client=ojs_client)
+                        status = result.download_status
+                        stats[status] = stats.get(status, 0) + 1
+                        if status == "downloaded":
+                            if on_downloaded:
+                                if asyncio.iscoroutinefunction(on_downloaded):
+                                    await on_downloaded(result)
+                                else:
+                                    on_downloaded(result)
+                            if out_queue is not None:
+                                await out_queue.put(result)
+                    except Exception as e:  # noqa: BLE001
+                        logger.error(f"Worker error downloading {rec.cite_key}: {e}")
+                        stats["failed_unexpected"] = stats.get("failed_unexpected", 0) + 1
+                    finally:
+                        in_queue.task_done()
+
+            workers = [asyncio.create_task(_worker()) for _ in range(worker_count)]
+            await asyncio.gather(*workers)
+
+        return stats
+
     async def download_all(
         self,
         cite_keys: list[str] | None = None,
         *,
         skip_already_downloaded: bool = True,
+        concurrency: int | None = None,
     ) -> dict[str, int]:
         """Download papers in parallel using an async queue and worker pool."""
         if cite_keys is not None:
@@ -205,54 +264,27 @@ class DownloadManager:
                 if not (r.download_status == "downloaded" and r.download_path and Path(r.download_path).is_file())
             ]
 
-        queue: asyncio.Queue[PublicationRecord] = asyncio.Queue()
+        worker_count = concurrency or self.concurrency
+        queue: asyncio.Queue[PublicationRecord | None] = asyncio.Queue()
         for r in records:
             await queue.put(r)
+        for _ in range(worker_count):
+            await queue.put(None)
 
-        stats: dict[str, int] = {}
-
-        if self.engine == "httpx":
-            session_ctx = httpx.AsyncClient(verify=False, timeout=self.timeout, follow_redirects=True)
-        else:
-            session_ctx = AsyncSession(impersonate="chrome", verify=False, timeout=self.timeout)
-
-        async with (
-            session_ctx as session,
-            OJSClient(engine=self.engine, verify_ssl=False, timeout=self.timeout) as ojs_client,
-        ):
-
-                async def _worker() -> None:
-                    while not queue.empty():
-                        try:
-                            rec = queue.get_nowait()
-                        except asyncio.QueueEmpty:
-                            break
-
-                        try:
-                            result = await self.download_record(rec, session=session, ojs_client=ojs_client)
-                            status = result.download_status
-                            stats[status] = stats.get(status, 0) + 1
-                        except Exception as e:  # noqa: BLE001 - worker safeguard
-                            logger.error(f"Unexpected worker error on {rec.cite_key}: {e}")
-                            stats["failed_unexpected"] = stats.get("failed_unexpected", 0) + 1
-                        finally:
-                            queue.task_done()
-
-                workers = [asyncio.create_task(_worker()) for _ in range(self.concurrency)]
-                await asyncio.gather(*workers)
-
-        return stats
+        return await self.download_stream(queue, concurrency=worker_count)
 
     def download_all_sync(
         self,
         cite_keys: list[str] | None = None,
         *,
         skip_already_downloaded: bool = True,
+        concurrency: int | None = None,
     ) -> dict[str, int]:
         """Synchronous wrapper for download_all."""
         return asyncio.run(
             self.download_all(
                 cite_keys=cite_keys,
                 skip_already_downloaded=skip_already_downloaded,
+                concurrency=concurrency,
             )
         )

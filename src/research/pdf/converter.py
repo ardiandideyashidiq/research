@@ -267,6 +267,27 @@ class PDFConverter:
         """Asynchronously convert a PDF document in a background thread."""
         return await asyncio.to_thread(self.convert, source, options=options)
 
+    async def convert_file_async(
+        self,
+        input_pdf: str | Path,
+        output_md: str | Path | None = None,
+        *,
+        options: ConversionOptions | None = None,
+    ) -> tuple[Path, ConvertedDocument]:
+        """Asynchronously convert PDF file to a Markdown file on disk in a worker thread."""
+
+        def _task() -> tuple[Path, ConvertedDocument]:
+            in_path = Path(input_pdf)
+            if not in_path.exists():
+                raise FileNotFoundError(f"Input PDF not found: {in_path}")
+            out_path = Path(output_md) if output_md else in_path.with_suffix(".md")
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            conv = self.convert(in_path, options=options)
+            out_path.write_text(conv.markdown, encoding="utf-8")
+            return out_path, conv
+
+        return await asyncio.to_thread(_task)
+
     async def convert_batch(
         self,
         sources: list[str | Path],
