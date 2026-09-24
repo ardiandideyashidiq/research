@@ -37,6 +37,12 @@ async def _async_main(args: Any) -> int:
             print(f"  Downloaded PDFs:     {stats['downloaded']}")
             print(f"  Converted Documents: {stats['converted']}")
             print(f"  RAG Semantic Chunks: {stats['total_chunks']}")
+            print(f"  Dense Embeddings:    {stats.get('total_embeddings', 0)}")
+            corpus_b = stats.get("corpus_breakdown", {})
+            if corpus_b:
+                print("  Corpus breakdown:")
+                for c_name, c_cnt in sorted(corpus_b.items()):
+                    print(f"    - {c_name: <16}: {c_cnt}")
             if statuses:
                 print("  Status breakdown:")
                 for st, cnt in sorted(statuses.items()):
@@ -158,8 +164,20 @@ async def _async_main(args: Any) -> int:
             return 0
 
         if cmd == "query":
-            print(f"\n[+] Searching indexed literature for: '{args.query}'...")
-            results = await app.query_rag(args.query, limit=args.limit, cite_key=args.cite_key)
+            if getattr(args, "embed", False):
+                print("\n[+] Checking and generating missing dense vector embeddings...")
+                app.retriever.embed_all_chunks()
+
+            corpus_str = f" [corpus: {args.corpus}]" if args.corpus != "all" else ""
+            mode_str = f" [mode: {args.mode}]"
+            print(f"\n[+] Searching indexed database for: '{args.query}'{mode_str}{corpus_str}...")
+            results = await app.query_rag(
+                args.query,
+                limit=args.limit,
+                cite_key=args.cite_key,
+                mode=args.mode,
+                corpus=args.corpus,
+            )
 
             if not results:
                 print("\n  No matching chunks found in database.\n")
@@ -171,7 +189,7 @@ async def _async_main(args: Any) -> int:
                 print(f"\n[+] Top {len(results)} Ranked Excerpts:\n")
                 for i, r in enumerate(results, start=1):
                     citation = r.formatted_citation()
-                    print(f"--- [{i}] {citation} (Score: {r.score:.3f}) ---")
+                    print(f"--- [{i}] {citation} (Match: {r.retrieval_mode}, Score: {r.score:.4f}) ---")
                     print(r.chunk.content.strip())
                     print()
             return 0
@@ -215,6 +233,12 @@ async def _async_main(args: Any) -> int:
                 json_path = out_dir / f"{doc.doc_id}_chunks.json"
                 converter.export_markdown(doc, md_path)
                 converter.export_chunks_json(doc.chunks, json_path)
+                if getattr(args, "index_rag", False):
+                    app.retriever.index_putusan_document(
+                        doc,
+                        markdown_path=str(md_path),
+                        embed=getattr(args, "embed", False),
+                    )
                 print(f"\n[+] Converted Putusan: {doc.metadata.nomor_putusan}")
                 print(f"  Pengadilan:  {doc.metadata.pengadilan}")
                 print(f"  Tingkat:     {doc.metadata.tingkat_peradilan}")
@@ -224,7 +248,10 @@ async def _async_main(args: Any) -> int:
                 print(f"  Bagian:      {len(doc.sections)} sections")
                 print(f"  Chunks:      {len(doc.chunks)} context-preserving chunks")
                 print(f"  Output MD:   {md_path}")
-                print(f"  Output JSON: {json_path}\n")
+                print(f"  Output JSON: {json_path}")
+                if getattr(args, "index_rag", False):
+                    print("  RAG Status:  Indexed into unified SQLite chunks table")
+                print()
                 return 0
 
             # Directory batch processing
@@ -250,6 +277,12 @@ async def _async_main(args: Any) -> int:
                 converter.export_markdown(d, m_path)
                 converter.export_chunks_json(d.chunks, j_path)
                 all_chunks.extend(d.chunks)
+                if getattr(args, "index_rag", False):
+                    app.retriever.index_putusan_document(
+                        d,
+                        markdown_path=str(m_path),
+                        embed=getattr(args, "embed", False),
+                    )
 
             all_chunks_path = out_dir / "all_chunks.json"
             converter.export_chunks_json(all_chunks, all_chunks_path)
@@ -259,7 +292,16 @@ async def _async_main(args: Any) -> int:
             print(f"  - Total Pages parsed:    {total_pages:,}")
             print(f"  - Total Semantic Chunks: {total_chunks:,}")
             print(f"  - Output directory:      {out_dir}")
-            print(f"  - Consolidated Chunks:   {all_chunks_path}\n")
+            print(f"  - Consolidated Chunks:   {all_chunks_path}")
+            if getattr(args, "index_rag", False):
+                print(f"  - RAG Indexing:          {total_chunks:,} chunks indexed into SQLite")
+            print()
+            return 0
+
+        if cmd == "embed":
+            print("\n[+] Generating dense vector embeddings for unembedded chunks...")
+            count = app.retriever.embed_all_chunks(batch_size=getattr(args, "batch_size", 64))
+            print(f"\n[+] Finished! Generated and stored {count} chunk embeddings.\n")
             return 0
 
         if cmd == "web-search":

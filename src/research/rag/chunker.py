@@ -25,6 +25,7 @@ class SemanticChunker:
         doc: ConvertedDocument,
         *,
         cite_key: str,
+        corpus: str = "literature",
     ) -> list[DocumentChunk]:
         """Chunk a ConvertedDocument using per-page and section structural boundaries."""
         paper_title = doc.metadata.title or cite_key
@@ -65,6 +66,7 @@ class SemanticChunker:
                                     page_end=page_end,
                                     content=sub_text,
                                     token_estimate=max(1, len(sub_text) // 4),
+                                    corpus=corpus,
                                 )
                             )
                         sub_buf = [p]
@@ -88,6 +90,7 @@ class SemanticChunker:
                                 page_end=page_end,
                                 content=sub_text,
                                 token_estimate=max(1, len(sub_text) // 4),
+                                corpus=corpus,
                             )
                         )
             else:
@@ -103,6 +106,7 @@ class SemanticChunker:
                         page_end=page_end,
                         content=text,
                         token_estimate=max(1, len(text) // 4),
+                        corpus=corpus,
                     )
                 )
 
@@ -150,6 +154,7 @@ class SemanticChunker:
         *,
         cite_key: str,
         paper_title: str,
+        corpus: str = "literature",
     ) -> list[DocumentChunk]:
         """Chunk a raw Markdown string using headings and paragraphs."""
         chunks: list[DocumentChunk] = []
@@ -188,6 +193,7 @@ class SemanticChunker:
                                 page_end=current_page,
                                 content=chunk_text,
                                 token_estimate=max(1, len(chunk_text) // 4),
+                                corpus=corpus,
                             )
                         )
                     accumulated_text = []
@@ -212,6 +218,7 @@ class SemanticChunker:
                                 page_end=current_page,
                                 content=chunk_text,
                                 token_estimate=max(1, len(chunk_text) // 4),
+                                corpus=corpus,
                             )
                         )
                     accumulated_text = []
@@ -231,6 +238,7 @@ class SemanticChunker:
                         page_end=current_page,
                         content=chunk_text,
                         token_estimate=max(1, len(chunk_text) // 4),
+                        corpus=corpus,
                     )
                 )
 

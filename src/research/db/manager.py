@@ -154,11 +154,29 @@ class DatabaseManager:
                 page_start INTEGER,
                 page_end INTEGER,
                 content TEXT NOT NULL,
+                corpus TEXT NOT NULL DEFAULT 'literature',
                 FOREIGN KEY (cite_key) REFERENCES publications(cite_key) ON DELETE CASCADE
             )
             """
         )
+        # Auto-migrate corpus in chunks if missing
+        chunk_cols = {row[1] for row in cursor.execute("PRAGMA table_info(chunks)").fetchall()}
+        if "corpus" not in chunk_cols:
+            cursor.execute("ALTER TABLE chunks ADD COLUMN corpus TEXT NOT NULL DEFAULT 'literature'")
+
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_chunks_cite_key ON chunks(cite_key)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_chunks_corpus ON chunks(corpus)")
+
+        # Create chunk_embeddings table for dense vectors
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS chunk_embeddings (
+                chunk_id TEXT PRIMARY KEY,
+                embedding BLOB NOT NULL,
+                FOREIGN KEY (chunk_id) REFERENCES chunks(chunk_id) ON DELETE CASCADE
+            )
+            """
+        )
 
         try:
             cursor.execute(
@@ -459,12 +477,13 @@ class DatabaseManager:
         cursor = conn.cursor()
         count = 0
         for c in chunks:
+            corpus_val = c.get("corpus", "literature")
             cursor.execute(
                 """
                 INSERT OR REPLACE INTO chunks (
                     chunk_id, cite_key, paper_title, section_title,
-                    section_level, page_start, page_end, content
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    section_level, page_start, page_end, content, corpus
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     c["chunk_id"],
@@ -475,6 +494,7 @@ class DatabaseManager:
                     c.get("page_start"),
                     c.get("page_end"),
                     c["content"],
+                    corpus_val,
                 ),
             )
             # Sync to chunks_fts
@@ -496,9 +516,13 @@ class DatabaseManager:
         return count
 
     def delete_chunks(self, cite_key: str) -> int:
-        """Delete all chunks for a publication."""
+        """Delete all chunks and their embeddings for a publication."""
         conn = self.get_connection()
         cursor = conn.cursor()
+        cursor.execute(
+            "DELETE FROM chunk_embeddings WHERE chunk_id IN (SELECT chunk_id FROM chunks WHERE cite_key = ?)",
+            (cite_key,),
+        )
         cursor.execute("DELETE FROM chunks WHERE cite_key = ?", (cite_key,))
         deleted = cursor.rowcount
         try:
@@ -508,66 +532,152 @@ class DatabaseManager:
         conn.commit()
         return deleted
 
+    def save_chunk_embeddings(self, embeddings: dict[str, Any]) -> int:
+        """Save binary float32 embeddings for chunks."""
+        import array
+
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        count = 0
+        for chunk_id, emb in embeddings.items():
+            if hasattr(emb, "tobytes"):
+                emb_bytes = emb.tobytes()
+            elif isinstance(emb, (list, tuple)):
+                emb_bytes = array.array("f", emb).tobytes()
+            else:
+                emb_bytes = bytes(emb)
+
+            cursor.execute(
+                "INSERT OR REPLACE INTO chunk_embeddings (chunk_id, embedding) VALUES (?, ?)",
+                (chunk_id, emb_bytes),
+            )
+            count += 1
+        conn.commit()
+        return count
+
+    def get_unembedded_chunks(self, limit: int | None = None) -> list[dict[str, Any]]:
+        """Return chunks that do not yet have an embedding in chunk_embeddings."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        sql = """
+            SELECT c.chunk_id, c.content, c.paper_title, c.section_title
+            FROM chunks c
+            LEFT JOIN chunk_embeddings e ON c.chunk_id = e.chunk_id
+            WHERE e.chunk_id IS NULL
+        """
+        if limit is not None:
+            sql += f" LIMIT {int(limit)}"
+        rows = cursor.execute(sql).fetchall()
+        return [dict(r) for r in rows]
+
+    def get_all_embeddings(
+        self,
+        *,
+        corpus: str | None = None,
+        cite_key: str | None = None,
+    ) -> tuple[list[str], Any]:
+        """Fetch all chunk IDs and their vector embeddings as a 2D float32 numpy array."""
+        import numpy as np
+
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        conditions = []
+        params = []
+        if corpus and corpus != "all":
+            conditions.append("c.corpus = ?")
+            params.append(corpus)
+        if cite_key:
+            conditions.append("c.cite_key = ?")
+            params.append(cite_key)
+
+        where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
+
+        sql = f"""
+            SELECT e.chunk_id, e.embedding
+            FROM chunk_embeddings e
+            JOIN chunks c ON e.chunk_id = c.chunk_id
+            {where_clause}
+        """
+        rows = cursor.execute(sql, params).fetchall()
+        if not rows:
+            return [], np.empty((0, 0), dtype=np.float32)
+
+        chunk_ids = [r[0] for r in rows]
+        all_bytes = b"".join(r[1] for r in rows)
+        dim = len(rows[0][1]) // 4
+        matrix = np.frombuffer(all_bytes, dtype=np.float32).reshape(len(rows), dim)
+        return chunk_ids, matrix
+
+    def get_chunks_by_ids(self, chunk_ids: list[str]) -> dict[str, dict[str, Any]]:
+        """Fetch chunk metadata and content for a list of chunk IDs."""
+        if not chunk_ids:
+            return {}
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        placeholders = ",".join("?" for _ in chunk_ids)
+        rows = cursor.execute(
+            f"SELECT * FROM chunks WHERE chunk_id IN ({placeholders})",
+            chunk_ids,
+        ).fetchall()
+        return {r["chunk_id"]: dict(r) for r in rows}
+
     def search_chunks(
         self,
         query: str,
         *,
         limit: int = 10,
         cite_key: str | None = None,
+        corpus: str | None = None,
     ) -> list[dict[str, Any]]:
-        """Full-text search across all indexed chunks using FTS5 BM25 ranking."""
+        """Full-text search across all indexed chunks using FTS5 BM25 ranking with optional corpus filter."""
         conn = self.get_connection()
         cursor = conn.cursor()
+
+        conditions = []
+        params: list[Any] = [query]
+        if cite_key:
+            conditions.append("c.cite_key = ?")
+            params.append(cite_key)
+        if corpus and corpus != "all":
+            conditions.append("c.corpus = ?")
+            params.append(corpus)
+
+        where_extra = f"AND {' AND '.join(conditions)}" if conditions else ""
+        params.append(limit)
+
         try:
-            if cite_key:
-                cursor.execute(
-                    """
-                    SELECT c.*, bm25(chunks_fts) as rank
-                    FROM chunks c
-                    JOIN chunks_fts f ON c.chunk_id = f.chunk_id
-                    WHERE chunks_fts MATCH ? AND c.cite_key = ?
-                    ORDER BY rank
-                    LIMIT ?
-                    """,
-                    (query, cite_key, limit),
-                )
-            else:
-                cursor.execute(
-                    """
-                    SELECT c.*, bm25(chunks_fts) as rank
-                    FROM chunks c
-                    JOIN chunks_fts f ON c.chunk_id = f.chunk_id
-                    WHERE chunks_fts MATCH ?
-                    ORDER BY rank
-                    LIMIT ?
-                    """,
-                    (query, limit),
-                )
-            rows = cursor.fetchall()
+            sql = f"""
+                SELECT c.*, bm25(chunks_fts) as rank
+                FROM chunks c
+                JOIN chunks_fts f ON c.chunk_id = f.chunk_id
+                WHERE chunks_fts MATCH ? {where_extra}
+                ORDER BY rank
+                LIMIT ?
+            """
+            rows = cursor.execute(sql, params).fetchall()
             return [dict(r) for r in rows]
         except sqlite3.OperationalError:
             pattern = f"%{query}%"
+            fallback_conditions = ["(c.content LIKE ? OR c.section_title LIKE ? OR c.paper_title LIKE ?)"]
+            fallback_params: list[Any] = [pattern, pattern, pattern]
             if cite_key:
-                cursor.execute(
-                    """
-                    SELECT *, 0.0 as rank FROM chunks
-                    WHERE content LIKE ? AND cite_key = ?
-                    LIMIT ?
-                    """,
-                    (pattern, cite_key, limit),
-                )
-            else:
-                cursor.execute(
-                    """
-                    SELECT *, 0.0 as rank FROM chunks
-                    WHERE content LIKE ? OR section_title LIKE ? OR paper_title LIKE ?
-                    LIMIT ?
-                    """,
-                    (pattern, pattern, pattern, limit),
-                )
+                fallback_conditions.append("c.cite_key = ?")
+                fallback_params.append(cite_key)
+            if corpus and corpus != "all":
+                fallback_conditions.append("c.corpus = ?")
+                fallback_params.append(corpus)
+            fallback_params.append(limit)
+
+            sql = f"""
+                SELECT c.*, 0.0 as rank FROM chunks c
+                WHERE {' AND '.join(fallback_conditions)}
+                LIMIT ?
+            """
+            cursor.execute(sql, fallback_params)
             return [dict(r) for r in cursor.fetchall()]
 
-    def get_stats(self) -> dict[str, int]:
+    def get_stats(self) -> dict[str, Any]:
         """Return high-level summary counts of database contents."""
         conn = self.get_connection()
         cursor = conn.cursor()
@@ -579,9 +689,24 @@ class DatabaseManager:
             "SELECT COUNT(*) FROM publications WHERE markdown_path IS NOT NULL"
         ).fetchone()[0]
         total_chunks = cursor.execute("SELECT COUNT(*) FROM chunks").fetchone()[0]
+        total_embeddings = 0
+        try:
+            total_embeddings = cursor.execute("SELECT COUNT(*) FROM chunk_embeddings").fetchone()[0]
+        except sqlite3.OperationalError:
+            pass
+
+        corpus_breakdown = {}
+        try:
+            c_rows = cursor.execute("SELECT corpus, COUNT(*) FROM chunks GROUP BY corpus").fetchall()
+            corpus_breakdown = {r[0]: r[1] for r in c_rows}
+        except sqlite3.OperationalError:
+            pass
+
         return {
             "total_publications": total_pubs,
             "downloaded": downloaded,
             "converted": converted,
             "total_chunks": total_chunks,
+            "total_embeddings": total_embeddings,
+            "corpus_breakdown": corpus_breakdown,
         }

@@ -15,6 +15,7 @@ class DocumentChunk:
     page_end: int | None = None
     content: str = ""
     token_estimate: int = 0
+    corpus: str = "literature"
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -31,6 +32,7 @@ class DocumentChunk:
             page_end=data.get("page_end"),
             content=data.get("content", ""),
             token_estimate=data.get("token_estimate", max(1, len(data.get("content", "")) // 4)),
+            corpus=data.get("corpus", "literature"),
         )
 
 
@@ -39,8 +41,17 @@ class RetrievalResult:
     chunk: DocumentChunk
     score: float
     snippet: str = ""
+    retrieval_mode: str = "bm25"
 
     def formatted_citation(self) -> str:
+        badge = ""
+        if self.chunk.corpus == "putusan":
+            badge = "[PUTUSAN] "
+        elif self.chunk.corpus == "web":
+            badge = "[WEB] "
+        elif self.chunk.corpus == "literature":
+            badge = "[ACADEMIC] "
+
         sec = f" > {self.chunk.section_title}" if self.chunk.section_title else ""
         pg = f" (p. {self.chunk.page_start})" if self.chunk.page_start else ""
-        return f"[{self.chunk.cite_key}] {self.chunk.paper_title}{sec}{pg}"
+        return f"{badge}[{self.chunk.cite_key}] {self.chunk.paper_title}{sec}{pg}"

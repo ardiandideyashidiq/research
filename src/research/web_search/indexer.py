@@ -73,6 +73,7 @@ class WebSearchIndexer:
                 md_content,
                 cite_key=result.cite_key,
                 paper_title=result.title,
+                corpus="web",
             )
             if chunks:
                 self.db.insert_chunks([c.to_dict() for c in chunks])

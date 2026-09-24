@@ -219,9 +219,23 @@ class ResearchApp:
         *,
         limit: int = 5,
         cite_key: str | None = None,
+        mode: str = "hybrid",
+        corpus: str | None = None,
+        **kwargs: Any,
     ) -> list[RetrievalResult]:
-        """Search full-text indexed document chunks via FTS5 BM25."""
-        return self.retriever.search(query, limit=limit, cite_key=cite_key)
+        """Search full-text indexed document chunks via hybrid (BM25 + Dense RRF), BM25, or Dense."""
+        return self.retriever.search(
+            query,
+            limit=limit,
+            cite_key=cite_key,
+            mode=mode,
+            corpus=corpus,
+            **kwargs,
+        )
+
+    def embed_chunks(self, *, batch_size: int = 64) -> int:
+        """Compute and persist dense vector embeddings for all unembedded chunks."""
+        return self.retriever.embed_all_chunks(batch_size=batch_size)
 
     async def search_web(
         self,

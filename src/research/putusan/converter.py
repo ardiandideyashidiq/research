@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pymupdf
 from loguru import logger
@@ -12,6 +13,10 @@ from research.putusan.extractor import extract_metadata
 from research.putusan.models import PutusanChunk, PutusanDocument
 from research.putusan.normalizer import normalize_putusan_text
 from research.putusan.segmenter import segment_putusan
+
+if TYPE_CHECKING:
+    from research.db.manager import DatabaseManager
+    from research.rag.models import DocumentChunk
 
 
 class PutusanConverter:
@@ -167,3 +172,83 @@ class PutusanConverter:
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(doc.normalized_markdown, encoding="utf-8")
         return target
+
+    @staticmethod
+    def index_document_to_db(
+        doc: PutusanDocument,
+        db: DatabaseManager,
+        *,
+        markdown_path: str | Path | None = None,
+    ) -> list[DocumentChunk]:
+        """Index a PutusanDocument and its context-preserving chunks into SQLite database."""
+        import re
+
+        from research.db.models import PublicationRecord
+        from research.rag.models import DocumentChunk
+
+        clean_nomor = doc.metadata.nomor_putusan
+        if not clean_nomor or clean_nomor == "TIDAK_TERDETEKSI":
+            cite_key = doc.doc_id
+        else:
+            safe_suffix = re.sub(r"[^a-zA-Z0-9]+", "_", clean_nomor).strip("_")
+            cite_key = f"Putusan_{safe_suffix}"
+
+        # Extract year if possible
+        year = None
+        if doc.metadata.tanggal_putusan:
+            m = re.search(r"\b(19\d\d|20\d\d)\b", doc.metadata.tanggal_putusan)
+            if m:
+                year = int(m.group(1))
+        if year is None:
+            m = re.search(r"\b(19\d\d|20\d\d)\b", clean_nomor)
+            if m:
+                year = int(m.group(1))
+
+        # Build PublicationRecord
+        pub = PublicationRecord(
+            cite_key=cite_key,
+            entry_type="putusan",
+            title=f"Putusan {doc.metadata.pengadilan} No. {doc.metadata.nomor_putusan}",
+            authors=doc.metadata.majelis_hakim if doc.metadata.majelis_hakim else [doc.metadata.pengadilan],
+            journal=doc.metadata.pengadilan,
+            year=year,
+            abstract=doc.metadata.amar_ringkas or (doc.sections[0].content[:600] if doc.sections else None),
+            sources=["putusan", doc.metadata.tingkat_peradilan],
+            download_status="downloaded",
+            download_path=doc.file_path,
+            markdown_path=str(markdown_path) if markdown_path else None,
+            full_metadata=doc.metadata.to_dict(),
+            is_chunked=True,
+        )
+        db.create(pub)
+
+        # Delete existing chunks for this cite_key
+        db.delete_chunks(cite_key)
+
+        # Map PutusanChunk to DocumentChunk
+        doc_chunks: list[DocumentChunk] = []
+        for c in doc.chunks:
+            sec_title = f"[{c.section}] {c.subsection}" if c.subsection else f"[{c.section}]"
+            dc = DocumentChunk(
+                chunk_id=f"putusan_{c.chunk_id}",
+                cite_key=cite_key,
+                paper_title=pub.title,
+                section_title=sec_title,
+                section_level=2,
+                page_start=c.page_start,
+                page_end=c.page_end,
+                content=c.full_text,
+                token_estimate=c.token_count,
+                corpus="putusan",
+            )
+            doc_chunks.append(dc)
+
+        if doc_chunks:
+            db.insert_chunks([c.to_dict() for c in doc_chunks])
+            logger.info(
+                "Indexed {} Putusan chunks for '{}' into RAG database",
+                len(doc_chunks),
+                cite_key,
+            )
+
+        return doc_chunks

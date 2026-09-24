@@ -15,9 +15,11 @@ Key capabilities:
 - **Anti-Bot Scraping Engine**: `curl-cffi` browser TLS impersonation (`impersonate="chrome"`) for Google Scholar, arXiv, and Cloudflare-protected academic repositories.
 - **PDF to Markdown & Layout Normalization**: High-performance conversion with **PyMuPDF** & **PyMuPDF4LLM**, dehyphenation, heading normalization, running header/footer removal, prose reflow, and YAML frontmatter metadata.
 - **Semantic Chunking & SQLite FTS5 BM25 RAG**: Heading- and page-aware chunking preserving academic citation context, with zero-dependency SQLite BM25 ranking and LLM prompt context formatting.
+- **Dense Multilingual Vector Embeddings & RRF**: Local ONNX-powered embeddings with `fastembed` (`sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`) stored as compact float32 binary blobs in SQLite, fused with BM25 using Reciprocal Rank Fusion ($k=60$).
+- **Cross-Corpus Unified Retrieval**: Simultaneous semantic search across academic papers (`literature`), court decisions (`putusan`), and web findings (`web`) with explicit corpus tags and legal context headers.
 - **End-to-End Autonomous Pipeline**: One-command complete lifecycle orchestration (`search -> snowball -> download -> convert -> RAG chunking`).
-- **Indonesian Court Judgment Engine (Putusan)**: Context-preserving conversion and chunking for court decisions across all jurisdictions (MA, MK, MKMK, PN, PT, PA, PM, PTUN, DKPP, KIP) with legal typography unspacing, watermark/disclaimer stripping, section segmentation (`KEPALA`, `IDENTITAS`, `DUDUK_PERKARA`, `PERTIMBANGAN_HUKUM`, `AMAR_PUTUSAN`, `PENUTUP`), context header injection, and Tesseract OCR fallback for scanned decisions.
-- **Production CLI Suite**: Ergonomic subcommands (`pipeline`, `search`, `snowball`, `download`, `convert`, `query`, `export`, `stats`, `putusan`, `web-search`).
+- **Indonesian Court Judgment Engine (Putusan)**: Context-preserving conversion and chunking for court decisions across all jurisdictions (MA, MK, MKMK, PN, PT, PA, PM, PTUN, DKPP, KIP) with legal typography unspacing, watermark/disclaimer stripping, section segmentation (`KEPALA`, `IDENTITAS`, `DUDUK_PERKARA`, `PERTIMBANGAN_HUKUM`, `AMAR_PUTUSAN`, `PENUTUP`), context header injection, and direct SQLite RAG indexing.
+- **Production CLI Suite**: Ergonomic subcommands (`pipeline`, `search`, `snowball`, `download`, `convert`, `query`, `export`, `stats`, `putusan`, `web-search`, `embed`).
 
 ## Commands
 
@@ -26,16 +28,18 @@ Environment is managed strictly by [uv](https://docs.astral.sh/uv/); never use p
 ```bash
 uv sync                 # install deps including dev group
 uv run research --help  # view all CLI subcommands
-uv run research stats   # show database publications, downloads, RAG chunks
+uv run research stats   # show database publications, downloads, RAG chunks, embeddings
 uv run research pipeline "artificial intelligence copyright" --limit 10
 uv run research search "quantum computing" --providers arxiv,openalex --limit 5
 uv run research web-search "pertanggungjawaban pidana kecerdasan buatan" --provider all --limit 5
 uv run research snowball <cite_key> --direction both --limit 10
 uv run research download --concurrency 4
 uv run research convert data/downloads/paper.pdf --index-rag
-uv run research query "criminal liability deepfake" --format-context
-uv run research putusan /path/to/putusan.pdf --output-dir data/putusan_processed
-uv run research putusan /path/to/putusan_dir/ --sample 50 --concurrency 6
+uv run research embed --batch-size 64 # generate vector embeddings for all pending chunks
+uv run research query "criminal liability deepfake" --mode hybrid --corpus all --format-context
+uv run research query "pertimbangan hukum" --mode hybrid --corpus putusan --limit 3
+uv run research putusan /path/to/putusan.pdf --output-dir data/putusan_processed --index-rag
+uv run research putusan /path/to/putusan_dir/ --sample 50 --concurrency 6 --index-rag
 uv run research export --format bibtex --output tmp/export.bib
 uv run ruff check .     # lint
 uv run ruff check --fix .
@@ -107,7 +111,8 @@ src/research/
 ├── rag/                  # Semantic chunking & local FTS5 BM25 retrieval
 │   ├── models.py         # DocumentChunk, RetrievalResult
 │   ├── chunker.py        # SemanticChunker (heading/page boundary-aware chunking)
-│   └── retriever.py      # RAGRetriever (BM25 ranking, prompt context builder)
+│   ├── embeddings.py     # EmbeddingEngine (fast ONNX multilingual dense embeddings)
+│   └── retriever.py      # RAGRetriever (Hybrid BM25 + Dense RRF ranking, context builder)
 ├── pipeline/             # Autonomous end-to-end research orchestration
 │   ├── models.py         # PipelineConfig, PipelineResult
 │   └── orchestrator.py   # ResearchPipeline (search -> snowball -> download -> convert -> RAG)

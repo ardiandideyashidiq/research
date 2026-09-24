@@ -61,11 +61,31 @@ def build_parser() -> argparse.ArgumentParser:
     p_conv.add_argument("--index-rag", action="store_true", help="Also chunk and index into RAG database")
 
     # 6. query (RAG)
-    p_query = subparsers.add_parser("query", help="Query full-text indexed literature chunks using FTS5 BM25")
+    p_query = subparsers.add_parser(
+        "query",
+        help="Query cross-corpus indexed literature & putusan using Hybrid (BM25 + Dense RRF), BM25, or Dense RAG",
+    )
     p_query.add_argument("query", help="Question or topic keywords to search")
+    p_query.add_argument(
+        "--mode",
+        choices=["hybrid", "bm25", "dense"],
+        default="hybrid",
+        help="Search mode: hybrid (BM25 + Dense RRF), bm25, or dense (default: hybrid)",
+    )
+    p_query.add_argument(
+        "--corpus",
+        choices=["all", "literature", "putusan", "web"],
+        default="all",
+        help="Corpus to search: all, literature, putusan, or web (default: all)",
+    )
     p_query.add_argument("--limit", type=int, default=5, help="Number of excerpts to return (default: 5)")
     p_query.add_argument("--cite-key", help="Filter search to a specific paper cite_key")
     p_query.add_argument("--format-context", action="store_true", help="Output as LLM-ready markdown prompt block")
+    p_query.add_argument(
+        "--embed",
+        action="store_true",
+        help="Generate missing dense vector embeddings for all chunks before searching",
+    )
 
     # 7. export
     p_exp = subparsers.add_parser("export", help="Export publications database to BibTeX, JSON, or SQLite")
@@ -94,8 +114,25 @@ def build_parser() -> argparse.ArgumentParser:
         default=1500,
         help="Target max characters per chunk (default: 1500)",
     )
+    p_putusan.add_argument(
+        "--index-rag",
+        action="store_true",
+        help="Index converted Putusan chunks into SQLite unified RAG database",
+    )
+    p_putusan.add_argument(
+        "--embed",
+        action="store_true",
+        help="Compute dense vector embeddings for newly indexed chunks",
+    )
 
-    # 10. web-search
+    # 10. embed
+    p_embed = subparsers.add_parser(
+        "embed",
+        help="Generate and persist dense vector embeddings for all unembedded chunks",
+    )
+    p_embed.add_argument("--batch-size", type=int, default=64, help="Embedding batch size (default: 64)")
+
+    # 11. web-search
     p_web = subparsers.add_parser(
         "web-search",
         help="Search web via Tavily and/or DuckDuckGo (ddgs), extract to clean Markdown, and auto-index into RAG",
