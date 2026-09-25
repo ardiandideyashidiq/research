@@ -23,7 +23,9 @@ konfliktual dan kabur, bukan sekadar kosong:**
    28/45A disinformasi; 29/45B ancaman; 40 moderasi), UU PDP (65–68;
    khususnya 66 jo. 68 memalsukan data), UU TPKS (14 kekerasan seksual
    berbasis elektronik), dan KUHP baru (172/407/441/243/332/258/622) yang
-   **efektif sejak 2 Januari 2026** (Pasal 624) serta diubah UU 1/2026.
+   **efektif sejak 2 Januari 2026** (Pasal 624 [TERBACA]) serta diubah UU
+   1/2026 *[PERLU VERIFIKASI: butir perubahan 407/622/172 oleh UU 1/2026 —
+   lihat riset/tahap20.md V1]*.
 3. **Konflik temporal & ketidakpastian preferensi:** Pasal 622 ayat (1)r
    jo. (10) memindahkan delik kesusilaan/SARA/akses ITE ke KUHP baru,
    namun sebagian pasal ITE (27A, 27B, 28(1)/(3), 29, 40) tetap — sehingga
