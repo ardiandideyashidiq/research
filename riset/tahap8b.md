@@ -162,6 +162,55 @@ fokus lebih luas; `10_56895_plr_v12i1_1644` PLR — revenge porn UU ITE/TPKS,
 menarik untuk konteks korban namun tanpa unsur AI/deepfake) dinilai kurang tajam
 terhadap isu deepfake/AI-legal dan tidak dimasukkan pada batch ini.
 
+## Literatur Baru #6 (Subagent: Content Provenance / C2PA — Kredibilitas Teknis Konten Sintetis)
+
+Satu paper tambahan (50 → 51) — menutup **celah corpus yang belum terisi**: Requests
+sebelumnya hanya membahas *detection* deepfake (`PAPER_Groh2024`,
+`PAPER_Westkamp2026`) dan *regulasi AI*, tetapi **tidak ada satu pun literatur
+tetentang content provenance / C2PA** sebagai lapisan kredibilitas media. Paper
+ini mengisi celah itu sebagai **counterweight normatif**: solusi teknis
+authentikasi bukan *silver bullet*, melainkan berpotensi menjadi vektor surveilans baru.
+
+| # | Cite Key | Judul | DOI (unik) | Label | Isi inti |
+|---|---|---|---|---|---|
+| 51 | Rivadeneira2026 | C2PA Content Credentials and the Surveillance Risk: Adversarial Scenarios and Governance Gaps in the Content Provenance Ecosystem | 10.2139/ssrn.6986118 | [ABSTRACT] | *Threat modeling* C2PA dengan kerangka LINDDUN → 7 skenario adversarial dalam 3 *activation mechanism* (mandat legislatif/*identity disclosure*; *architectural capture* via CA negara; kegagalan desain/implementasi) → menutup 7 kategori ancaman LINDDUN; kesimpulan: perbaikan spesifikasi & UX **tidak memadai**, dibutuhkan *governance* di luar lapisan spesifikasi (SSRN preprint) |
+
+**Discovery & dedup**: dua query dijalankan — `"content provenance C2PA deepfake synthetic media watermark"`
+dan `"deepfake detection provenance standard"` (Crossref + OpenAlex, masing-masing
+14 hasil ter-dedup). DOI kandidat dibandingkan terhadap `riset/literature-review/`
+dan `riset/tahap8b_paper/`; **Romero Moreno 2024** (hasil query pertama) **di-skip
+karena duplikat** `PAPER_RomeroMoreno2024`. Tidak ada paper C2PA/provenance
+sebelumnya di korpus — celah ini konfirmasi baru.
+
+**Full-text: gagal (label [ABSTRACT], bukan [FULL-TEXT])**. Upaya `research fulltext`
+dicoba pada 5 rute resmi: Unpaywall (kosong), landing page SSRN (OJS/Highwire gagal
+ekstrak), direct PDF `Delivery.cfm`, mirror **WITNESS Library**, serta kandidat
+alternatif (Muller 2026 IEEE Signal Processing Letters; Ossowski 2026 IEEE PAEE;
+Rosenthol 2022 SPIE; Kaur 2024 Springer OA — semuanya **gagal** `/PDF` magic-byte).
+OpenAlex mencatat `oa_status: green` + `any_repository_has_fulltext: true` tetapi
+**tidak menyediakan `pdf_url`**. Sesuai AGENTS #8, `curl` manual **dilarang**;
+karena itu label **[ABSTRACT]** dipertahankan secara jujur dan kartu
+`PAPER_Rivadeneira2026_C2PA-content-credentials-surveillance-risk.md` hanya memuat
+hal yang dapat dinyatakan dari abstrak (tanpa kutipan pasal). **Kartu ini tidak boleh
+dipakai untuk kutipan substantif tanpa pembacaan teks penuh.**
+
+**Posisi ke-skripsi**: (a) **forensik & moderasi/PSE** — mengisi celah corpus
+yang selama ini kosong dan Sengketakan klaim "solusi teknis (watermark/C2PA)
+menyelesaikan masalah"; (b) **multi-aktor** — tiga *activation mechanism* (regulator,
+Certificate Authority, platform/operator) menambah tipologi aktor di luar(cluster)
+pembuat–penyebar–platform; (c) **perdata** — *identity assertion* yang *immutable*
+bertegangan dengan *right to be forgotten* (posisi `PAPER_ShaelouRazmetaeva2024`).
+Bridge dengan `PAPER_KusumawardaniHawin2024` (Lessig: *code is the law* — solusi
+teknis tetap tunduk pada hukum).
+
+**Backfill enrichment (4 blok) pada 4 kartu lama** — `PAPER_AvilaNegri2021`,
+`PAPER_KusumawardaniHawin2024`, `PAPER_ShaelouRazmetaeva2024`,
+`PAPER_Napitupulu2023` — kini masing-masing memuat: teknik penalaran penulis,
+tabel pasal/dokumen dengan status `[VERBATIM]`/`[RUJUKAN]`/`[TAK DISEBUT]`, kritik
+analitis, dan *research-gap mapping*. Verifikasi pasal yang dijalankan via MCP
+Pasal.id: **UU 7/2011 Pasal 21 → [TERBACA]** (kewajiban Rupiah + pengecualiannya);
+**ITE Pasal 18 ayat (3) → tidak ada di korpus Pasal.id** → ditandai `[PERLU VERIFIKASI]`.
+
 ## Integritas
 
 - Paper baru: full-text first (AGENTS #6), label [FULL-TEXT]/[ABSTRACT]/[METADATA], DOI unik.
