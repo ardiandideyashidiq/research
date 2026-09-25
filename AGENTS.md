@@ -113,6 +113,21 @@ uv run python tests/test_timeouts.py            # Fast-fail timeouts on unrespon
    - Never rely on a paper's quoted pasal number; confirm against the corpus before
      citing substantively (papers routinely quote outdated versions, e.g. UU ITE
      19/2016 or wrong PDP sanctions).
+10. **Self-Improving Workflow & Tools**:
+    - Whenever a task reveals a repeated manual step, a tool limit that forces a
+      subagent to fall back to `curl`/ad-hoc scripts, or a workflow gap, the agent
+      SHOULD fix it on the spot and commit: enhance the research CLI (new flag/
+      subcommand), update `workflow.md`, `AGENTS.md`, `knowledge/`, or the
+      subagent briefs.
+    - Before enhancing a tool, read its current implementation and docs; keep changes
+      minimal, lint-clean (`uv run ruff check .`), and backward-compatible.
+    - Register any new CLI surface in `AGENTS.md` (Detailed CLI section) and, if it
+      changes methodology, in `workflow.md` (Alat Operasional / gate checks).
+    - If a subagent reports an anti-pattern (manual retrieval, unverified pasal,
+      invented content), treat it as a tooling/instruction gap to close, not just an
+      agent failure, and improve the instructions/tools to prevent recurrence.
+    - Keep the `riset/` trail and `knowledge/` library consistent with tool changes so
+      future sessions & subagents inherit the improvements.
 
 ---
 
@@ -987,3 +1002,4 @@ Import packages strictly using absolute `src/` layout: `from research.db import 
 - **Polite Pools Email**: Academic API clients (Crossref, OpenAlex, Unpaywall, OpenAIRE) use `rdndds@gmail.com`.
 - **Ruff Compliance**: The codebase must maintain 100% compliance with `uv run ruff check .` without ignoring errors.
 - **Graceful Shutdown**: Always ensure background workers, database connections, and HTTP clients close properly via shielded teardown blocks.
+- **Continuous Self-Improvement**: Treat every completed phase as a chance to harden the platform — if a step required manual work, boat-anchor it into the CLI/workflow/agent guidance (rule #10).
