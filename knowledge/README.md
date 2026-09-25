@@ -1,0 +1,41 @@
+---
+title: Knowledge Base — Analisis Status Hukum Perkara
+description: >-
+  Indeks pustaka doktrin untuk analisis kualifikasi yuridis, penemuan hukum, dan
+  penetapan akibat hukum; dipakai pada Tahap 5-7 (kerangka konseptual, teori, asas).
+---
+
+# Knowledge Base: Analisis Status Hukum Perkara
+
+Pustaka doktrin & framework untuk menganalisis **status hukum perkara**
+(kualifikasi yuridis / legal standing / normative status). Dirujuk oleh
+`riset/tahap2.md` s.d. `tahapN.md` serta bab pembahasan skripsi.
+
+## Isi
+
+- <a href="./analisis-status-hukum/kerangka-teori.md">`analisis-status-hukum/kerangka-teori.md`</a>
+  — Tiga Lapisan Ilmu Hukum (Dogmatika/Teori/Filsafat) + **5 Kelompok Teori
+  Utama**: (1) Penemuan Hukum & Kualifikasi (Scholten, Sudikno); (2)
+  Stufenbau (Kelsen, Nawiasky); (3) Pertanggungjawaban & Atribusi (pidana/
+  perdata/admin, PMH 1365); (4) Ajudikasi (positivisme vs progresif vs
+  Dworkin); (5) Kebenaran Hukum (koherensi/korespondensi/konsensus).
+- <a href="./analisis-status-hukum/framework-operasional.md">`analisis-status-hukum/framework-operasional.md`</a>
+  — **6 Tahap Analisis Berjenjang**: I. Skematisasi fakta (konstatiring);
+  II. Kualifikasi & subsumsi (silogisme); III. Audit norma & cacat norma
+  (Harris/Hadjon, lex superior/specialis/posterior); IV. Penemuan hukum
+  (interpretasi 7 metode + konstruksi 4 metode); V. Atribusi tanggung jawab
+  (kausalitas, mens rea, PMH, kewenangan); VI. Sintesis IRAC + triade
+  Radbruch (keadilan/kepastian/kemanfaatan) + penetapan deklaratoir/
+  konstitutif/kondemnatoir. Termasuk **lembar kerja template** analisis
+  status hukum perkara.
+
+## Cara pakai dalam workflow
+
+- **Tahap 5** (kerangka konseptual) & **Tahap 6** (teori bertingkat):
+  pakai `kerangka-teori.md` — pilih grand/middle/applied dari 5 kelompok teori.
+- **Tahap 11** (uji otoritas & hierarki): pakai Tahap III framework-operasional
+  (Stufenbau + 4 prinsip Harris/Hadjon + tipologi cacat norma).
+- **Tahap 13–16** (penalaran hukum): pakai Tahap II & IV framework
+  (konstatir–kualifikasi–konstituir; interpretasi & konstruksi).
+- **Tahap 17–18** (argumentasi & preskripsi): pakai Tahap VI (IRAC + triade
+  Radbruch) dan `framework-operasional.md` Template Operasional.
