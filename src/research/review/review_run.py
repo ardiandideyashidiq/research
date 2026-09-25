@@ -103,6 +103,7 @@ async def run_review(
     out_dir: str | Path,
     relevance_query: str,
     relevance_top_k: int = 10,
+    relevance_min_score: float = 0.0,
     seeds: int = 3,
     snowball_limit: int = 20,
     direction: str = "both",
@@ -173,7 +174,17 @@ async def run_review(
             )
         )
 
-    # 3. Relevance-capped snowball over the strongest seeds.
+    # 3. Relevance-capped snowball over the strongest seeds. Seeds that do not
+    #    clear the relevance floor are dropped from the review entirely: a
+    #    snowball seed is itself reviewed, and an off-topic seed would pull in
+    #    more off-topic citations than any cap could save.
+    if relevance_min_score > 0:
+        before = len(seed_papers)
+        seed_papers = [
+            p for p in seed_papers if p.relevance_score >= relevance_min_score
+        ]
+        result.dropped_irrelevant += before - len(seed_papers)
+        result.seed_count = len(seed_papers)
     ranked_seeds = sorted(seed_papers, key=lambda p: -p.relevance_score)[:seeds]
     result.seeds_expanded = len(ranked_seeds)
     seen_keys = {p.cite_key for p in seed_papers}
@@ -204,6 +215,22 @@ async def run_review(
             seen_keys.add(rec.cite_key)
             if doi_key:
                 seen_dois.add(doi_key)
+            # Snowballing ranks the works it fetches, but a record may already
+            # exist in the DB and be re-reported without being re-ranked. Score
+            # here too so a weak match is never queued for review.
+            rec_score = score_work(
+                {
+                    "title": rec.title,
+                    "type": rec.entry_type,
+                    "publication_year": rec.year,
+                    "cited_by_count": 0,
+                    "concepts": [],
+                },
+                terms,
+            )
+            if relevance_min_score > 0 and rec_score.score < relevance_min_score:
+                result.dropped_irrelevant += 1
+                continue
             label, md, pdf = _classify(rec, md_dir)
             snowball_papers.append(
                 ReviewPaper(
@@ -214,6 +241,8 @@ async def run_review(
                     venue=rec.journal,
                     label=label,
                     origin="snowball",
+                    relevance_score=rec_score.score,
+                    matched_terms=rec_score.matched_terms,
                     pdf_url=rec.pdf_url,
                     pdf_path=pdf,
                     md_path=md,

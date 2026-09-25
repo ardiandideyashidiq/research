@@ -1307,6 +1307,7 @@ async def _async_main(args: Any) -> int:
                 out_dir=args.out,
                 relevance_query=args.relevance_query,
                 relevance_top_k=args.relevance_top_k,
+                relevance_min_score=args.relevance_min_score,
                 seeds=args.seeds,
                 snowball_limit=args.snowball_limit,
                 direction=args.direction,

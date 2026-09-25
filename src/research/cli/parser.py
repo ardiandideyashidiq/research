@@ -914,6 +914,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Keep only the top-K most relevant papers per seed (default: 10)",
     )
     p_review.add_argument(
+        "--relevance-min-score",
+        type=float,
+        default=0.0,
+        help="Drop papers (including seeds) scoring below this (default: 0.0)",
+    )
+    p_review.add_argument(
         "--seeds", type=int, default=3, help="How many seeds to expand via snowball (default: 3)"
     )
     p_review.add_argument(
