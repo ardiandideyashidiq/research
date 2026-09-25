@@ -210,11 +210,3 @@ sein*) dihubungkan secara rasional dengan tatanan norma positif (*das
 sollen*) menggunakan instrumen dogmatika, teori, dan filsafat hukum untuk
 mewujudkan kepastian hukum yang berkeadilan.
 
----
-
-💡 **Saran Langkah Selanjutnya:**
-*Apakah Anda ingin kita membedah penerapan teori-teori di atas pada satu
-contoh perkara konkret tertentu (misalnya perkara pidana korupsi, sengketa
-bisnis perdata, atau kasus kebocoran data digital)? Atau Anda ingin
-mendalami teknik analisis subsumsi silogisme deduktif untuk naskah skripsi
-Anda?*
