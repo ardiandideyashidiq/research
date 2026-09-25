@@ -162,6 +162,24 @@ def build_parser() -> argparse.ArgumentParser:
         default=10,
         help="Max forward/backward citations to fetch (default: 10)",
     )
+    p_snow.add_argument(
+        "--download",
+        action="store_true",
+        help="After snowballing, fetch the FULL TEXT of newly discovered papers "
+        "(Unpaywall/OJS resolve -> PDF download -> Markdown via the dual-engine "
+        "downloader). No manual curl needed.",
+    )
+    p_snow.add_argument(
+        "--index-rag",
+        action="store_true",
+        help="With --download, also chunk & index the converted Markdown into RAG",
+    )
+    p_snow.add_argument(
+        "--timeout",
+        type=float,
+        default=15.0,
+        help="Download timeout in seconds for --download (default: 15.0)",
+    )
 
     # 4b. fulltext (resolve DOI/cite_key -> download -> convert -> RAG index)
     p_ft = subparsers.add_parser(
