@@ -59,6 +59,34 @@ Menafsirkan menurut tujuan norma & kebutuhan masyarakat:
   (mencabut sebagian UU 44/2008 via 622(12)) → legislator menyadari perlunya
   delik kesusilaan yang teknologi-netral.
 
+## 5b. Batasan Yurisprudensial MK (koreksi self-improve, cek korpus 2026-09-25)
+
+Putusan Mahkamah Konstitusi mempersempit jangkauan pasal yang kita pakai —
+**wajib dimasukkan dalam interpretasi deepfake**:
+
+1. **Putusan MK 105/PUU-XXII/2024** (29-04-2025, inkonstitusional bersyarat):
+   frasa **"orang lain"** dalam Pasal 27A & 45(4) UU 1/2024 **tidak mencakup**
+   lembaga pemerintah, sekelompok orang beridentitas spesifik, institusi,
+   korporasi, profesi, atau jabatan; dan **"suatu hal"** ditafsirkan sebagai
+   *perbuatan yang merendahkan kehormatan/nama baik seseorang*.
+   → **Deepfake yang menyerang pejabat/lembaga/korporasi TIDAK lagi dapat
+   dijerat 27A/45(4)** (khas kasus K2/K6). Jangkauan reputasi menyempit ke
+   orang perseorangan.
+2. **Putusan MK 115/PUU-XXII/2024** (29-04-2025, inkonstitusional bersyarat):
+   kata **"kerusuhan"** dalam Pasal 28(3) & 45A(3) UU 1/2024 dimaknai
+   *kondisi gangguan ketertiban di ruang FISIK, bukan digital/siber*.
+   → Deepfake disinformasi yang menimbulkan "kerusuhan digital" tidak serta
+   merta masuk 28(3)/45A(3); perlu kualitas fisik. Mempertegas klaster D.
+3. **Putusan MK 50/PUU-XXIV/2026** (16-03-2026): Pasal 310/311 KUHP
+   (pencemaran) dimaknai melindungi akademisi/peneliti/aktivis dalam
+   kritik ranah publik → konteks relevan bagi preskripsi (Tahap 18).
+
+**Dampak pada tahapan lain:** klaim di `tahap13` (K2/K6 via 27A), `tahap16`
+(IRAC isu reputasi), `tahap17` (argumen jalur reputasi), `tahap19` (Bab III
+klaster B) yang mengandalkan 27A/45(4) untuk pejabat/lembaga harus
+disandarkan pada MK 105/2024. Detail putusan: korpus Pasal.id law_id 702
+(relationships → court_reviews).
+
 ## 5. Interpretasi Ekstensif & Restriktif
 
 - **Ekstensif**: perluas "Informasi Elektronik" (Pasal 1 angka 1 UU 11/2008

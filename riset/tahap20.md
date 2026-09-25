@@ -173,8 +173,8 @@ tahap penyusunan skripsi.
 |---|---|---|---|
 | V1 | **Tanggal berlaku efektif KUHP 1/2023** + konsekuensi UU 1/2026 (Penyesuaian Pidana) & kekuatan UU 1/2026 mengubah Pasal 622/407/172 | K1 | Baca UU 1/2026 Pasal VII dst. + PP/peraturan pelaksana; cek status korpus; perbarui Bab I/III/IV |
 | V2 | Nobel pasal sanksi PDP: **66 jo. 68** (bukan 67) | K2 | Perbarui tahap11, 13, 16, 17, 18 |
-| V3 | Nomor & penunjukan 47 putusan MK uji materi UU 1/2023 (mis. 282/PUU-XXIII/2025 membatalkan Pasal 240–241) | korpus | Cek apakah ada yang menyentuh 407/441/622; kutip bila relevan Bab III |
-| V4 | Putusan MK uji materi UU ITE (tahap1 §7 #10; mis. MK 51/PUU-XXIII/2025 tentang Dokumen Elektronik/aset digital) | tahap1 | Telusuri & kutip bila memengaruhi Bab III |
+| V3 | Nomor & penunjukan 47 putusan MK uji materi UU 1/2023 (mis. 282/PUU-XXIII/2025 membatalkan Pasal 240–241) | korpus | **SEBAGIAN TERISI (cek MCP 2026-09-25)**: 47 putusan terdaftar; relevan klaster reputasi = MK 282/2025 (Pasal 240–241 inkonstitusional) & MK 50/2026 (Pasal 310/311 KUHP dimaknai proteksi akademisi/aktivis). Belum ada yang menyentuh 407/441/622 → tetap cek sebelum Bab III |
+| V4 | Putusan MK uji materi UU ITE (tahap1 §7 #10) | tahap1 | **SEBAGIAN TERISI (cek MCP 2026-09-25)**: 11 putusan terdaftar; yang mengubah jangkauan deepfake: **MK 105/2024** (Pasal 27A & 45(4): "orang lain"/"suatu hal" dibatasi → korban lembaga/korporasi/pejabat diciutkan) & **MK 115/2024** (Pasal 28(3)/45A(3): "kerusuhan" = fisik, bukan digital). Wajib dikutip Bab III klaster B/D (dicatat `tahap14.md` §5b) |
 | V5 | Nomor putusan **PN Pasir Pangaraian dan PN Bandung** (dari Husain [F-T]) | tahap8 C, 17 | Ambil nomor & ratio decidendi; verifikasi inkracht |
 | V6 | Teks **UU TPKS 12/2022 Pasal 4(1)i, 14** | tahap8, 12 | Baca korpus |
 | V7 | Putusan deepfake Indonesia yang inkracht (kasus 2025–2026 masih proses) | tahap13, 12 | Koleksi putusan/berkas |
