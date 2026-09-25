@@ -53,6 +53,10 @@ Pustaka doktrin & framework untuk menganalisis **status hukum perkara**
   — **Framework 7 Dimensi + Scorecard + 35 Poin Audit**: arsitektur 7 dimensi
   evaluasi, rubrik nilai (bobot & kategori layak), master checklist 35 Cek
   (per Bab I–V & teknis), dan format lembar catatan reviewer.
+- <a href="./penulisan/abstrak-normatif.md">`penulisan/abstrak-normatif.md`</a>
+  — **Penulisan Abstrak Hukum Normatif**: anatomi 5 elemen sekuensial,
+  formula/template kalimat per bagian, contoh utuh + bedah komponen, red
+  flags abstrak, terjemahan Inggris & pemilihan keywords.
 
 ## Cara pakai dalam workflow
 
