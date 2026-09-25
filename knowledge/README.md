@@ -28,6 +28,14 @@ Pustaka doktrin & framework untuk menganalisis **status hukum perkara**
   Radbruch (keadilan/kepastian/kemanfaatan) + penetapan deklaratoir/
   konstitutif/kondemnatoir. Termasuk **lembar kerja template** analisis
   status hukum perkara.
+- <a href="./analisis-status-hukum/dekonstruksi-unsur-pasal.md">`analisis-status-hukum/dekonstruksi-unsur-pasal.md`</a>
+  — **Anatomi & Dekonstruksi Unsur Pasal / Ayat (4 Tahap)**: I. Dekonstruksi
+  gramatikal & subjek hukum (normadressaat); II. Pemisahan unsur objektif
+  (*actus reus*) vs subjektif (*mens rea*), bestanddelen vs elementen;
+  III. Monisme vs dualisme; IV. Subsumsi & silogisme IRAC. Plus contoh
+  dekonstruksi (Pasal 368 KUHP, korupsi, 1365 KUHPerdata), hubungan
+  antar-ayat (pokok/kualifikasi/pengecualian), dan konsekuensi
+  tidak-terbukti unsur (vrijspraak vs ontslag).
 
 ## Cara pakai dalam workflow
 

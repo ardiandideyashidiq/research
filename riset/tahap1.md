@@ -324,7 +324,7 @@ dalam kurung).
 | 21 | Zigo (2025) — Identity Under Copyright: Legal Response to the Deepfake Era | ADJURIS | [FULL-TEXT] | ANALISIS_Zigo2025_identity-under-copyright-danish-model.md |
 | 22 | Nurnisaa & Surya (2026) — Legal Vacuum in Deepfake Regulation: A Comparative Analysis of Indonesia, Malaysia, and Singapore | IJHLP 4(2) | [ABSTRACT] | ANALISIS_NurnisaaSurya_2026_legal-vacuum-deepfake-komparasi-ASEAN.md |
 
-- **[FULL-TEXT]** = 4 paper dibaca penuh (Utara&Widyawati 2025, Fitriani&Wahyudi 2026, Salsabila 2025, Rezvorovych 2025, Jasserand 2016).
+- **[FULL-TEXT]** = 5 paper dibaca penuh (Utara&Widyawati 2025, Fitriani&Wahyudi 2026, Salsabila 2025, Rezvorovych 2025, Jasserand 2016) + 1 di-upgrade kemudian (Wicaksono-BBD 2026 → status terbaru lihat `riset/tahap12.md` Editing E3).
 - **[ABSTRACT]** = 11 paper berdasarkan abstrak; **[METADATA]** = 2 paper hanya metadata (Sakti 2026; Vainaite 2025 — isi belum diverifikasi).
 
 #### 5b.3.2 Konsensus lintas literatur (temuan yang saling menguatkan)
