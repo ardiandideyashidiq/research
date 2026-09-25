@@ -384,6 +384,15 @@ platform (modul `research`):
 4. **Menggali korpus yang sudah terindeks (RAG)**: `uv run research query
    "<isu>" --mode hybrid --corpus all --with-source --output file.md` membaca
    chunk literatur/putusan/web yang sudah diindeks di SQLite.
+5. **Perluasan korpus via snowball (citation graph)**: `uv run research
+   snowball <cite_key> --direction both --limit N --download` memperluas dari
+   sitasi maju/mundur seed, lalu **otomatis mengambil full text** paper baru
+   (Unpaywall/OJS → unduh anti-bot → konversi Markdown; tambah `--index-rag`
+   untuk chunking). Dipakai mis. untuk menjenuhkan literatur pada Tahap 8b.
+6. **Perluasan korpus terstruktur (Tahap 8b)**: saat korpus perlu diperkaya
+   lintas jenis (paper ≥50, putusan MK, regulasi pelaksana, doktrin,
+   berita/web), buat `riset/tahap8b.md` + sub-agen per kategori — menambah
+   sumber SETELAH penelitian pendahuluan & SEBELUM analisis substantif.
 
 > Catatan integritas: kutipan pasal/teori tetap wajib diverifikasi dari sumber
 > primer (korpus peraturan) pada Tahap 8/11; platform ini hanya alat

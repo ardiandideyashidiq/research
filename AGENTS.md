@@ -325,7 +325,14 @@ uv run research snowball Devlin2018BERT --direction backward --limit 15
 
 # Snowball forward citations to find recent follow-up research
 uv run research snowball Vaswani2017Attention --direction forward --limit 20
+
+# Snowball AND fetch full texts of newly discovered papers (anti-curl; optional RAG)
+uv run research snowball Noerman2024kriminalisasideepfakeindonesia \
+  --direction both --limit 6 --download --index-rag
 ```
+`--download` automatically resolves (Unpaywall/OJS), downloads (dual-engine
+anti-bot), and converts newly discovered papers to Markdown — no manual
+`curl`/`httpx` needed. Use `--index-rag` to also chunk them into the RAG DB.
 
 #### Python API
 ```python
