@@ -84,6 +84,41 @@ class SnowballOrchestrator:
                     for w in referenced:
                         raw_discovered.append((w, "backward"))
 
+            # 3.5. Relevance ranking + cap. When relevance_query is set, score
+            # every discovered work, drop those below min_score, and keep only
+            # the top_k so downstream download/convert/review never pays for
+            # tangential citations.
+            if self.config.relevance_query.strip() and raw_discovered:
+                from research.snowball.ranking import rank_works
+
+                works_only = [w for w, _ in raw_discovered]
+                kept, ranked_out, dropped_irrelevant = rank_works(
+                    works_only,
+                    query=self.config.relevance_query,
+                    top_k=self.config.relevance_top_k,
+                    min_score=self.config.relevance_min_score,
+                )
+                kept_dois = {s.doi for s in kept if s.doi}
+                kept_titles = {s.title for s in kept if s.title}
+                filtered: list[tuple[dict[str, str]]] = []
+                for w, rel in raw_discovered:
+                    doi = (w.get("doi") or "").lower() or None
+                    title = w.get("title") or w.get("display_name") or ""
+                    if (doi and doi in kept_dois) or (title and title in kept_titles):
+                        filtered.append((w, rel))
+                raw_discovered = filtered
+                result.ranked_out_count = ranked_out
+                result.dropped_irrelevant_count = dropped_irrelevant
+                logger.info(
+                    "Relevance ranking for '{}': kept {} (top_k={}), "
+                    "ranked_out {}, dropped_irrelevant {}",
+                    self.config.relevance_query,
+                    len(raw_discovered),
+                    self.config.relevance_top_k,
+                    ranked_out,
+                    dropped_irrelevant,
+                )
+
             # 4. Transform, auto-enrich, and index into DB
             for work, relation in raw_discovered:
                 discovered_rec = oa_client.work_to_record(

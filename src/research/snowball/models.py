@@ -17,6 +17,9 @@ class SnowballConfig:
     email: str = "rdndds@gmail.com"
     timeout: float = 15.0
     concurrency: int = 4
+    relevance_query: str = ""
+    relevance_top_k: int = 10
+    relevance_min_score: float = 0.0
 
 
 @dataclass
@@ -27,3 +30,5 @@ class SnowballResult:
     backward_count: int = 0
     discovered_records: list[PublicationRecord] = field(default_factory=list)
     newly_indexed_count: int = 0
+    ranked_out_count: int = 0
+    dropped_irrelevant_count: int = 0
