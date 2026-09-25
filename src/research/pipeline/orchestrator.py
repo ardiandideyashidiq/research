@@ -14,11 +14,54 @@ if TYPE_CHECKING:
     from research.db.models import PublicationRecord
 
 
+_CLIENT: Any = None
+
+
+async def _get_unpaywall_client(timeout: float) -> Any:
+    """Return a run-scoped Unpaywall client, creating it on first use."""
+    global _CLIENT
+    if _CLIENT is None:
+        from research.unpaywall.client import UnpaywallClient
+
+        _CLIENT = UnpaywallClient(timeout=timeout, cache=_CACHE)
+    return _CLIENT
+
+
+async def _close_unpaywall_client() -> None:
+    global _CLIENT
+    if _CLIENT is not None:
+        try:
+            await _CLIENT.close()
+        except Exception as e:  # noqa: BLE001 - teardown is best-effort
+            logger.debug("Unpaywall client close failed: {}", e)
+        _CLIENT = None
+
+
+async def _resolve_unpaywall(doi: str, timeout: float) -> str | None:
+    """Look up an open-access PDF URL for a DOI, tolerating network failure.
+
+    Unpaywall is a best-effort enrichment: a miss must never abort the run, and
+    a per-DOI failure is logged and skipped rather than raised.
+    """
+    try:
+        client = await _get_unpaywall_client(timeout)
+        return await client.get_best_pdf_url(doi)
+    except Exception as e:  # noqa: BLE001 - enrichment is best-effort
+        logger.debug("Unpaywall lookup failed for {}: {}", doi, e)
+        return None
+
+
+_CACHE: Any = None
+
+
 class ResearchPipeline:
     """Automated orchestrator coordinating discovery, snowballing, downloading, normalization, and RAG indexing."""
 
     def __init__(self, app: ResearchApp) -> None:
         self.app = app
+        global _CACHE
+        if _CACHE is None:
+            _CACHE = app.cache
 
     async def run(
         self,
@@ -31,9 +74,13 @@ class ResearchPipeline:
         else:
             cfg = config
 
-        if cfg.streaming:
-            return await self._run_streaming(cfg)
-        return await self._run_staged(cfg)
+        try:
+            if cfg.streaming:
+                return await self._run_streaming(cfg)
+            return await self._run_staged(cfg)
+        finally:
+            # The Unpaywall client is run-scoped; never leak its session.
+            await _close_unpaywall_client()
 
     async def _run_streaming(self, cfg: PipelineConfig) -> PipelineResult:
         """Execute fully parallel streaming pipeline with producer-consumer queues."""
@@ -52,6 +99,7 @@ class ResearchPipeline:
             "bib_count": 0,
             "discovered_count": 0,
             "snowballed_count": 0,
+            "unpaywall_resolved_count": 0,
             "downloaded_count": 0,
             "converted_count": 0,
             "indexed_chunks_count": 0,
@@ -63,6 +111,14 @@ class ResearchPipeline:
             if rec.cite_key in queued_cite_keys:
                 return
             queued_cite_keys.add(rec.cite_key)
+            # Resolve an open-access PDF before downloading: a record discovered
+            # through search/snowball often has a DOI but no direct link, and the
+            # downloader has nothing to fetch without one.
+            if cfg.unpaywall and not rec.pdf_url and rec.doi:
+                rec.pdf_url = await _resolve_unpaywall(rec.doi, cfg.unpaywall_timeout)
+                if rec.pdf_url:
+                    stats["unpaywall_resolved_count"] += 1
+                    self.app.db.update(rec.cite_key, pdf_url=rec.pdf_url)
             await download_queue.put(rec)
 
         # Worker for CPU-bound conversion and semantic chunking
@@ -365,6 +421,7 @@ class ResearchPipeline:
             bib_count=stats["bib_count"],
             discovered_count=stats["discovered_count"],
             snowballed_count=stats["snowballed_count"],
+            unpaywall_resolved_count=stats["unpaywall_resolved_count"],
             downloaded_count=stats["downloaded_count"],
             converted_count=stats["converted_count"],
             indexed_chunks_count=stats["indexed_chunks_count"],
@@ -483,7 +540,25 @@ class ResearchPipeline:
 
         # 3. Open-Access Paper Downloading (download)
         downloaded_count = 0
+        unpaywall_resolved_count = 0
         if cfg.download:
+            # Resolve open-access links first: records discovered through
+            # search/snowball frequently carry a DOI but no direct PDF URL, and
+            # the downloader has nothing to fetch without one.
+            if cfg.unpaywall:
+                for rec in self.app.db.list(limit=200):
+                    if rec.pdf_url or not rec.doi:
+                        continue
+                    url = await _resolve_unpaywall(rec.doi, cfg.unpaywall_timeout)
+                    if url:
+                        rec.pdf_url = url
+                        unpaywall_resolved_count += 1
+                        self.app.db.update(rec.cite_key, pdf_url=url)
+                if unpaywall_resolved_count:
+                    logger.info(
+                        "Pipeline Step 2.5: Unpaywall resolved {} open-access links",
+                        unpaywall_resolved_count,
+                    )
             self.app.downloader.timeout = cfg.download_timeout
             dl_res = await self.app.downloader.download_all(
                 concurrency=cfg.download_concurrency,
@@ -588,6 +663,7 @@ class ResearchPipeline:
             bib_count=bib_count,
             discovered_count=discovered_count,
             snowballed_count=snowballed_count,
+            unpaywall_resolved_count=unpaywall_resolved_count,
             downloaded_count=downloaded_count,
             converted_count=converted_count,
             indexed_chunks_count=indexed_chunks_count,

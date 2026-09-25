@@ -83,6 +83,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Max forward/backward citations to fetch per seed (default: 8)",
     )
     p_pipe.add_argument(
+        "--no-unpaywall",
+        action="store_true",
+        help="Skip the Unpaywall open-access PDF resolution stage",
+    )
+    p_pipe.add_argument(
         "--no-download", action="store_true", help="Skip downloading PDFs"
     )
     p_pipe.add_argument(

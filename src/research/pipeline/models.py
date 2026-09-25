@@ -19,6 +19,8 @@ class PipelineConfig:
     snowball_seeds: int = 2
     snowball_limit: int = 8
     snowball_concurrency: int = 4
+    unpaywall: bool = True
+    unpaywall_timeout: float = 12.0
     download: bool = True
     download_concurrency: int = 6
     download_timeout: float = 10.0
@@ -35,6 +37,7 @@ class PipelineResult:
     bib_count: int = 0
     discovered_count: int = 0
     snowballed_count: int = 0
+    unpaywall_resolved_count: int = 0
     downloaded_count: int = 0
     converted_count: int = 0
     indexed_chunks_count: int = 0
@@ -49,6 +52,7 @@ class PipelineResult:
         lines.extend([
             f"  - Discovered:   {self.discovered_count} papers",
             f"  - Snowballed:   {self.snowballed_count} citations",
+            f"  - Unpaywall:    {self.unpaywall_resolved_count} OA links resolved",
             f"  - Downloaded:   {self.downloaded_count} PDFs",
             f"  - Converted:    {self.converted_count} Markdown documents",
             f"  - RAG Chunks:   {self.indexed_chunks_count} indexed chunks",

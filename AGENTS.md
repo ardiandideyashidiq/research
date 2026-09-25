@@ -742,6 +742,9 @@ uv run research pipeline --bib data/seeds/ai_law.bib \
 uv run research pipeline "criminal liability autonomous systems" \
   --no-streaming \
   --limit 5
+
+# Skip the Unpaywall open-access resolution stage
+uv run research pipeline "some query" --no-unpaywall
 ```
 
 #### Python API
@@ -771,6 +774,14 @@ async def main():
 
 asyncio.run(main())
 ```
+
+---
+
+#### Notes
+- Before downloading, records that carry a DOI but no direct PDF link are
+  resolved through **Unpaywall** (`--no-unpaywall` to skip). This is what lets
+  search/snowball-discovered papers actually download. The run summary reports
+  how many links were resolved.
 
 ---
 

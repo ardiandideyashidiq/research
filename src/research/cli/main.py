@@ -153,6 +153,7 @@ async def _async_main(args: Any) -> int:
                 snowball_seeds=args.snowball_seeds,
                 snowball_limit=getattr(args, "snowball_limit", 8),
                 snowball_concurrency=getattr(args, "snowball_concurrency", 4),
+                unpaywall=not getattr(args, "no_unpaywall", False),
                 download=not args.no_download,
                 download_concurrency=getattr(args, "download_concurrency", 6),
                 download_timeout=getattr(args, "download_timeout", 10.0),
