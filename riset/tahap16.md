@@ -23,13 +23,13 @@ berbasis pasal **[TERBACA]**.
 menyiarkan/mendistribusikan/membuat dapat diaksesnya Informasi Elektronik yang
 memuat muatan melanggar kesusilaan dipidana (ITE 27(1) jo. 45(1)) [TERBACA];
 setiap orang yang memalsukan Data Pribadi dengan maksud menguntungkan diri/
-merugikan orang lain dipidana (PDP 66 jo. 67) [TERBACA].
+merugikan orang lain dipidana (PDP 66 jo. 68) [TERBACA].
 
 **Premis Minor (Q):** Subjek X membuat & menyebarkan video deepfake seksual
 dari wajah Z tanpa izin (kasus K1/K3, Tahap 13).
 
 **Konklusi (R):** X terkualifikasi memenuhi unsur ITE 27(1)/45(1) dan/atau
-PDP 66/67 → status hukum: **perbuatan pidana** (dengan catatan doktrin
+PDP 66 jo. 68 → status hukum: **perbuatan pidana** (dengan catatan doktrin
 subsumsi: unsur "muatan" & "memalsukan" terpenuhi via interpretasi Tahap 14).
 
 ### Yogi Varian (dibalik untuk menguji presis): bila konten deepfake SATIRE/
@@ -55,7 +55,7 @@ perbandingan (Tahap 18), serta (c) harmonisasi aturan transisi ITE↔KUHP baru.
 ```
 [I] Issue  : Apakah deepfake seksual non-konsensual terkualifikasi melanggar
              hukum pidana Indonesia (lex lata)?
-[R] Rule   : P1: ITE 27(1) jo. 45(1) [kesusilaan]; P2: PDP 66 jo. 67
+[R] Rule   : P1: ITE 27(1) jo. 45(1) [kesusilaan]; P2: PDP 66 jo. 68
              [memalsukan data]; (P3 antisipatif: KUHP 407); asas legalitas,
              triade Radbruch.
 [A] Analysis: - Objek: video deepfake = IE (Pasal 1 angka 1 UU 11/2008) &
@@ -65,7 +65,7 @@ perbandingan (Tahap 18), serta (c) harmonisasi aturan transisi ITE↔KUHP baru.
              - Pengecualian: 45(2) tdk berlaku (bukan kepentingan umum/seni).
              => subsumsi memenuhi.
 [C] Conclusion: Terkualifikasi melanggar; sanksi pidana (ITE 27(1)/45(1);
-             alternatif PDP 66/67). Konflik temporal dicatat (KUHP 407
+             alternatif PDP 66 jo. 68). Konflik temporal dicatat (KUHP 407
              menggantikan saat berlaku).
 ```
 

@@ -380,7 +380,7 @@ dari cita hukum tertinggi (UUD 1945) mengecil menuju fakta konkret problematika.
 - **Isi narasi**: kutip/tulis ulang blok IRAC `tahap16.md` §3 (Isu A) —
   objek = IE + Pornografi [TERBACA], perbuatan = distribusi + membuat (PDP
   66), unsur subjektif = sengaja/tanpa hak, sanksi ITE 27(1)/45(1) alternatif
-  PDP 66/67, konflik temporal dicatat.
+  PDP 66 jo. 68, konflik temporal dicatat.
 - **Sumber**: `riset/tahap16.md` §1, §3.
 
 #### 4.2.5 Catatan Khusus: Concursus Tiga Rezim dan Ketidakpastian Preferensi

@@ -94,7 +94,10 @@ koherensi dengan peta norma).
 - Yang **tidak dicabut** (tetap di ITE): 27(2), 27A, 27B, 28(1),(3), 29, 40 — deepfake
   reputasi/disinformasi/ancaman/moderasi tetap di ITE [TERBACA — tahap11 §3.1].
 - KUHP baru **belum berlaku** pada masa penulisan (masa transisi 2026) [tahap2 §2.1,
-  tahap1 §7 #9].
+  tahap1 §7 #9]. **Catatan koreksi K1 (tahap20)**: status efektif UU 1/2023 diperbarui —
+  UU 1/2026 (Penyesuaian Pidana) telah berlaku [TERBACA law_id 29] dan mengubah UU 1/2023
+  (status korpus "diubah"); tanggal efektif KUHP 1/2023 masih [PERLU VERIFIKASI] —
+  premis "ITE lex lata penuh" diterima dengan reservasi.
 
 **(b) Dukungan paper:**
 

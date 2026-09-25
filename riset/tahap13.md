@@ -32,7 +32,7 @@ hipotetis-yuridis untuk menguji jangkauan norma, bukan penetapan final.
 - **Subsumsi (kandidat pasal)**:
   - UU ITE 27B jo. 45(8)–(11) (pemerasan/pengancaman) jika ada ancaman
     [TERBACA — konten 27B].
-  - UU PDP **Pasal 66 jo. 67** (membuat/memalsukan Data Pribadi) [TERBACA].
+  - UU PDP **Pasal 66 jo. 68** (membuat/memalsukan Data Pribadi) [TERBACA].
   - KUHP penipuan (Pasal 378 KUHP lama / delik penipuan KUHP 2023) — referensi.
   - Catatan: fakta penuh belum terverifikasi dari putusan → hipotesis.
 
@@ -44,7 +44,7 @@ hipotetis-yuridis untuk menguji jangkauan norma, bukan penetapan final.
 - **Subsumsi**:
   - UU ITE 28(1) jo. 45A(1) (berita bohong/menyesatkan yg merugikan
     konsumen) [TERBACA] — bila menyesatkan transaksi.
-  - UU PDP 66/67 [TERBACA].
+  - UU PDP 66 jo. 68 [TERBACA].
   - KUHP 441 ayat (2) (penghinaan pejabat via TI, kelak) jika merusak
     nama baik pejabat [TERBACA].
 
@@ -56,7 +56,7 @@ hipotetis-yuridis untuk menguji jangkauan norma, bukan penetapan final.
 - **Subsumsi**:
   - UU ITE **27(1) jo. 45(1)** (kesusilaan) [TERBACA] — distribusi konten
     melanggar kesusilaan.
-  - UU PDP 66/67 [TERBACA] (memalsukan data biometrik wajah).
+  - UU PDP 66 jo. 68 [TERBACA] (memalsukan data biometrik wajah).
   - KUHP baru **Pasal 407** (Pornografi) [TERBACA] — kelak berlaku.
   - UU TPKS (kekerasan seksual) — [OUTLINE].
 
@@ -69,14 +69,14 @@ hipotetis-yuridis untuk menguji jangkauan norma, bukan penetapan final.
 - **Subsumsi**:
   - UU ITE 27(1)/45(1) [TERBACA]; bila korban anak → **UU Perlindungan Anak**
     (Pasal 81/82 sebagai acuan yang dicabut oleh 622 — [TERBACA via 622]).
-  - UU PDP 66/67 (data anak = data spesifik, Pasal 4(2)e [TERBACA]).
+  - UU PDP 66 jo. 68 (data anak = data spesifik, Pasal 4(2)e [TERBACA]).
 
 ### K5 — Pelecehan seksual foto AI siswa SMP Jakarta Timur (200 foto)
 
 - **Konstatir**: pelaku diduga mengedit 200 foto korban (siswa) dgn AI utk
   pelecehan seksual.
 - **Kualifikasi**: deepfake seksual/pelecehan, korban anak.
-- **Subsumsi**: UU ITE 27(1)/45(1); UU PDP 66/67 (data anak spesifik);
+- **Subsumsi**: UU ITE 27(1)/45(1); UU PDP 66 jo. 68 (data anak spesifik);
   UU Perlindungan Anak; (KUHP 407 kelak).
 
 ### K6 — Bareskrim: deepfake catut nama pejabat negara (Jan 2025)
@@ -85,7 +85,7 @@ hipotetis-yuridis untuk menguji jangkauan norma, bukan penetapan final.
 - **Kualifikasi**: penipuan + pencemaran/penghinaan pejabat via konten
   sintetis.
 - **Subsumsi**: UU ITE 27A/45(4–6) (menuduhkan hal tidak benar) [TERBACA];
-  UU PDP 66/67; KUHP 441(2) (penghinaan pejabat via TI, kelak) [TERBACA].
+  UU PDP 66 jo. 68; KUHP 441(2) (penghinaan pejabat via TI, kelak) [TERBACA].
 
 ---
 
@@ -95,7 +95,7 @@ hipotetis-yuridis untuk menguji jangkauan norma, bukan penetapan final.
    wajah/suara tanpa izin; (b) **mendistribusikan/memperalatkan** utk tujuan
    seksual, penipuan, atau reputasi.
 2. **Pasal yang paling sering dipanggil**: UU ITE 27(1)/45(1) (kesusilaan),
-   27A/45(4–6) (reputasi), 28(1)/45A (disinformasi), UU PDP 66/67
+   27A/45(4–6) (reputasi), 28(1)/45A (disinformasi), UU PDP 66 jo. 68
    (pemalsuan data), kelak KUHP 407.
 3. **Gap yang tersingkap**: tidak ada delik yang menarget perbuatan
    **membuat** (rekayasa) konten secara eksplisit kecuali UU PDP 66
