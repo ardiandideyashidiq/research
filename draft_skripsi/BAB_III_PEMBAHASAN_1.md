@@ -19,20 +19,28 @@ rezim ITE, PDP, UU TPKS, dan KUHP baru (yang telah efektif sejak 2 Januari
 - **Subjek & objek**: "Orang" (Pasal 1 angka 21 UU 11/2008 [TERBACA]); objek
   deepfake = Informasi Elektronik (Pasal 1 angka 1) dan, bila seksual,
   **Pornografi** (Pasal 172 UU 1/2023 [TERBACA]).
-- **Jalur pidana**:
-  - UU ITE **Pasal 27(1) jo. 45(1)** (kesusilaan) [TERBACA] — jangkauan
-    distribusi konten melanggar kesusilaan; pengecualian 45(2).
+- **Jalur pidana (anatomi unsur: `riset/pasal/*.md`)**:
+  - UU ITE **Pasal 27(1) jo. 45(1)** (kesusilaan) [TERBACA] — menjangkau
+    *distribusi* (menyiarkan/mendistribusikan/mentransmisikan) konten
+    melanggar kesusilaan utk diketahui umum; pengecualian 45(2); **tidak
+    menjangkau perbuatan membuat** (leemten).
   - UU PDP **Pasal 66 jo. 68** (memalsukan data pribadi) [TERBACA] — pasal
-    paling langsung untuk membuat deepfake wajah/suara tanpa izin.
+    paling langsung untuk **membuat** deepfake wajah/suara tanpa izin;
+    sanksi 66 = **Pasal 68** (≤6 th, denda ≤Rp6 M) [bukan 67].
   - UU TPKS **Pasal 14** (kekerasan seksual berbasis elektronik) [TERBACA] —
-    *lex specialis* yang menjangkau perekaman/transmisi muatan seksual tanpa
-    persetujuan (≤6 th bila bermaksud pemerasan); delik aduan.
-  - **KUHP baru (efektif 2026)**: kesusilaan berpindah ke **Pasal 407**
-    (Pornografi) [TERBACA] via Pasal 622 ayat (10) [TERBACA], dengan
-    penyesuaian UU 1/2026.
+    *lex specialis* menjangkau perekaman/transmisi muatan seksual tanpa
+    persetujuan (≤6 th bila bermaksud pemerasan); **delik aduan** kecuali
+    korban Anak/Disabilitas; unsur "perekaman" belum eksplisit membidik
+    sintesis AI → perlu penafsiran.
+  - **KUHP baru (efektif 2-1-2026, Pasal 624)**: kesusilaan berpindah ke
+    **Pasal 407** (Pornografi) [TERBACA] via Pasal 622 ayat (10)r [TERBACA];
+    **407 menjangkau pembuatan** (memproduksi/membuat/memperbanyak) →
+    mengisi leemten ITE 27(1); pengecualian ayat (2) seni/budaya/ilmu.
 - **Batasan yurisprudensial**: MK 105/2024 (limitasi ITE 27A/45(4) "orang
-  lain"); MK 115/2024 ("kerusuhan" fisik) — mempengaruhi klaster reputasi &
-  disinformasi.
+  lain" — korban lembaga/korporasi/pejabat diciutkan); MK 115/2024
+  ("kerusuhan" 28(3) = fisik, bukan digital); MK 50/2026 (kritik publik
+  academic/aktivis, konteks penghinaan). Detail: `riset/pasal/*.md` &
+  `tahap8b_putusan.md`.
 
 ### 3.2.2 Klaster B — Deepfake Reputasi/Kehormatan
 
