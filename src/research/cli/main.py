@@ -234,6 +234,61 @@ async def _async_main(args: Any) -> int:
             print(f"  - Forward (Citing):      {res.forward_count} papers")
             print(f"  - Backward (References):  {res.backward_count} papers")
             print(f"  - Newly Indexed to DB:    {res.newly_indexed_count} records\n")
+
+            # Optional: fetch full texts of newly discovered papers (anti-curl).
+            if getattr(args, "download", False):
+                to_download = [
+                    r
+                    for r in res.discovered_records
+                    if r.download_status != "downloaded"
+                    and (r.pdf_url or r.doi or r.url)
+                ]
+                if to_download:
+                    print(
+                        f"[+] Fetching FULL TEXT for {len(to_download)} newly discovered "
+                        "paper(s) via dual-engine downloader (no manual curl)...\n"
+                    )
+                    in_q: asyncio.Queue[PublicationRecord | None] = asyncio.Queue()
+                    out_q: asyncio.Queue[PublicationRecord | None] = asyncio.Queue()
+                    for rec in to_download:
+                        await in_q.put(rec)
+                    await in_q.put(None)
+                    app.downloader.timeout = getattr(args, "timeout", 12.0)
+                    app.downloader.concurrency = 4
+                    stats = await app.downloader.download_stream(
+                        in_q, out_q, concurrency=4, force=False
+                    )
+                    print(f"[+] Download stats: {stats}")
+
+                    # Convert only PDFs without an existing Markdown; do it in a small
+                    # parallel pool so large snowball batches don't stall serially.
+                    converted = 0
+
+                    async def _convert_one(item: PublicationRecord) -> None:
+                        nonlocal converted
+                        pdf_path = Path(item.download_path)
+                        out_md = pdf_path.with_suffix(".md")
+                        if out_md.exists():
+                            return
+                        _, conv_doc = await app.pdf.convert_file_async(pdf_path, out_md)
+                        converted += 1
+                        if getattr(args, "index_rag", False):
+                            await asyncio.to_thread(
+                                app.retriever.index_document,
+                                conv_doc,
+                                cite_key=item.cite_key,
+                            )
+
+                    tasks: list[asyncio.Task] = []
+                    while not out_q.empty():
+                        item = await out_q.get()
+                        if item is not None and item.download_status == "downloaded":
+                            tasks.append(asyncio.create_task(_convert_one(item)))
+                    if tasks:
+                        await asyncio.gather(*tasks, return_exceptions=True)
+                    print(f"[+] Converted {converted} new PDF(s) to Markdown.\n")
+                else:
+                    print("[-] No new papers to download (all cached/empty).\n")
             return 0
 
         if cmd == "download":
