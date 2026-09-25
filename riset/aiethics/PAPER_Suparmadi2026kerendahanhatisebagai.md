@@ -41,11 +41,11 @@ Klausul Tema: **AI Ethics & Martabat Manusia** (kelompok `aiethics`, kluster non
 
 ### 2b. Teknik Penalaran Penulis (*Author's Analytical Technique*)
 
-| Teknik | Deskripsi (dibatasi pada yang yang terungkap dalam abstrak) |
+| Teknik | Deskripsi (dibatasi pada yang terungkap dalam abstrak) |
 |---|---|
 | **Dekonstruksi unsur pasal** | **—** Tidak ada. Paper tidak bergerak di ranah penguraikan unsur pidana. |
 | **Pemetaan rezim** (ITE/PDP/KUHP/TPKS) | **—** Tidak ada. Nol rezim hukum dipetakan; tidak ada argumen *lex specialis*. |
-| **Struktur argumentasi** | **Analogi historis-spiritual, bukan silogisme hukum.** Penulis menetapkan dua terminus: (a) Ensiklik *Magnifica Humanitas* (Paus Leo XIV) mengkritik "logika kalkulatif AI, konsentrasi kuasa digital, ideologi transhumanisme"; (b) Santo Vinsensius yang berabad-abad lalu memperingatkan "kesombongan intelektual yang melepaskan daya nalar dari fondasi kerendahan hati". Lalu ethosesis: **keduanya berpijak pada masalah yang sama**. Kerangka berpikir: *kerangka nilai* (hilemanitas/kerendahan hati) — **bukan** tri-teori/trisistem/progresif. |
+| **Struktur argumentasi** | **Analogi historis-spiritual, bukan silogisme hukum.** Penulis menetapkan dua terminus: (a) Ensiklik *Magnifica Humanitas* (Paus Leo XIV) mengkritik "logika kalkulatif AI, konsentrasi kuasa digital, ideologi transhumanisme"; (b) Santo Vinsensius, beberapa abad yang lalu, memperingatkan "kesombongan intelektual yang melepaskan daya nalar dari fondasi kerendahan hati". Lalu penulis menyimpulkan: **keduanya berpijak pada masalah yang sama**. Kerangka berpikir: *kerangka nilai* (kerendahan hati) — **bukan** tri-teori/trisistem/progresif. |
 | **Komparasi** | **Tidak ada komparasi hukum.** Yang ada adalah perbandingan **era-pendapat** (Vinsensius vs Paus Leo XIV) dan perbandingan **orientasi nilai** (martabat/kasih vs efisiensi/kekuasaan). Tidak ada *tertium comparationis* normatif, tidak ada daftar negara, tidak ada yurisprudensi pembanding. |
 | **Preskripsi** | **Konseptual, tidak konkret.** Preskripsinya bersifat **aran moral-normatif** (teknologi "tunduk pada kerendahan hati, diorientasikan pada pelayanan kasih, terutama bagi yang lemah dan rentan"). **Tidak ada** draf pasal, rancangan aturan, atau mekanisme regulasi. Preskripsi hukum (*de lege ferenda*) = **—**. |
 
@@ -62,7 +62,7 @@ Klausul Tema: **AI Ethics & Martabat Manusia** (kelompok `aiethics`, kluster non
 ### 2d. Kritik Analisis terhadap Tulisan (*Counter-Points*)
 
 - **(a) Potensi *analysis jump*:** **Ya, dan cukup jelas.** Abstrak bergerak dari kritik "logika kalkulatif AI" secara langsung ke "kesombongan intelektual" tanpa perantara analisis yang dapat diverifikasi. Klaim sentral paper bahwa logika AI dan kesombongan Vinsensian "berpijak pada masalah yang sama, yakni mengukur manusia berdasarkan kapasitas dan efisiensinya, bukan martabatnya sebagai citra Allah" merupakan **risiko *equivocation***: ia menyamakan dua argumen yang berbeda jenis (teknologi AI modern vs dosa intelektual abad ke-4) pada tataran nilai, tanpa menunjukkan bahwa keduanya menghasilkan **konsekuensi hukum atau institusional** yang sama. Abstrak tidak memberi bukti bahwa operationalisasi "efisiensi" dalam AI berimplikasi identik dengan konsekuensi kesombongan Vinsensius.
-- **(b) Batasan asas legalitas dalam penafsiran progresif:** **Tidak berlaku / di luar cakupan.** Paper ini tidak berhadapan dengan norma hukum, sehingga isu *nullum crimen sine lege*, asas legalitas, atau penafsiran progresif **tidak muncul sama sekali**. Justru inilah kelemahan strukturalnya bagi ilmu hukum: paper secara implisit bergantian bahasa tentang "menorientasikan teknologi" pada nilai tertentu, tetapi tidak pernah mengikatnya pada **kewajiban normatif yang dapat ditegakkan** (*enforceable legal duty*).
+- **(b) Batasan asas legalitas dalam penafsiran progresif:** **Tidak berlaku / di luar cakupan.** Paper ini tidak berhadapan dengan norma hukum, sehingga isu *nullum crimen sine lege*, asas legalitas, atau penafsiran progresif **tidak muncul sama sekali**. Justru inilah kelemahan strukturalnya bagi ilmu hukum: paper secara implisit bergantian dari bahasa "respons" ke bahasa "nilai", tetapi tidak pernah mengikatnya pada **kewajiban normatif yang dapat ditegakkan** (*enforceable legal duty*).
 - **(c) Data empiris tanpa verifikasi primer:** **Tidak ada data empiris.** Paper bersifat konseptual-filosofis, sehingga tuduhan "data tanpa verifikasi" tidak relevan. Namun ada **kelemahan lain yang lebih halus**: dokumen-dokumen kunci yang menjadi tumpuan argumen, yaitu *Magnifica Humanitas* dan tulisan Santo Vinsensius, **tidak dikutip dengan nomor bagian atau pasal dalam abstrak**, sehingga rujukan normatif-teologisnya tidak dapat diverifikasi pembaca tanpa teks penuh. Keterbatasan ini konsekuensi langsung dari label `[ABSTRACT]`.
 - **(d) Celah *tertium comparationis* pada analisis perbandingan:** **Ada, dan relevan.** Paper ini tidak melakukan perbandingan hukum sama sekali (tidak ada Indonesia vs negara lain). Namun ia **melakukan** perbandingan era-pendapat (Vinsensius vs Paus Leo XIV) **tanpa *tertium comparationis* normatif**: tidak ada kriteria bersama yang menguji apakah kritik spiritual Vinsensius **berpindah** secara sahih ke ranah governance AI. Perbandingan ini bersifat **retoris-analogis, bukan argumentatif-verifikatif**.
 - **Kritik tambahan (reputasi & verifikasi sumber):** (i) **afiliasi penulis tidak tercantum** — tidak dapat diverifikasi lewat proses peer-review dari sumber yang tersedia; (ii) **akreditasi jurnal tidak terverifikasi**; (iii) **DOI prefix `10.35312` tidak dikenal** sebagai penerbit jurnal Indonesia-field. Semua ini menurunkan bobot otoritas untuk keperluan sintesis skripsi. (iv) **[ABSTRACT]** — seluruh kritik di atas bersifat **tentatif**; sebagian mungkin sudah dijawab dalam teks penuh.
@@ -75,7 +75,7 @@ Klausul Tema: **AI Ethics & Martabat Manusia** (kelompok `aiethics`, kluster non
 * **Das Sollen (Norma Ideal/Aturan yang Diharapkan):**
   Teknologi AI, betapa setinggi apa pun, seharusnya **tunduk pada kerendahan hati** dan **diorientasikan pada pelayanan kasih**, terutama bagi mereka yang **paling lemah dan rentan**. Manusia adalah **tujuan**, bukan alat: teknologi tidak boleh memperlakukan manusia sebagai instrumen. Kewajiban moral ini berpijak pada **martabat manusia sebagai Imago Dei (Citra Allah)**, bukan pada kapasitas atau efisiensi.
 * **Das Sein (Realita Hukum/Problem Normatif):**
-  Fenomena AIirin-_KALENDER-_ mengkritik **logika kalkulatif AI** (menilai manusia berdasarkan parameter), **konsentrasi kuasa digital**, dan **ideologi transhumanisme** yang cenderung mereduksi nilai kemanusiaan. Inti persoalan menurut paper: ada **kecenderungan memcefungsikan manusia ke dalam metrik**, dengan mengabaikan **martabat**-nya.
+  Kecerdasan Buatan, menurut kritik dalam *Magnifica Humanitas*, menampilkan **logika kalkulatif AI** (menilai manusia berdasarkan parameter), **konsentrasi kuasa digital**, dan **ideologi transhumanisme** yang cenderung mereduksi nilai kemanusiaan. Inti persoalan menurut paper: ada **kecenderungan memfungsikan manusia ke dalam metrik**, dengan mengabaikan **martabat**-nya.
 
 > **Peringatan konversi:** Das Sollen/Das Sein di atas adalah **norma moral-teologis**, bukan Das Sollen/Das Sein **hukum**. Jangan memetakannya langsung ke rumusan masalah hukum skripsi.
 
@@ -91,13 +91,13 @@ Klausul Tema: **AI Ethics & Martabat Manusia** (kelompok `aiethics`, kluster non
 | Tingkatan Teori / Asas | Nama Teori / Asas & Tokoh Penggagas | Fungsi & Peranannya dalam Paper Ini |
 | :--- | :--- | :--- |
 | **Grand Theory** (Filosofis) | **Imago Dei / martabat manusia sebagai citra Allah** (landasan teologi Kristen; menjadi rujukan dalam Ensiklik *Magnifica Humanitas* Paus Leo XIV). Dilengkapi **kerangka etika kasih dan kerendahan hati** | Menolak tolok ukur "efisiensi" dan menggeser tolok ukur manusia dari **kapasitas** ke **martabat**. Inilah premis normatif seluruh argumen. |
-| **Middle Range Theory** | **Spiritualitas Vinsensian** (Santo Vinsensius a Paulo): kerendahan hati, kesederhanaan, critiques terhadap kesombongan intelektual | Menyediakan **model respons** terhadap AI: humiditas, bukan kesombongan. |
+| **Middle Range Theory** | **Spiritualitas Vinsensian** (Santo Vinsensius a Paulo): kerendahan hati, kesederhanaan, dan kritik terhadap kesombongan intelektual | Menyediakan **model respons** terhadap AI: kerendahan hati, bukan kesombongan. |
 | **Applied Theory** | — *(tidak ada teori terapan hukum; diterapkan pada kasus etika AI)* |
 | **Asas Hukum (*Rechtsbeginselen*)** | **—** TIDAK ADA asas hukum yang dirujuk (tidak ada *lex specialis*, *ultimum remedium*, *geen straf zonder schuld*, dll.) |
 | **Doktrin Sarjana (Legal Doctrines)** | — *(tidak ada sarjana hukum yang dikutip; hanya tokoh teologis/religius)* |
-| **Etos Garbage** (argumen etis non-hukum) | Kritik terhadap **transhumanisme**, **logika kalkulatif**, **konsentrasi kuasa digital** (dari *Magnifica Humanitas*) | Menyusun masalah: AI sebagaistruments yang potential mendominasi, jika tidak diikat pada kerendahan hati |
+| **Orientasi Etis Non-Hukum** | Kritik terhadap **transhumanisme**, **logika kalkulatif**, **konsentrasi kuasa digital** (dari *Magnifica Humanitas*) | Menyusun masalah: AI sebagai instrumen yang berpotensi mendominasi, jika tidak diikat pada kerendahan hati |
 
-> **Penilaian jujur:** pangkal teori paper ini **penuh teologis-filosofis, nol hukum**. Bagi kerangka teori hukum skripsi, paper ini **tidak menyumbang Grand/Middle/Applied theory** yang dapat diadopsi langsung. Nilai=FALSE~0.5 untuk kerangka teori hukum, = tinggi untuk Latar Belakang/filosofi.
+> **Penilaian jujur:** pangkal teori paper ini **penuh teologis-filosofis, nol hukum**. Bagi kerangka teori hukum skripsi, paper ini **tidak menyumbang Grand/Middle/Applied theory** yang dapat diadopsi langsung. Nilai kontribusinya rendah (sekitar 0.5) untuk kerangka teori hukum, = tinggi untuk Latar Belakang/filosofi.
 
 ---
 
@@ -121,16 +121,16 @@ Klausul Tema: **AI Ethics & Martabat Manusia** (kelompok `aiethics`, kluster non
 Paper ini **tidak** menggunakan IRAC/silogisme hukum. Struktur yang sebenarnya (hasil rekonstruksi dari abstrak):
 
 ```text
-  [Premis 1]: AI memiliki kecenderungan evaluates manusia via logika kalkulatif/efisiensi
-              &cctkredux (kritik Magnifica Humanitas).
-  [Premis 2]: Kesombongan intelektual Vinsensius Pt MMGI also Frozen837 membebaskan daya nalar dari kerendahan hati.
+  [Premis 1]: AI memiliki kecenderungan menilai manusia lewat logika kalkulatif dan
+              efisiensi (kritik dalam Magnifica Humanitas).
+  [Premis 2]: Kesombongan intelektual menurut Vinsensius membebaskan daya nalar dari kerendahan hati.
   [Premis 3]: Keduanya berpijak pada masalah yang sama, yaitu menilai manusia berdasarkan kapasitas, bukan berdasarkan martabat.
   [Kesimpulan]: Keutamaan kerendahan hati Vinsensian = kerangka etis agar AI tidak menjadi
                 alat dominasi/pengejaran kesempurnaan teknis yang semu; keterbatasan manusia
                 = ruang perjumpaan kasih & solidaritas.
 ```
 
-> **Catatan integrasi:** "Kesimpulan" di atas bersifat **nilai-eksistensial**, bukan **konsekuensi hukum**. Tidak adaimplikالasia hukum (tidada upgrade норATIVE, sanctions, nor liability). Ini **bukan** IRAC; jangan dipaksakan ke format itu tanpa note.
+> **Catatan integrasi:** "Kesimpulan" di atas bersifat **nilai-eksistensial**, bukan **konsekuensi hukum**. Tidak ada implikasi hukum (tidak ada draft norma, sanksi, atau pertanggungjawaban). Ini **bukan** IRAC; jangan dipaksakan ke format itu tanpa note.
 
 ---
 
@@ -139,12 +139,12 @@ Paper ini **tidak** menggunakan IRAC/silogisme hukum. Struktur yang sebenarnya (
 ### 1. Temuan Utama (*Key Findings*)
 1. **Kesombongan intelektual & logika AI berakar pada masalah yang sama:** keduanya mengukur manusia berdasarkan **kapasitas dan efisiensi**, bukan **martabat**-nya sebagai citra Allah. Ini klaim inti paper.
 2. **Kerendahan hati & kesederhanaan Vinsensian = kerangka etis respons:** menawarkan orientasi agar inovasi teknologi **tidak** menjadi alat dominasi atau sekadar alat pengejaran "kesempurnaan teknis yang semu".
-3. **Keterbatasan manusia = Ferguson_anethical gift, bukan cacat:** pengakuan atas keterbatasan manusiaitive_tracker_the_good menjadi "ruang perjumpaan kasih dan solidaritas".
+3. **Keterbatasan manusia = anugerah etis, bukan cacat:** pengakuan atas keterbatasan manusia ternyata menjadi "ruang perjumpaan kasih dan solidaritas".
 4. **Orientasi pastoral-melayan:** teknologi setinggi apa pun harus tunduk pada kerendahan hati dan diarahkan pada pelayanan kasih, terutama bagi yang **paling lemah dan rentan**.
 
 ### 2. Preskripsi Hukum / Rekomendasi Pembaharuan (*De Lege Ferenda*)
 * **Preskripsi hukum: — (tidak ada).** Paper tidak mengusulkan perubahan norma, tidak menyusun draf pasal, dan tidak mengusulkan legislasi baru. Yang ada adalah **aran etis-teologis** (*moral prescription*), bukan *de lege ferenda* hukum.
-* **Yang mungkin ditransliterasi** (dengan kehati-hatian, sebagai bahan Bab II/filosofi): prinsip bahwa **manusia adalah tujuan, bukan alat** (Kant's dictum, yang di Diction- teks abstrak) dan bahwa **rezim норatif harusinados memprioritaskan pihak lemah** — dua ini adalah **framework values**, bukan solusi hukum.
+* **Yang mungkin ditransliterasi** (dengan kehati-hatian, sebagai bahan Bab II/filosofi): prinsip bahwa **manusia adalah tujuan, bukan alat** (Kant's dictum, yang terkandung dalam teks abstrak) dan bahwa **rezim normatif harus memprioritaskan pihak lemah** — dua ini adalah **framework values**, bukan solusi hukum.
 
 ---
 
@@ -152,14 +152,14 @@ Paper ini **tidak** menggunakan IRAC/silogisme hukum. Struktur yang sebenarnya (
 
 ### 1. Kelebihan & Kebaharuan Paper (*Novelty*)
 * **Titik Kuat (*Strengths*):** (i) **jarang** — menyodorkan sumber Kristiani klasik (Vinsensius) sebagai sumber etika AI, sesuatu yang jarang diulang dalam literatur AI-ethics Indonesia; (ii) **jembatan temporal** yang menarik antara etika abad ke-4 dan ensiklik 2025; (iii) **orientasi sensitivitas pihak rentan** (memperhatikan yang lemah dan rentan) selaras dengan kerangka HAM.
-* **Kebaharuan (*Novelty*):** Schlüssel novel: **"kerendahan hati"** sebagai kategori respons terhadap AI —ojat stabil yangzb_Q dengan merely "etika" generik. Namun novelty ini **bersifat teologis**, bukan kebaharuan metodologis hukum.
+* **Kebaharuan (*Novelty*):** Kunci kebaruannya: **"kerendahan hati"** sebagai kategori respons terhadap AI, bukan sekadar etika generik. Namun novelty ini **bersifat teologis**, bukan kebaharuan metodologis hukum.
 
 ### 2. Keterbatasan, Kelemahan, & Cacat Logika (*Limitations & Gaps*)
 * **Keterbatasan paling menentukan: TIDAK ADA muatan hukum.** Nol pasal, nol undang-undang, nol yurisprudensi, nol tipologi cacat norma, nol preskripsi hukum. Bagi skripsi hukum normatif, paper **tidak menyumbang** titik rujukan normatif apa pun.
-* **Lolosan genus (*genre drift*):** Judulnya menyebut "Merespons Tantangan Kecerdasan Buatan" sehinggauddur menyiratkan analisis respond, padahal isinya **respons etis-spiritual**, bukan respons hukum. Penelize membaca judul akan mengira ada analisis governance/hukum — kemungkinan besar tidak ada.
+* **Lolosan genus (*genre drift*):** Judulnya menyebut "Merespons Tantangan Kecerdasan Buatan" sehingga menyiratkan analisis respons, padahal isinya **respons etis-spiritual**, bukan respons hukum. Peneliti yang membaca judul akan mengira ada analisis governance/hukum — kemungkinan besar tidak ada.
 * **Celah analisis:** risiko *equivocation* antara "logika AI" dan "dosa kesombongan" (§2d-a). Abstrak **tidak menjembatani** perbedaan dua medan tersebut.
-* **Dokumen kunci tanpa nomor kutipan:** *Magnifica Humanitas* & Vinsensius disebut **secara digestif**, tanpa nomor bagian — **tidak dapat diverifikasi** dari abstrak; struktur argumen ovenrem blokir.
-* **Perubahan posisi hukum (*Temporal Gap*):** **Tidak relevan.** Paper ini tidak pernah menyentuh peraturan. Namun implikasinya: paper **tidak aware** sama sekali akan dinamika hukum AI Indonesia post-2026 (KUHP baru berlaku, UU 1/2026, MK 105/2024 vs 115/2024, TPKS 12/2022). Ekspektasi paham terhadap regulation Indonesia **tidak terpenuhi**.
+* **Dokumen kunci tanpa nomor kutipan:** *Magnifica Humanitas* & Vinsensius disebut **secara digestif (ringkasan)**, tanpa nomor bagian — **tidak dapat diverifikasi** dari abstrak; struktur argumen paper tidak dapat dibongkar.
+* **Perubahan posisi hukum (*Temporal Gap*):** **Tidak relevan.** Paper ini tidak pernah menyentuh peraturan. Namun implikasinya: paper **tidak aware** sama sekali akan dinamika hukum AI Indonesia post-2026 (KUHP baru berlaku, UU 1/2026, MK 105/2024 vs 115/2024, TPKS 12/2022). Pengetahuan tentang regulasi Indonesia **tidak terpenuhi**.
 * **Keterbatasan sumber:** afiliasi penulis **—**, reputasi jurnal **tidak terverifikasi** (§I). Bobot otoritas rendah.
 
 ---
@@ -170,9 +170,9 @@ Paper ini **tidak** menggunakan IRAC/silogisme hukum. Struktur yang sebenarnya (
 
 | Pertanyaan Evaluatif | Analisis Posisi untuk Skripsi / Penelitian Anda |
 | :--- | :--- |
-| **Di mana letak kesepakatan (persamaan) paper dengan skripsi Anda?** | **Kesepakatan pada tataran nilai (bukan tataran norma) yang bisa diadopsi:** (i) **manusia sebagai tujuan, bukan alat** — selaras dengan orientasi non-instrumental dalam bahasa hukum dan tujuan Achievement hukum; (ii) **penghormatan pada martabat dan memprioritaskan pihak lemah** — selaras dengan fungsi melindungi kepentingan hukum dan asas non-diskriminasi; (iii) **kritik terhadap dominasi dan penguasaan digital** — masih abstrak, tetapi dapat dipakai sebagai **justifikasi normatif** mengapa rezim pencegahan (termasuk Pasal 40 UU 1/2024) dan UU TPKS diarahkan pada prevention dan perlindungan pihak rentan. Ketiganya dipakai **sebagai landasan nilai di Bab II**, bukan sebagai sumber hukum. |
+| **Di mana letak kesepakatan (persamaan) paper dengan skripsi Anda?** | **Kesepakatan pada tataran nilai (bukan tataran norma) yang bisa diadopsi:** (i) **manusia sebagai tujuan, bukan alat** — selaras dengan orientasi non-instrumental dalam bahasa hukum dan tujuan hukum; (ii) **penghormatan pada martabat dan memprioritaskan pihak lemah** — selaras dengan fungsi melindungi kepentingan hukum dan asas non-diskriminasi; (iii) **kritik terhadap dominasi dan penguasaan digital** — masih abstrak, tetapi dapat dipakai sebagai **justifikasi normatif** mengapa rezim pencegahan (termasuk Pasal 40 UU 1/2024) dan UU TPKS diarahkan pada pencegahan dan perlindungan pihak rentan. Ketiganya dipakai **sebagai landasan nilai di Bab II**, bukan sebagai sumber hukum. |
 | **Di mana letak perbedaan / pertentangan dengan skripsi Anda?** | **Perbedaan genre total.** (a) Skripsi bekerja di **rezim hukum positif Indonesia** (ITE/PDP/KUHP/TPKS), sedangkan paper berada di luar rezim norma hukum. (b) Skripsi menghasilkan **preskripsi hukum yang dapat ditegakkan**, sedangkan paper hanya memberi aran moral yang tidak punya mekanisme tegaknya. (c) Skripsi fokus pada **deepfake secara spesifik** (replikasi digital, hak atas likeness, pemerasan seksual nonkonsensual), sedangkan paper hanya membahas **AI secara umum** dan **tidak pernah menyebut "deepfake" sama sekali**. (d) Kerangka nilainya **teologis Kristen**, sementara skripsi bersandar pada kerangka **Pancasila dan HAM** — dua sumber legitimasi yang berbeda dan tidak dapat dipertukarkan. |
-| **Bagaimana paper ini menjadi bukti *Research Gap* bagi skripsi Anda?** | **Paper ini justru MENYERTAKAN*komplemen*, bukan yang lain:** (a) **Gap substansi:** literatur etika-teologi AI Indonesia berkembang tapi **berhenti di tataran nilai/rohani** dan **tidak pernah menyentuh normalisasi hukum Indonesia** — skripsi mengisi **“dari nilai ke norma”**. (b) **Gap metode:** paper mengkritik "efisiensi", tetapi tidak punya **alat (unsur,-delik,-elements)** untuk mengoperasionalkannya menjadi **kualifikasi delik** — persis ruang yang diisi skripsi (dekonstruksi unsur pasal). (c) **Gap argumentatif:** paper tidak menjawab **“dans/status dan/atauSIAPA yang harus bertanggung jawab secara hukum atas dominasi AI”** — ini Rumusan Masalah skripsi (RM1 status lex lata, RM2 rekonstruksi *de lege ferenda*). (d) **Gap temporal:** paper **tidak menyadari** dinamika hukum 2026 (KUHP baru + UU 1/2026 + MK 105/2024), menegaskan bahwa argumen etika **belum pernah** disinkronkan dengan rezim hukum Indonesia. |
+| **Bagaimana paper ini menjadi bukti *Research Gap* bagi skripsi Anda?** | **Paper ini justru menjadi bukti *komplemen* bagi skripsi:** (a) **Gap substansi:** literatur etika-teologi AI Indonesia berkembang tapi **berhenti di tataran nilai/rohani** dan **tidak pernah menyentuh normalisasi hukum Indonesia** — skripsi mengisi **“dari nilai ke norma”**. (b) **Gap metode:** paper mengkritik "efisiensi", tetapi tidak punya **alat (unsur, delik, kualifikasi)** untuk mengoperasionalkannya menjadi **kualifikasi delik** — persis ruang yang diisi skripsi (dekonstruksi unsur pasal). (c) **Gap argumentatif:** paper tidak menjawab **“siapa yang harus bertanggung jawab secara hukum atas dominasi AI”** — ini Rumusan Masalah skripsi (RM1 status lex lata, RM2 rekonstruksi *de lege ferenda*). (d) **Gap temporal:** paper **tidak menyadari** dinamika hukum 2026 (KUHP baru + UU 1/2026 + MK 105/2024), menegaskan bahwa argumen etika **belum pernah** disinkronkan dengan rezim hukum Indonesia. |
 | **Rencana Penempatan dalam Skripsi:** | [x] **Bab II (Tinjauan Pustaka dan Kerangka Teori)** — **secara terbatas**: sebagai salah satu literatur etika-Agama yang menandai **orientasi nilai** "martabat manusia dan perlindungan pihak lemah", untuk menegaskan bahwa khazanah etika Indonesia sudah shifting orientasi nilai. **[ ] Bab I** — **tidak**: bukan novelty normatif, tidak layak jadi matriks kebaharuan. **[ ] Bab III/IV** — **tidak**: nol muatan normatif, tidak dapat dipakai untuk argumentasi hukum. **Rekomendasi: SIMPAN SEBAGAI LITERATUR PENDUKING (background nilai), BUKAN sebagai argumen inti.** |
 
 > **Peringatan penggunaan:** jangan **memaksakan** paper ini ke kerangka hukum. Justru **ironinya** bagi sintesis: paper ini adalah bukti konkret bahwa **terdapat** wacana etis-agama yang berpihak pada yang lemah dan martabat, tetapi **tidak menghasilkan norma**. Di sinilah letak **gap** yang diisi skripsi, bukan di sinilah bahan yang bisa dipakai.
@@ -189,7 +189,7 @@ Paper ini **tidak** menggunakan IRAC/silogisme hukum. Struktur yang sebenarnya (
 | ISU               : Etika AI dalam perspektif teologi Kristen - apakah kerendahan hati (Vinsensius) merupakan respons yang tepat atas |
 | (bukan isu hukum) : logika kalkulatif, konsentrasi kuasa digital & transhumanisme AI.                                                 |
 | TEORI & METODE    : Imago Dei / martabat + spiritualitas Vinsensian | Studi kepustakaan filosofis-teologis (deskriptif-kualitatif)     |
-| TEMUAN UTAMA      : (1) Kesombongan intelektual (Vinsensius) & logika AI berakar pada masalah yang sama: menilai manusia by file.    |
+| TEMUAN UTAMA      : (1) Kesombongan intelektual (Vinsensius) & logika AI berakar pada masalah yang sama: menilai manusia berdasarkan kapasitas, bukan martabat.    |
 |                    (2) Kerendahan hati & kesederhanaan = kerangka etis agar AI tidak jadi alat dominasi.                           |
 |                    (3) Keterbatasan manusia = ruang kasih & solidaritas.                                                             |
 |                    (4) Teknologi harus tunduk pada kerendahan hati & melayani yang lemah/rentan.                                     |
@@ -221,7 +221,7 @@ Paper ini **tidak** menggunakan IRAC/silogisme hukum. Struktur yang sebenarnya (
 ## CATATAN UNTUK SINTESIS (input untuk main-agent)
 
 1. **Label: [ABSTRACT].** Full-text tidak diperoleh (`pdf_url: null`). Bila kelak di-upgrade ke `[FULL-TEXT]`, **wajib** baca markdown hasil `research fulltext` dan perbarui §2c/§2d/§IV (mungkin ada kutipan pasal yang tidak terlihat di abstrak).
-2. **Relevansi terhadap skripsi: RENDAH** (~0.15–0.25). Rekomendasi: **jangan masukkan ke matriks utama** / argumen inti. Simpan sebagai **literatur etika-Agama** untuk Latar Belakang &_limitasi_ ("wacana nilai sudah ada, norma belum").
+2. **Relevansi terhadap skripsi: RENDAH** (~0.15–0.25). Rekomendasi: **jangan masukkan ke matriks utama** / argumen inti. Simpan sebagai **literatur etika-Agama** untuk Latar Belakang dan limitasi ("wacana nilai sudah ada, norma belum").
 3. **Jangan kutip paper ini untuk pasal/angka** — nol kutipan pasal tersedia.
 4. **Peringatan retrieval:** `relevance_score` mesin = 0.85 (keyword "buatan" + "kecerdasan") **tidak mencerminkan relevansi substantif**; ini contoh keyword-noise. Jika matriks dibangun dari skor mesin, nilai relevansi harus **diperiksa manual** — paper ini akan menjadi false positive.
 5. **Duplikasi DOI:** pastikan DOI 10.35312/rrfb5977 tidak masuk daftar pustaka skripsi kecuali sebagai sumber nilai.

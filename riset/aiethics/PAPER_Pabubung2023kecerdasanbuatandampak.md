@@ -124,7 +124,7 @@ Kartu ini disusun **hanya dari abstrak lengkap** yang direkonstruksi Crossref da
 ### 2. Klasifikasi Problematika Norma
 * [ ] ***Vague Norm* (Norma Kabur)** — tidak dapat dinyatakan. Tidak ada norma positif yang dianalisis, sehingga tidak ada kabur norma yang ditelusuri.
 * [ ] ***Conflict van Normen / Antinomi* (Konflik Norma)** — tidak dapat dinyatakan. Tidak ada dua norma atau dua tingkat hierarki yang dipertentangkan.
-* [x] ***Leemten van Normen / Wet Vacuum* (Kekosongan Hukum)** — **secara implisit** terindikasi: argumen paper menyebut "tantangan besar" daninantisipasi masalah masa depan "yang menyangkut martabat manusia", tanpaiapparatus normatif apa pun untuk mengatasinya. Namun perlu dicatat: **paper ini sendiri tidak menggunakan istilah *wet vacuum* dan tidak mengklaim adanya celah hukum positif** — jadi penandainya di sini adalah **interpretasi pembaca, bukan klaim penulis**.
+* [x] ***Leemten van Normen / Wet Vacuum* (Kekosongan Hukum)** — **secara implisit** terindikasi: argumen paper menyebut "tantangan besar" dan antisipasi masalah-masalah di masa depan "yang menyangkut martabat manusia", tanpa apparatus normatif apa pun untuk mengatasinya. Namun perlu dicatat: **paper ini sendiri tidak menggunakan istilah *wet vacuum* dan tidak mengklaim adanya celah hukum positif** — sehingga penandainya di sini adalah **interpretasi pembaca, bukan klaim penulis**.
 
 ---
 
@@ -134,7 +134,6 @@ Kartu ini disusun **hanya dari abstrak lengkap** yang direkonstruksi Crossref da
 | :--- | :--- | :--- |
 | **Grand Theory** *(Teori Utama/Filosofis)* | **— (tokoh tidak disebut)** | `[ABSTRACT]` Penulis menempatkan **filsafat sebagai "interuptor" dan "induk segala ilmu (*mater scientiarum*)"**, dan menegaskan peran filsafat untuk **"menginterupsi dan mengoreksi laju perkembangan secara etis"**. Grand theory yang dipakai bersifat **generik-filosofis**, bukan teori keadilan dari tokoh tertentu. Nama tokoh seperti Kant, Rawls, atau Aristoteles **tidak disebut** → `—`.
 | **Middle Range Theory** *(Teori Antara)* | **—** | `[ABSTRACT]` Tidak ada teori antara yang dapat diidentifikasi. |
-| **Applied Theory** *(Teori Terapan)* | **—** | `[ABSTRACT]` Tidak ada teori terapan hukum atau ）。
 | **Applied Theory** *(Teori Terapan)* | **—** | `[ABSTRACT]` Tidak ada teori terapan hukum yang dapat diidentifikasi. |
 | **Asas Hukum** *(Rechtsbeginselen)* | **— TIDAK ADA asas hukum.** Yang ada adalah **asas etis**: "manusia harus selalu menjadi **tujuan** dalam setiap perkembangan dan kemajuan" | `[ABSTRACT]` Asas ini berfungsi sebagai **norma pengikat (*yardstick*)** untuk menilai dampak AI terhadap martabat. **Atribusi tidak diketahui** — tidak boleh disebut sebagai "asas Kantiana", "prinsip onto-etis UNESCO", atau nama lain tanpa teks penuh. |
 | **Doktrin Sarjana** *(Legal Doctrines)* | **—** | `[ABSTRACT]` Tidak ada doktrin sarjana, putusan, atau yurisprudensi yang dikutip dalam abstrak. |
@@ -212,17 +211,115 @@ Seluruh butir di bawah **hanya bersumber dari abstrak**; tidak ada temuan granul
   - Peran filsafat sebagai **interuptor** memberi alasan normatif mengapa kajian etika harus mendahului regulasi — berguna untuk argumen *necessitas* dalam motivate skripsi.
 * **Kebaharuan (*Novelty*):**
   - `[ABSTRACT]` Penegasan bahwa **martabat manusia adalah elemen paling mendasar** dan bahwa privasi hanyalah **salah satu elemen** dari martabat. Rumusan ini berpotensi berguna untuk menyusun hierarki kepentingan dalam skripsi.
-  - **Caveat jujur:** kekuatan *novelty* ini **tidak dapat diverifikasi** tanpa pembacaan teks penuh dan perbandingan dengan literatur pembanding. Yang dapat dinyatakan hanya bahwa *angle* tersebut relevan; klaim "baru" tidak boleh-langsung dis封面.
+  - **Caveat jujur:** kekuatan *novelty* ini **tidak dapat diverifikasi** tanpa pembacaan teks penuh dan perbandingan dengan literatur pembanding. Yang dapat dinyatakan hanya bahwa *angle* tersebut relevan; klaim "baru" tidak boleh langsung dinyatakan ke dalam draft tanpa verifikasi.
 
 ### 2. Keterbatasan, Kelemahan, & Cacat Logika (*Limitations & Gaps*)
 * **Keterbatasan Kontekstual — paper ini bukan paper Indonesia secara substansial:**
-  Tidak ada satu pun rujukan hukum Indonesia, kasus Indonesia, atau regulasi Indonesia. Paper terbit 2023 tetapi **tidak menyentuh** regulasi Indonesia yang paling relevan: **UU PDP No. 27 Tahun 2022** (berlaku sejak 17 Oktober 2024, sesudah paper ini terbit) yang mengatur data pribadi, dan rezim konten elektronik dalam **UU ITE**. `[PERLU VERIFIKASI]` tanggal operasional UU PDP danCommerce konten elektronik diverifikasi terpisah via MCP Pasal.id bila akan dikutip dalam draft.
+  Tidak ada satu pun rujukan hukum Indonesia, kasus Indonesia, atau regulasi Indonesia. Paper terbit 2023 tetapi **tidak menyentuh** regulasi Indonesia yang paling relevan: **UU PDP No. 27 Tahun 2022** (berlaku sejak 17 Oktober 2024, sesudah paper ini terbit) yang mengatur data pribadi, serta rezim konten elektronik dalam **UU ITE**. `[PERLU VERIFIKASI]` tanggal operasional UU PDP dan rezim konten elektronik wajib diverifikasi terpisah via MCP Pasal.id sebelum dikutip dalam draft.
 * **Keterbatasan Metodologis:**
   - Klaim faktual tanpa verifikasi primer (lihat 2d-c): tidak ada data, studi kasus, atau statistik.
   - **Daftar pustaka tidak dapat ditelusuri** dari metadata (Crossref `reference-count: 0` → Crossref tidak merekam referensi untuk DOI ini), sehingga *traceability* klaim ke literatur tidak dapat diperiksa oleh pembaca abstrak.
 * **Celah Analisis — "martabat" tidak diJX di level operasional:**
-  Abstrak menyebut martabat sebagai "elemen paling mendasar" tetapi **tidak menguraikan unsurnya** (apakah martabat sama dengan kehormatan, 价格 dignity, integritas privasi, dan seterusnya) dan **tidak menjelaskan bagaimanaOUterness tersebut diuji secara konkret**. Tanpa uraian unsur, konsep "martabat" berisiko bersifat **normatif-assertif** dan tidak dapat disubsumsikan ke fakta kasus mana pun. **Inilah celah yang paling dapat diisi oleh skripsi** (lihat Bagian VIII).
+  Abstrak menyebut martabat sebagai "elemen paling mendasar" tetapi **tidak menguraikan unsurnya** (apakah martabat sama dengan kehormatan, martabat diri, integritas privasi, dan seterusnya) dan **tidak menjelaskan bagaimana kemendalaman konsep tersebut diuji secara konkret**. Tanpa uraian unsur, konsep "martabat" berisiko bersifat **normatif-assertif** dan tidak dapat disubsumsikan ke fakta kasus mana pun. **Inilah celah yang paling dapat diisi oleh skripsi** (lihat Bagian VIII).
 * **Perubahan Posisi Hukum (*Temporal Gap*):**
   Paper terbit **April 2023**, sebelum **UU PDP No. 27 Tahun 2022** mulai berlaku dan sebelum **UU No. 1 Tahun 2024** memperbarui rezim UU ITE. Kerangka normatif paper ini, bila ada, sudah **tertinggal waktu** terhadap hukum positif yang berlaku saat skripsi ditulis. **Namun** — dicatat jujur — kita **tidak tahu** apakah paper ini membahas hukum positif sama sekali, karena teks penuh tidak terbaca.
 * **Ketiadaan dimensi forensik, multi-aktor, dan moderated content:**
   Tidak ada pembahasan tentang **pembuktian/verifikasi konten sintetik**, **tanggung jawab platform**, **moderasi konten**, **jalur perdata (hak cipta, personality rights)**, maupun **perselisihan multi-aktor**. Seluruh kerangka paper berhenti pada tataran konseptual-etis.
+
+---
+
+## VIII. POSISI & RELEVANSI TERHADAP PENELITIAN SAYA (*RESEARCH POSITIONING*)
+
+### 4. Research-Gap Mapping terhadap isu skripsi ("Status Hukum Deepfake di Indonesia")
+
+| Isu skripsi | Posisi paper ini | Celah yang dibiarkan paper ini (GAP) |
+| :--- | :--- | :--- |
+| **Martabat manusia vs AI** | **PAYOFF UTAMA.** Paper ini adalah sumber framing "martabat" yang paling eksplisit di korpus literatur yang pernah dikaji skripsi. Menempatkan AI berhadapan dengan martabat (bukan sekadar data pribadi) memang berguna untuk argumen dasar. | Paper **tidak menguraikan unsur martabat** dan **tidak mengoperasionalkannya**. Skripsi dapat mengisi: menguraikan martabat menjadi unsur-unsur (kehormatan, otonomi, integritas, identitas) lalu mengujinya ke fakta deepfake. |
+| **Deepfake sebagai teknologi spesifik** | **TIDAK DISINGGUNG.** Abstrak tidak menyebut "deepfake", "sintetis", "face swap", atau "video palsu" sama sekali. Istilah yang dipakai hanya "kecerdasan buatan" secara umum. | **GAP MAKSIMAL.** Paper tidak membedakan AI generatif yang bersifat netral/proktif dari AI generatif yang merusak martabat. Skripsi dapat mempertegas: deepfake adalah varian AI generatif yang melukai martabat, sehingga harus dibedakan dari AI generatif pada umumnya. |
+| **Deepfake non-konsensual / seksual** | **TIDAK DISINGGUNG.** Tidak ada penyebutan konten seksual, eksploitasi, atau korban. | **GAP MAKSIMAL.** Justru di sinilah dampak paling-Paradoks terhadap martabat: deepfake seksual non-konsensual adalah pengkhianatan martabat paling file. Paper ini tidak akan memberikanaid untuk itu. |
+| **Verifikasi / pembuktian forensik** | **TIDAK DISINGGUNG.** | **GAP TOTAL.** Tidak ada bahasan sama sekali soal bagaimana konten sintetik dibuktikan, di forensics-kan, atau dipertanggungjawabkan pembuktiannya. Ini gap yang hanya bisa diisi dari literatur teknis-juridis. |
+| **Multi-aktor (deepfaker, platform, victim,-flow modelmaker)** | **DISINGGUNG SECARA TRIA[ADIC], TAPI SINGKAT.** Abstrak menyebut manusia sebagai **"pengembang, pengguna (dan objek)"** dari AI. | **GAP TINGKAT TINGGI.** Framing triadic ini masih **generik-AI** (untuk AI secara umum), tidak **spesifik-peran-dalam-deepfake**. Tidak membedakan aksi Restart/deepfaker (produsen), platform (pengelola), dan korban (objek) — tiga posisi yang secara yuridis обладает beban responsibility berbeda. |
+| **Moderasi konten / PSE** | **TIDAK DISINGGUNG.** | **GAP TOTAL.** Tidak ada rezim moderasi. |
+| **Jalur perdata (personalitas, hak cipta)** | **TIDAK DISINGGUNG.** | **GAP TOTAL.** |
+| **Temporal ITE <-> KUHP / UU 1/2024** | **TIDAK DISINGGUNG.** | **GAP TOTAL.** Paper ini sepenuhnya pre-2024 dan tidak aware akan dinamika hukum yang menjadi isu kunci skripsi. |
+| **Privasi / data pribadi (UU PDP 27/2022)** | **SINGGUTAN.** Privasi disebut sebagai elemen martabat yang melemah, TETAPI tanpa nama UU, tanpa nomor pasal. | **GAP KRITIS.** Justru di sinilah letak potensi saling melengkapi: argumen privasi paper ini dapat dipagarkkan dengan **UU PDP No. 27 Tahun 2022** yang mengoperasionalkan hak atas data pribadi ke dalam hukum positif Indonesia. |
+
+### 1. Kesepakatan dengan skripsi
+- **Sepakat bahwa AI yang berdampak pada manusia adalah masalah yang serius** dan perlu pendekatan mendahulukan etika/kehormatan sebelum atau sambilbelieve pada regulasi teknis.
+- **Sepakat bahwa privasi adalah salah satu wajah dari serangan terhadap martabat** — ini dapat diadopsi sebagai salah satu elemen dalam ekspektasi skripsi.
+
+### 2. Perbedaan / Kritik terhadap skripsi
+- Skripsi bekerja pada tataran **hukum positif Indonesia** (status hukum, kualifikasi delik, preskripsi undang-undang). Paper ini **tidak bisa** dibandingkan secara langsung dengan tataran itu dan **tidak akan pernah bisa** — perbedaan ini **bukan kelemahan skripsi, melainkan perbedaan level analisis**.
+- Skripsi tidak menerima klaim **"martabat = elemen paling mendasar"** sebagai aksiomatik yang sudah terbukti; skripsi akan mengujinya dan memerlukan bukti-bukti kasus yang dapat diuji secara yuridis.
+
+### 3. Bagaimana paper ini menjadi bukti *Research Gap* untuk skripsi
+Paper ini menjadi **bukti bahwa framing "martabat manusia" terhadap AI di Indonesia sudah ada, tetapi masih berhenti pada tataran konseptual-etis dan belum pernah di-downstream-kan ke analisis hukum positif Indonesia.** Roller coaster:
+1. **Existence gap الإقليمي:** framing martabat **ada** (paper ini), tapi **belum pernah** diuji terhadap konten spesifik deepfake.
+2. **Operasionalisasi gap:** "martabat" **tidak pernah** diuraikan menjadi unsur yang bisa disubsumsikan → ruang untuk dekonstruksi unsur ala **dekonstruksi-unsur-pasal.md** (bestanddelen/elementen).
+3. **Downstream gap:** tidak ada satupun peraturan perundang-undangan yang disebut → ruang untuk analisis rezim (UU ITE, UU PDP 27/2022, UU 1/2024, KUHP baru).
+4. **Temporal gap:** paper 2023 pre-UU PDP ⇒ argumentasi skripsi harus meng-updated ke rezim hukum 2026.
+
+### 5. Rencana Penempatan dalam Skripsi
+- [x] **Bab I (Latar Belakang & Matriks Kebaharuan/Novelty)** — sebagai bukti bahwa framing martabat **sudah ada namun belum pernah cholesterol ke deepfake**,]** sekaligus declaring kebaharuan skripsi.
+- [x] **Bab II (Tinjauan Pustaka & Kerangka Teori)** — sebagai sumber landasan konseptual "martabat manusia" (dengan label `[ABSTRACT]` — **WAJIB dicatat**; jika dipakai substantif, harus cari versi full-text atau sumber pengganti).
+- [ ] **Bab III/IV (Pembahasan & Argumentasi Hukum)** — **TIDAK**, karena paper tidak menyediakan argumen yuridis yang dapat dipakai.
+
+> **PERINGATAN PENGGUNAAN:** Karena label `[ABSTRACT]`, paper ini **tidak boleh** menjadi sandaran argumen substantif apa pun. Pemakaiannya dibatasi pada: (a) pemetaan tema, (b) bukti bahwa framing tersebut sudah ada dalam literatur, (c) penanda untuk research gap. **Setiap kutipan langsung dari paper ini dilarang** sampai full text diperoleh.
+
+---
+
+## IX. MATRIKS RINGKASAN EKSTRAKSI CEPAT (*QUICK EXTRACTION CARD*)
+
+```markdown
++------------------------------------------------------------------------------------------------------------------------------------------+
+| IDENTITAS PAPER  : Michael Reskiantio Pabubung (2023), "Era Kecerdasan Buatan dan Dampak terhadap              |
+|                    Martabat Manusia dalam Kajian Etis", Jurnal Filsafat Indonesia, Vol. 6 (No. 1), hlm. 66-74.     |
+|                    DOI: 10.23887/jfi.v6i1.49293. LABEL EPISTEMIK: [ABSTRACT] (full text gagal diunduh,             |
+|                    HTTP 403 pada seluruh rute).                                                                  |
+| ISU HUKUM        : Dampak teknologi kecerdasan buatan terhadap martabat manusia sebagai elemen paling            |
+|                    mendasar dalam kompetisi metafisik/"diskusi mengenai kemanusiaan". Dampak yang paling           |
+|                    nyata: buramnya privasi sehingga kebebasan dan hak atas hidup privat melemah.                 |
+|                    TIDAK menyinggung hukum positif, deepfake, konten seksual, verifikasi, atau                   |
+|                    platform.                                                                                       |
+| TEORI & METODE   : Filosafi/etika (filsafat sebagai "interuptor" dan mater scientiarum) | Pendekatan             |
+|                    konseptual + filosofis; metode kualitatif melalui analisis literatur. Tanpa              |
+|                    teori bernama, tanpa statute, tanpa kasus, dan tanpa komparasi.                         |
+| TEMUAN UTAMA     : (1) Privasi = salah satu elemen martabat manusia, dan melemah akibat AI;                     |
+|                    (2) AI <-> martabat adalah relasi timbal balik: banyak manfaat justru menimbulkan               |
+|                    tantangan besar; (3) ethos: manusia harus selalu menjadi tujuan dalam setiap                  |
+|                    perkembangan.                                                                                 |
+| RESEARCH GAP     : Nol pasal/norma; nol operate definitions; nol komparasi; nol dimensi deepfake;              |
+|                    nol verifikasi forensik; nol multi-aktor spesifik; temporal gap (pre-UU PDP 27/2022            |
+|                    dan pre-UU 1/2024).                                                                            |
+| KONTRIBUSI KITA  : Paper ini dipakai sebagai BUKTI KEBARUAN (novelty) bahwa framing "martabat manusia vs AI"     |
+|                    sudah ada di literatur Indonesia tetapi masih konseptual-etis, belum pernah                  |
+|                    di-downstream-kan ke status hukum deepfake. Skripsi mengisi: dekonstruksi unsur             |
+|                    martabat -> subsidensi ke rezim UU ITE/UU PDP 27/2022/UU 1/2024, dan multidimensional         |
+|                    (forensik/multi-aktor/moderasi).                                                             |
++------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+---
+
+## X. CHECKLIST FINAL EKSTRAKSI PAPER
+
+- [ ] **Identitas bibliografi dan reputasi jurnal telah terverifikasi** — identitas dan DOI **TERVERIFIKASI** via Crossref; **peringkat SINTA TIDAK terverifikasi** (publisher memblokir HTTP 403, web search tidak menghasilkan data) → dicatat jujur di Bagian I.
+* [x] ***Leemten van Normen / Wet Vacuum* (Kekosongan Hukum)** — **secara implisit** terindikasi: argumen paper menyebut "tantangan besar" dan antisipasi masalah-masalah di masa depan "yang menyangkut martabat manusia", tanpa apparatus normatif apa pun untuk mengatasinya. Namun perlu dicatat: **paper ini sendiri tidak menggunakan istilah *wet vacuum* dan tidak mengklaim adanya celah hukum positif** — sehingga penandainya di sini adalah **interpretasi pembaca, bukan klaim penulis**.
+- [ ] **Kerangka teori dan asas-asas hukum telah dicatat** — dicatat sebagai **—** (tidak ada tokoh/teori/asas hukum); satu asas etis tanpa atribusi dicatat.
+- [x] **Metode penafsiran/konstruksi hukum dan penalaran silogisme telah diekstraksi** — dinyatakan **seluruhnya tidak berlaku** (paper bukan penalaran hukum); silogisme normatif-filosofis direkonstruksi secara jujur.
+- [x] **Temuan utama dan preskripsi *de lege ferenda* telah dirangkum** — 5 temuan utama + preskripsi konseptual; **preskripsi legislatif = —**.
+- [x] ***Research gap* dan keterbatasan paper telah ditemukan** — 7 jenis gap teridentifikasi (lihat Bagian VII dan VIII).
+- [x] **Posisi dan relevansi paper terhadap skripsi telah ditetapkan** — pemetaan ke 9 isu skripsi (lihat Tabel VIII) + placement di Bab I dan II saja.
+- [x] **Penegasan epistemic:** kartu ini **tidak boleh** dipakai untuk kutipan substantif. Seluruh isi berlabel `[ABSTRACT]`.
+
+---
+
+## CATATAN UNTUK REVIEWER (step 4 SKILL literature-review)
+
+1. **Label check:** header menyatakan `[ABSTRACT]` dengan tabel kegagalan retrieval 3 rute. **Consistent** dengan packet (`label: ABSTRACT`) dan dengan hasil `research fulltext` yang saya jalankan ulang secara independen.
+2. **Anti-hallucination check:** setiap klaim faktual di dalam kartu ini dapat dilacak ke kata-per-kata abstrak Crossref. Tidak ada nomor pasal, tidak ada nama UU, tidak ada nama tokoh yang dikarang. Semua yang tidak ada di abstrak ditulis `—` atau `[TAK DISEBUT]`.
+3. **Yang perlu diverifikasi lanjutan (bukan oleh kartu ini, tapi oleh sintesis):**
+   - Cluster **"martabat manusia"** dalam literatur Indonesia: paper ini sebaiknya dibaca bersama **Pabubung 2024** (`10.23887/jfi.v7i2.68070`, "Persoalan Privasi dan Degradasi Martabat Manusia dalam Pengawasan Berbasis Kecerdasan Buatan", juga `[ABSTRACT]`) — paper yang **membuat eksplisit** landasan teorinya sebagai **Kantian** (berdasarkan abstrak pasangannya), Something yang TIDAK boleh diasumsikan untuk paper 2023 ini.
+   - **UU PDP No. 27 Tahun 2022** — sudah teridentifikasi di memory proyek (law_id 16) tetapi **belum dibaca isinya** untuk paper ini. Jika drafting kesimpulan hukum tentang privasi, lakukan **MCP Pasal.id** (`resolve_law` → `get_law_context` → `read_law`).
+   - **DOI 10.23887/jfi.v6i1.49293** — jika full text dibutuhkan (untuk upgrade label ke `[FULL-TEXT]`), **hanya** melalui `uv run research fulltext "<DOI>"` atau `--pdf-url <direct URL>`. Pengambilan via `curl`/`httpx` **dilarang** (AGENTS.md aturan #8) dan tidak dicoba. Alternatif sah: **menghubungi penulis** atau mencari repositori institutional Undiksha.
+4. **Catatan untuk step 5 (sintesis):** label kolom "Kejujuran Epistemik" di matriks harus diisi **`[ABSTRACT]`** — **bukan** `[FULL-TEXT]`, dan **bukan** `[TERBACA]**. Kartu ini adalah peta tema, bukan otoritas doktrinal.
