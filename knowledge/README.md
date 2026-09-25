@@ -43,6 +43,16 @@ Pustaka doktrin & framework untuk menganalisis **status hukum perkara**
   mens rea, sanksi); IV. Tipologisasi cacat norma; V. 3-lapis ilmu hukum
   (dogmatika/teori/filsafat, Marzuki); VI. Pemetaan IRAC/CRAC. Plus contoh
   isu AI, pemetaan ke RM Bab I/III/IV, dan pencegahan analysis jump.
+- <a href="./review-kualitas/review-epistemologis.md">`review-kualitas/review-epistemologis.md`</a>
+  — **Epistemologi Review Riset Hukum Normatif**: trilogi kebenaran
+  (koherensi, konsensus, traceability); red flags metodologis; **5 Kriteria
+  Evaluasi** (isu & cacat norma, hierarki bahan, pendekatan, penalaran IRAC,
+  preskripsi/novelty); uji de lege ferenda & beda normatif murni vs
+  normatif-terapan.
+- <a href="./review-kualitas/review-framework-7dimensi.md">`review-kualitas/review-framework-7dimensi.md`</a>
+  — **Framework 7 Dimensi + Scorecard + 35 Poin Audit**: arsitektur 7 dimensi
+  evaluasi, rubrik nilai (bobot & kategori layak), master checklist 35 Cek
+  (per Bab I–V & teknis), dan format lembar catatan reviewer.
 
 ## Cara pakai dalam workflow
 
