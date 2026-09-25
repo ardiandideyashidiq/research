@@ -77,7 +77,7 @@ uv run python tests/test_timeouts.py            # Fast-fail timeouts on unrespon
    - When analyzing a paper with a DOI, subagents MUST obtain the full text via
      `uv run research fulltext "<DOI>"` (add `--index-rag` when RAG indexing is wanted)
      instead of settling for abstracts.
-   7. **Every Research Stage Uses a Subagent**:
+7. **Every Research Stage Uses a Subagent**:
    - Each of the 20 stages of the normative workflow (see `workflow.md` and the
      `riset/tahapN.md` trail) MUST be executed with a dedicated subagent (`Agent`,
      `general-purpose`) rather than the main agent doing the analysis inline.
@@ -113,7 +113,20 @@ uv run python tests/test_timeouts.py            # Fast-fail timeouts on unrespon
    - Never rely on a paper's quoted pasal number; confirm against the corpus before
      citing substantively (papers routinely quote outdated versions, e.g. UU ITE
      19/2016 or wrong PDP sanctions).
-10. **Self-Improving Workflow & Tools**:
+10. **Auto-Enrich Doctrine into `knowledge/`**:
+    - Whenever a paper, web result, or doctrinal point (teori, tokoh, asas,
+      definisi) is encountered that is NOT yet reflected in `knowledge/`
+      (`analisis-status-hukum/*`, README index), subagents SHOULD capture it:
+      run a quick web search (`uv run research web-search "--no-index"`) for
+      the doctrine AND/OR read it from the paper's full text, then write a
+      short knowledge file (or append to the existing one) with: doctrine
+      name, tokoh/penggagas, sumber (DOI/URL/paper cite_key + label
+      [FULL-TEXT]/[ABSTRACT]/[WEB]), fungsi bagi analisis status hukum.
+    - Index new files in `knowledge/README.md`; keep naming modular &
+      traceable. Do NOT duplicate an existing entry — update it instead.
+    - This keeps the doctrinal grounding current and lets future stages &
+      subagents inherit it (self-improving rule #10).
+11. **Self-Improving Workflow & Tools**:
     - Whenever a task reveals a repeated manual step, a tool limit that forces a
       subagent to fall back to `curl`/ad-hoc scripts, or a workflow gap, the agent
       SHOULD fix it on the spot and commit: enhance the research CLI (new flag/
