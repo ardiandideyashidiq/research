@@ -251,6 +251,9 @@ class ResearchApp:
         direction: str = "both",
         limit_forward: int = 15,
         limit_backward: int = 15,
+        relevance_query: str = "",
+        relevance_top_k: int = 10,
+        relevance_min_score: float = 0.0,
     ) -> SnowballResult:
         """Traverse citation network for a seed paper in the database."""
         rec = self.db.get(seed_cite_key)
@@ -261,6 +264,9 @@ class ResearchApp:
         self.snowball.config.direction = direction  # type: ignore[assignment]
         self.snowball.config.limit_forward = limit_forward
         self.snowball.config.limit_backward = limit_backward
+        self.snowball.config.relevance_query = relevance_query
+        self.snowball.config.relevance_top_k = relevance_top_k
+        self.snowball.config.relevance_min_score = relevance_min_score
         return await self.snowball.snowball_record(rec)
 
     async def download_papers(

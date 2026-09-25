@@ -163,6 +163,23 @@ def build_parser() -> argparse.ArgumentParser:
         help="Max forward/backward citations to fetch (default: 10)",
     )
     p_snow.add_argument(
+        "--relevance-query",
+        default="",
+        help="Free-text query used to rank snowball results and drop tangential papers",
+    )
+    p_snow.add_argument(
+        "--relevance-top-k",
+        type=int,
+        default=10,
+        help="Keep only the top-K most relevant discovered papers (default: 10)",
+    )
+    p_snow.add_argument(
+        "--relevance-min-score",
+        type=float,
+        default=0.0,
+        help="Drop discovered papers scoring below this (default: 0.0)",
+    )
+    p_snow.add_argument(
         "--download",
         action="store_true",
         help="After snowballing, fetch the FULL TEXT of newly discovered papers "

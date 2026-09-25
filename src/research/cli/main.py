@@ -227,13 +227,27 @@ async def _async_main(args: Any) -> int:
                 direction=args.direction,
                 limit_forward=args.limit,
                 limit_backward=args.limit,
+                relevance_query=getattr(args, "relevance_query", ""),
+                relevance_top_k=getattr(args, "relevance_top_k", 10),
+                relevance_min_score=getattr(args, "relevance_min_score", 0.0),
             )
             print(
                 f"\nSnowballing Complete for {res.seed_cite_key} ('{res.seed_title}'):"
             )
             print(f"  - Forward (Citing):      {res.forward_count} papers")
             print(f"  - Backward (References):  {res.backward_count} papers")
-            print(f"  - Newly Indexed to DB:    {res.newly_indexed_count} records\n")
+            print(f"  - Newly Indexed to DB:    {res.newly_indexed_count} records")
+            if getattr(args, "relevance_query", "").strip():
+                print(
+                    f"  - Relevance Query:       '{args.relevance_query}' "
+                    f"(top_k={getattr(args, 'relevance_top_k', 10)})"
+                )
+                print(f"  - Ranked Out (over cap): {res.ranked_out_count} records")
+                print(
+                    f"  - Dropped Irrelevant:    "
+                    f"{res.dropped_irrelevant_count} records"
+                )
+            print()
 
             # Optional: fetch full texts of newly discovered papers (anti-curl).
             if getattr(args, "download", False):
