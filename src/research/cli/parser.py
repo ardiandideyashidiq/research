@@ -892,6 +892,53 @@ def build_parser() -> argparse.ArgumentParser:
         "--overwrite", action="store_true", help="Overwrite existing chapter files"
     )
 
+    # 16b. review-run (bib -> dedup -> ranked snowball -> unpaywall -> manifest)
+    p_review = subparsers.add_parser(
+        "review-run",
+        help="Turn a .bib export into a subagent-ready literature review run: "
+        "dedup, relevance-capped snowball, Unpaywall resolve, review packets + manifest",
+    )
+    p_review.add_argument("--bib", required=True, help="Path to the .bib file (or directory)")
+    p_review.add_argument(
+        "--out", default="tmp/review_run", help="Output directory (default: tmp/review_run)"
+    )
+    p_review.add_argument(
+        "--relevance-query",
+        required=True,
+        help="Free-text topical query used to rank and cap snowball results",
+    )
+    p_review.add_argument(
+        "--relevance-top-k",
+        type=int,
+        default=10,
+        help="Keep only the top-K most relevant papers per seed (default: 10)",
+    )
+    p_review.add_argument(
+        "--seeds", type=int, default=3, help="How many seeds to expand via snowball (default: 3)"
+    )
+    p_review.add_argument(
+        "--snowball-limit",
+        type=int,
+        default=20,
+        help="Forward/backward works fetched per seed before ranking (default: 20)",
+    )
+    p_review.add_argument(
+        "--direction",
+        choices=["both", "forward", "backward"],
+        default="both",
+        help="Snowball direction (default: both)",
+    )
+    p_review.add_argument(
+        "--no-unpaywall",
+        action="store_true",
+        help="Skip the Unpaywall open-access resolution stage",
+    )
+    p_review.add_argument(
+        "--markdown-dir",
+        default="data/markdown",
+        help="Where converted full-text Markdown lives (default: data/markdown)",
+    )
+
     # 17. audit-traceability (Quality Gate & Missing Citations Detector)
     p_audit = subparsers.add_parser(
         "audit-traceability",

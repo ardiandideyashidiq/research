@@ -1293,6 +1293,32 @@ async def _async_main(args: Any) -> int:
                 return 0
 
         # 16. scaffold
+        elif args.command == "review-run":
+            from research.review import run_review
+
+            print(
+                f"\n[+] Review run: bib='{args.bib}' "
+                f"query='{args.relevance_query}' "
+                f"top_k={args.relevance_top_k} seeds={args.seeds}"
+            )
+            run_res = await run_review(
+                app,
+                bib_path=args.bib,
+                out_dir=args.out,
+                relevance_query=args.relevance_query,
+                relevance_top_k=args.relevance_top_k,
+                seeds=args.seeds,
+                snowball_limit=args.snowball_limit,
+                direction=args.direction,
+                resolve_unpaywall=not args.no_unpaywall,
+                markdown_dir=args.markdown_dir,
+            )
+            print("\n" + run_res.summary())
+            print(
+                "\nNext: spawn one subagent per manifest entry to write the review cards.\n"
+            )
+            return 0
+
         elif args.command == "scaffold":
             print(
                 f"\n[+] Menghasilkan kerangka draf skripsi 5 Bab (output_dir='{args.output_dir}', style='{args.style}')..."
