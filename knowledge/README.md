@@ -36,6 +36,13 @@ Pustaka doktrin & framework untuk menganalisis **status hukum perkara**
   dekonstruksi (Pasal 368 KUHP, korupsi, 1365 KUHPerdata), hubungan
   antar-ayat (pokok/kualifikasi/pengecualian), dan konsekuensi
   tidak-terbukti unsur (vrijspraak vs ontslag).
+- <a href="./analisis-status-hukum/dekonstruksi-isu-hukum.md">`analisis-status-hukum/dekonstruksi-isu-hukum.md`</a>
+  — **Dekonstruksi & Pemecahan Isu Hukum (6 Tahap)**: I. Skematisasi &
+  pemisahan fakta hukum; II. Kualifikasi yuridis; III. Anatomi norma
+  (conditio–disposisi–sanksi; 3 sub-isu pidana Barda Nawawi: actus reus,
+  mens rea, sanksi); IV. Tipologisasi cacat norma; V. 3-lapis ilmu hukum
+  (dogmatika/teori/filsafat, Marzuki); VI. Pemetaan IRAC/CRAC. Plus contoh
+  isu AI, pemetaan ke RM Bab I/III/IV, dan pencegahan analysis jump.
 
 ## Cara pakai dalam workflow
 
@@ -44,6 +51,9 @@ Pustaka doktrin & framework untuk menganalisis **status hukum perkara**
 - **Tahap 11** (uji otoritas & hierarki): pakai Tahap III framework-operasional
   (Stufenbau + 4 prinsip Harris/Hadjon + tipologi cacat norma).
 - **Tahap 13–16** (penalaran hukum): pakai Tahap II & IV framework
-  (konstatir–kualifikasi–konstituir; interpretasi & konstruksi).
+  (konstatir–kualifikasi–konstituir; interpretasi & konstruksi) dan
+  `dekonstruksi-isu-hukum.md` (Tahap 1–3: pecah fakta, kualifikasi, unsur;
+  Tahap 6: IRAC per sub-isu).
 - **Tahap 17–18** (argumentasi & preskripsi): pakai Tahap VI (IRAC + triade
-  Radbruch) dan `framework-operasional.md` Template Operasional.
+  Radbruch) dan `framework-operasional.md` Template Operasional; sub-isu dari
+  `dekonstruksi-isu-hukum.md` jadi titian rumusan masalah Bab III/IV.
