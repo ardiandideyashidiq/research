@@ -454,6 +454,12 @@ async def _async_main(args: Any) -> int:
                 url=target,
                 download_status="pending",
             )
+            # Upsert so the downloader's status update has a row to write to.
+            # Without this the record is transient: update_status -> update()
+            # returns None for an unknown cite_key, the downloader falls back to
+            # the still-pending record, and a perfectly good PDF is reported as
+            # "could not obtain".
+            app.db.create(rec, merge=True)
             in_q: asyncio.Queue[PublicationRecord | None] = asyncio.Queue()
             out_q: asyncio.Queue[PublicationRecord | None] = asyncio.Queue()
             await in_q.put(rec)
