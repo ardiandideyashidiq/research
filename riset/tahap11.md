@@ -68,7 +68,8 @@ Semua bersumber lembaga legislatif sah → lulus eksklusi.
 Potensi kontradiksi antar-norma untuk perbuatan sama:
 
 - **Deepfake seksual non-konsensual** dapat dijerat: ITE 27(1)/45(1)
-  (kesusilaan) ATAU UU PDP 66 jo. 68 (memalsukan data) ATAU (kelak) KUHP 407 —
+  (kesusilaan) ATAU UU PDP 66 jo. 68 (memalsukan data) ATAU (kelak → efektif
+  2-1-2026) KUHP 407 —
   saling tumpang tindih, bukan kontradiksi logis (concursus).
 - **Deepfake reputasi**: ITE 27A/45(4–6) vs KUHP 441 (penghinaan TI) —
   dua rezim keberlakuan berbeda waktu (ITE sekarang, KUHP kelak).
