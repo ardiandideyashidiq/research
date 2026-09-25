@@ -884,6 +884,36 @@ app.close_sync()
 
 ---
 
+### 16b. Literature Review Run (`review-run`)
+
+Turns a `.bib` export into subagent-ready review inputs: dedup by DOI →
+relevance-capped snowball → Unpaywall resolve → per-paper packets + manifest.
+
+#### CLI Usage
+```bash
+uv run research review-run \
+  --bib /path/to/references.bib \
+  --relevance-query "kecerdasan buatan martabat manusia" \
+  --relevance-top-k 10 --relevance-min-score 0.3 \
+  --seeds 3 --snowball-limit 20 \
+  --out tmp/aiethics_review
+```
+
+Writes `manifest.json` plus one packet per paper under `<out>/packets/`.
+A paper is labelled `FULL-TEXT` only when a converted Markdown file actually
+exists on disk; otherwise `ABSTRACT` or `METADATA` — never optimistic. Follow
+by spawning one subagent per manifest entry to write the review card (see the
+`literature-review` skill).
+
+#### Notes
+- `--relevance-min-score` also filters the *seeds* and papers already in the
+  database, not just freshly fetched snowball works; without it an off-topic
+  seed drags in off-topic citations.
+- Reference-manager exports commonly duplicate every entry under a `...2`
+  cite key; ingest deduplicates by normalized DOI (title+year as fallback).
+
+---
+
 ### 17. Citation Traceability Auditor (`audit-traceability`)
 
 Scans thesis draft chapters, verifies in-text citations and statutory mentions against the database, catches ghost citations (*no fabrication* rule per Tahap 20), and builds an audit report.
@@ -914,7 +944,7 @@ src/research/
 ├── __init__.py           # Lazy app loader (get_app) & CLI entry point (research:main)
 ├── app.py                # ResearchApp unified application facade
 ├── cli/                  # Production CLI subcommands and runner
-│   ├── parser.py         # Argument parser specification with 17 subcommands
+│   ├── parser.py         # Argument parser specification with 19 subcommands
 │   └── main.py           # Async CLI execution handlers & signal management
 ├── normative/            # Normative legal research toolkit supporting workflow.md
 │   ├── models.py         # NormativeProject, LegalSyllogism, AuditReport, STAGE_DEFINITIONS (1-20)
@@ -992,6 +1022,9 @@ src/research/
 │   ├── extractor.py      # CardExtractor (heuristic & milestone-aware literature & putusan extractor)
 │   ├── export.py         # Matrix export (Markdown GFM table + cards, UTF-8 BOM CSV, JSON)
 │   └── manager.py        # CardManager (SQLite review_cards & FTS5 CRUD, batch extraction, search)
+├── review/               # Literature-review run orchestration (bib -> ranked snowball -> packets)
+│   ├── models.py         # ReviewPaper, ReviewRunResult (label + relevance per queued paper)
+│   └── review_run.py     # run_review(): dedup ingest, capped snowball, Unpaywall, packets
 └── putusan/              # Indonesian Court Judgment conversion & context-preserving chunking
     ├── models.py         # PutusanMetadata, PutusanSection, PutusanChunk, PutusanDocument
     ├── normalizer.py     # Watermark/disclaimer stripping, spaced typography unspacing, table reflow
