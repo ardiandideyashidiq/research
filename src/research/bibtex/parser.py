@@ -205,24 +205,33 @@ def parse_bib_files(
 ) -> list[BibEntry]:
     """Parse multiple BibTeX files or directories, optionally deduplicating entries by cite_key."""
     file_paths = expand_bib_paths(paths, recursive=recursive)
-    all_entries: list[BibEntry] = []
-    seen: dict[str, BibEntry] = {}
-
+    parsed: list[BibEntry] = []
     for path in file_paths:
-        entries = parse_bib_file(path)
-        for entry in entries:
-            if not deduplicate:
-                all_entries.append(entry)
-                continue
+        parsed.extend(parse_bib_file(path))
 
-            if entry.cite_key in seen:
-                existing = seen[entry.cite_key]
-                for src in entry.sources:
-                    if src not in existing.sources:
-                        existing.sources.append(src)
-            else:
-                seen[entry.cite_key] = entry
-                all_entries.append(entry)
+    if not deduplicate:
+        return parsed
 
-    return all_entries
+    from research.bibtex.dedup import entry_identity
+
+    # DOI/title-aware dedup. Reference-manager exports commonly re-import the
+    # same work under a "...2" cite key, which cite_key-only dedup misses.
+    seen: dict[str, BibEntry] = {}
+    result: list[BibEntry] = []
+    for entry in parsed:
+        identity = entry_identity(entry)
+        if identity in seen:
+            existing = seen[identity]
+            for src in entry.sources:
+                if src not in existing.sources:
+                    existing.sources.append(src)
+            aliases = existing.raw_fields.get("duplicate_cite_keys", "")
+            if entry.cite_key != existing.cite_key:
+                existing.raw_fields["duplicate_cite_keys"] = (
+                    f"{aliases},{entry.cite_key}" if aliases else entry.cite_key
+                )
+        else:
+            seen[identity] = entry
+            result.append(entry)
+    return result
 
