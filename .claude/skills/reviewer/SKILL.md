@@ -1,70 +1,73 @@
 ---
 name: reviewer
 description: >-
-  Reviewer kualitas penelitian hukum normatif berbasis knowledge/review-kualitas.
-  Pakai utk mengevaluasi draft skripsi, trail riset (riset/tahap*.md), kartu
-  literatur (literature-review/tahap8b_paper), atau naskah hukum lainnya dengan
-  framework 7 dimensi / 5 kriteria / 35-Cek.
+  Reviews Indonesian normative/doctrinal legal research artifacts (thesis
+  drafts, riset workflow trails, literature review cards) against the
+  knowledge/review-kualitas frameworks (7 dimensions, 5 criteria, 35-Cek
+  checklist, weighted scorecard). Use when the user asks to review, audit, or
+  quality-check a legal-analysis document, draft skripsi chapters, or research
+  trail files for coherence, traceability, or methodological rigor.
 ---
 
-# Skill: Reviewer Kualitas Penelitian Hukum Normatif
+# Reviewer: Kualitas Penelitian Hukum Normatif
 
-Skill ini memandu **review kritis** karya/artefak penelitian hukum normatif
-berdasarkan library `knowledge/review-kualitas/`:
+Review artefak hukum normatif dengan kerangka pada
+`knowledge/review-kualitas/review-epistemologis.md` (trilogi kebenaran **dan**
+5 kriteria) serta `knowledge/review-kualitas/review-framework-7dimensi.md`
+(7 dimensi + scorecard + 35-Cek). Baca kedua file itu saat skill dipakai.
 
-- `review-epistemologis.md` — trilogi kebenaran (koherensi, konsensus,
-  traceability), red flags, 5 Kriteria Evaluasi.
-- `review-framework-7dimensi.md` — framework 7 dimensi, scorecard berbobot,
-  master checklist **35 poin audit**, format lembar reviewer.
+## Alur review (ceklist — salin & tandai)
 
-## Kapan dipakai
-- Mengevaluasi kualitas **draft skripsi** (`draft_skripsi/*.md`).
-- Mengaudit **trail riset** (`riset/tahap*.md`) — konsistensi lintas tahap.
-- Menilai **kartu literatur** (`riset/literature-review/`,
-  `riset/tahap8b_paper/`) — kualitas & label epistemik.
-- Menelaah preskripsi/novelty sebelum diserahkan.
+```
+Review Progress:
+- [ ] 1. Tentukan cakupan (bab/artefak / seluruh dokumen / lintas-trail)
+- [ ] 2. Skrining awal red flags (istilah empiris, campur das sein/das sollen,
+         deskriptif belaka, analysis jump)
+- [ ] 3. Telusuri konsistensi lintas artefak (pasal [TERBACA], KUHP 2-1-2026+
+         UU 1/2026, PDP 66 jo. 68, label epistemik)
+- [ ] 4. Nilai 7 dimensi + hitung scorecard (bobot 15/15/10/15/25/10/10)
+- [ ] 5. Tulis laporan ke review/<artefak>.review.md
+```
 
-## Prosedur Review (wajib diikuti)
+## Cek wajib per jenis artefak
 
-### 1. Siapkan target
-1. Baca `knowledge/README.md` & (jika relevan) `knowledge/review-kualitas/*.md`
-   utk kerangka.
-2. Tentukan **cakupan**: (a) satu bab/artefak, (b) seluruh dokumen, atau
-   (c) lintas-dokumen (trail). Sampaikan eksplisit di laporan.
-3. Baca target secara utuh (gunakan `Read`/`Grep` sesuai jenis; utk file
-   besar baca secukupnya + teliti bagian inti).
+**Draf skripsi (`draft_skripsi/*.md`):**
+- 35-Cek per bab; cek **sitasi inline & keterhubungan DAFTAR PUSTAKA** (0
+  ghost-citation; tak ada duplikat/entri non-topik).
+- **Tanda [PERLU VERIFIKASI] di teks** utk premis belum terverifikasi (mis.
+  efek UU 1/2026 pada 407/622/172, putusan inkracht, PP 40(6)).
+- **Subsumsi IRAC per unsur** (bestanddelen), urutan interpretasi, dan
+  tertium comparationis utk pendekatan perbandingan.
 
-### 2. Terapkan kerangka
-- **Skrining awal (red flags):** deteksi istilah riset empiris (populasi,
-  sampel, kuesioner, SPSS, hipotesis), campur das sollen/das sein,
-  deskriptif belaka, *analysis jump*.
-- Untuk review **draf skripsi**: pakai **7 Dimensi** + **35-Cek** per bab;
-  hitung **scorecard** (bobot) bila diminta.
-- Untuk review **trail riset**: fokus Dimensi 1 (isu & cacat norma),
-  2 (bahan/hirarki), 5 (penalaran IRAC) + **traceability** klaim
-  (tiap pasal/paper harus punya jejak ke `riset/` / korpus [TERBACA]).
-- Untuk review **kartu literatur**: cek label epistemik jujur
-  ([FULL-TEXT]/[ABSTRACT]/[METADATA]), sumber DOI/URL, isi tidak melampaui
-  sumber, relevansi ke topik skripsi.
+**Trail riset (`riset/tahap*.md`):**
+- Konsistensi lintas tahap: tipologi; sanksi **PDP 66 jo. 68** (bukan 67);
+  **KUHP efektif 2-1-2026 + UU 1/2026**; label epistemik paper konsisten
+  antar-artefak (mis. matriks/literature_matrix.md).
+- Jejak klaim: tiap pasal memiliki [TERBACA] / kartu `riset/pasal/*`; putusan
+  punya nomor & inkracht terverifikasi.
 
-### 3. Aturan integritas (zero-hallucination)
-- **Jangan mengarang** isi target; hanya nilai apa yang benar-benar ada.
-- Bedakan **temuan fakta** (kutip baris/pasal) vs **penilaian** (kritik).
-- Tandai klaim yang tidak dapat diverifikasi sbg `[BELUM TERVERIFIKASI]`.
-- Jangan edit file target — tulis **laporan terpisah** (kecuali diminta).
+**Kartu literatur (`riset/literature-review/`, `riset/tahap8b_paper/`):**
+- Label jujur ([FULL-TEXT]/[ABSTRACT]/[METADATA]) sesuai isi; sumber (DOI/URL)
+  valid; isi tidak melampaui sumber (anti-halusinasi); relevansi ke topik.
 
-### 4. Format laporan
-Tulis laporan ke file (mis. `review/<nama>.review.md`) dengan template:
-1. **Ringkasan eksekutif** (isi, metode, penilaian singkat).
-2. **Katalog temuan** — tabel: lokasi/baris, kategori (red-flag/isu/bahan/
-   pendekatan/teori/penalaran/preskripsi/sistematika-trace), temuan,
-   keparahan (Kritis/Penting/Minor).
-3. **Scorecard** (bila diminta) — skor 7 dimensi + total + kategori.
-4. **Kekuatan (strengths).**
-5. **Rekomendasi perbaikan** — prioritas & spesifik (buku/pasal/metode).
-6. **Keputusan akhir** — Layak / Revisi Kecil / Revisi Besar / Ditolak.
+## Format laporan (template)
 
-## Output default
-- Laporan review ke `review/<artefak>.review.md` (buat dir `review/` bila
-  belum ada).
-- Jangan langsung commit; kembalikan ke pemanggil utk ditindaklanjuti.
+```markdown
+# Laporan Review — <artefak>
+1. Ringkasan eksekutif (isu, metode, skor)
+2. Katalog temuan — tabel: lokasi/baris, kategori, temuan, keparahan
+   (Kritis/Penting/Minor) / atau Positif
+3. Scorecard (7 dimensi, bobot, skor, terbobot, total, kategori)
+4. Kekuatan (strengths)
+5. Rekomendasi perbaikan (prioritas; spesifik: buku/pasal/metode)
+6. Keputusan akhir — Layak / Revisi Kecil / Revisi Besar / Ditolak
+```
+
+## Integritas
+
+- Hanya nilai yang benar-benar ada; kutip baris/file utk tiap temuan.
+- Bedakan temuan fakta vs penilaian; klaim tak terverifikasi → tandai
+  `[BELUM TERVERIFIKASI]`.
+- Jangan edit artefak target — tulis laporan terpisah di `review/`.
+- Keputusan akhir gunakan ambang skorckard: 86–100 Sangat Layak ·
+  70–85 Revisi · <70 Ditolak.

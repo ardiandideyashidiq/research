@@ -1005,6 +1005,39 @@ Import packages strictly using absolute `src/` layout: `from research.db import 
 
 ---
 
+## Skills — Creation Reference
+
+When the user asks to **create, refactor, or fix a skill**, follow the official
+best practices: <https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices>
+(also `https://code.claude.com/docs/en/skills` for Claude Code specifics).
+
+Project skills live in `.claude/skills/<skill-name>/SKILL.md`.
+
+Required structure & rules:
+- **File**: must be `SKILL.md` (exact name) inside `.claude/skills/<name>/`.
+- **Frontmatter**: exactly `name` (≤64 chars, lowercase/numbers/hyphens, no
+  XML, no reserved "anthropic"/"claude") and `description` (non-empty,
+  ≤1024 chars, **third-person**, includes "what it does" + "when to use it"
+  with trigger keywords). No XML tags.
+- **Naming**: prefer gerund/noun-phrase (e.g. `processing-pdfs`,
+  `writing-abstracts`); avoid vague names (`helper`, `utils`).
+- **Body**: keep under 500 lines; use **progressive disclosure** — SKILL.md
+  is an overview; put details in sibling files (`reference.md`, `FORMS.md`,
+  `scripts/`) loaded on demand; keep references **one level deep**.
+- **Content**: concise (Claude already knows basics); consistent terminology;
+  concrete examples; workflows with checklists + feedback loops; no
+  time-sensitive info outside an "old patterns" section; forward slashes.
+- **Anti-patterns**: don't offer many tool options; don't assume packages
+  installed; don't defer error handling in scripts.
+- **Grounding**: when the skill wraps project doctrine, point it at
+  `knowledge/` files (e.g. `knowledge/review-kualitas/`,
+  `knowledge/penulisan/`) — keep references relative from SKILL.md.
+
+Existing project skills: `reviewer` (legal-research quality review) and
+`abstrak` (normative abstract writing/review) under `.claude/skills/`.
+
+---
+
 ## Conventions & Rules
 
 - **Python 3.13+**: PEP 604 unions (`str | None`, `list[str]`), `X | None` return types — no legacy `Optional` or `List` from `typing`. Use `from typing import Self` and `from types import TracebackType` for context managers.
