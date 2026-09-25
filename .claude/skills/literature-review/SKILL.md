@@ -65,6 +65,19 @@ Untuk tiap batch paper (1–3 paper per subagent), subagent:
 - Menulis satu kartu `riset/<topik>_paper/PAPER_<CiteKey>_<slug>.md` berisi:
   identitas (judul, penulis, tahun, jurnal, DOI, URL) · isu · metode · teori
   · temuan · gap · relevansi ke skripsi · label epistemic.
+- **WAJIB sertakan 4 blok enrichment** (sesuai `template-analisis-paper.md`):
+  1. **Teknik penalaran penulis** — dekonstruksi unsur pasal? pemetaan rezim
+     (ITE/PDP/KUHP/TPKS)? struktur argumentasi (silogisme/tipologi/kerangka
+     teori)? komparasi (ada *tertium comparationis* atau daftar negara)?
+     preskripsi konkret atau konseptual?
+  2. **Pasal/dokumen yang dianalisis** — daftar pasal dengan status
+     `[VERBATIM]` / `[RUJUKAN]` / `[TAK DISEBUT]` (paper yang hanya menyebut
+     nama UU tanpa nomor = methodological gap; catat eksplisit).
+  3. **Kritik analitis** — analysis jump? batasan asas legalitas dalam
+     penafsiran progresif? data empiris tanpa verifikasi primer? celah
+     komparasi (*non-transferability of law*)?
+  4. **Research-gap mapping** — kaitkan ke gap skripsi (temporal
+     ITE↔KUHP, multi-aktor, forensik, moderasi/PSE, perdata).
 - **Dilarang** mengarang; isi di luar sumber → "—".
 - **Dilarang** mengedit file existing atau `tahap8b.md`.
 

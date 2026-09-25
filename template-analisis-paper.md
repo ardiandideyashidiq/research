@@ -34,9 +34,32 @@
 * [ ] **Pendekatan Perundang-undangan (*Statute Approach*)**: Menelaah hirarki, *ratio legis*, dan konsistensi norma pasal.
 * [ ] **Pendekatan Konseptual (*Conceptual Approach*)**: Merujuk pada pandangan para sarjana (*doktrin*) dan konsep hukum ketika aturan belum ada.
 * [ ] **Pendekatan Kasus (*Case Approach*)**: Menganalisis *ratio decidendi* (pertimbangan hukum hakim) dalam putusan pengadilan.
-* [ ] **Pendekatan Perbandingan (*Comparative Approach*)**: Membandingkan sistem hukum nasional dengan hukum negara lain/sistem hukum lain.
+* [ ] **Pendekatan Perbandingan (*Comparative Approach*)**: Membandingkan sistem hukum nasional dengan sistem hukum negara lain.
 * [ ] **Pendekatan Sejarah (*Historical Approach*)**: Menelusuri perkembangan historis dan latar belakang pembentukan aturan.
 * [ ] **Pendekatan Filsafat (*Philosophical Approach*)**: Menganalisis nilai-nilai keadilan dan hakikat filosofis norma.
+
+### 2b. Teknik Penalaran Penulis (*Author's Analytical Technique*)
+| Teknik | Deskripsi |
+|---|---|
+| **Dekonstruksi unsur pasal** | Apakah penulis menguraikan sub-unsur pasal & mengujinya ke fakta? |
+| **Pemetaan rezim** | Berapa rezim dipetakan (ITE/PDP/KUHP/TPKS) & ada argumen *lex specialis*? |
+| **Struktur argumentasi** | Silogisme/IRAC? Tipologi cacat norma? Kerangka teori (tri-teori/trisistem/progresif)? |
+| **Komparasi** | Ada *tertium comparationis* (objek, unsur, sanksi) atau sekadar daftar negara? |
+| **Preskripsi** | Konkret (draf pasal) atau konseptual (aras kebijakan)? |
+
+### 2c. Pasal/Dokumen yang Dianalisis Penulis (*Statutes & Sources*)
+| Pasal/Peraturan | Status kutipan | Peran dalam argumen |
+|---|---|---|
+| (cth: ITE Pasal 27(1) jo. 45(1)) | [VERBATIM] / [RUJUKAN] / [TAK DISEBUT] | (dasar kualifikasi / konteks) |
+
+> Isi **hanya pasal yang benar-benar disebut penulis**; tandai `[TAK DISEBUT]`
+> bila hanya nama UU tanpa nomor pasal (methodological gap).
+
+### 2d. Kritik Analisis terhadap Tulisan (*Counter-Points*)
+- (a) Potensi *analysis jump* (pasal → konklusi tanpa uji unsur/fakta)?
+- (b) Batasan asas legalitas dalam penggunaan penafsiran progresif?
+- (c) Data empiris yang dipakai (tanpa verifikasi primer)?
+- (d) Celah *tertium comparationis* pada analisis perbandingan?
 
 ---
 

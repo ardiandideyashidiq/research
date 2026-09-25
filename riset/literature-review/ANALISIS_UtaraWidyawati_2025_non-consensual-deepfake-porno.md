@@ -98,6 +98,38 @@
 
 ---
 
+## Vb. ANALISIS MANUAL — TEKNIK PENALARAN & DASAR HUKUM (enrichment)
+
+### Teknik penalaran penulis
+| Teknik | Yang dilakukan | Catatan |
+|---|---|---|
+| **Dekonstruksi unsur pasal** | Menguraikan **Pasal 27(1) UU ITE** menjadi sub-unsur: menyiarkan/pertunjukkan/mendistribusikan/mentransmisikan/membuat dapat diakses + "melanggar kesusilaan" + "untuk diketahui umum" | [FULL-TEXT] Transparan, tetapi **tidak menguji tiap unsur ke fakta konkret** (analysis jump parsial) |
+| **Pemetaan rezim (4 rezim)** | UU PDP Pasal 66 → UU ITE 27(1)/45(1) → UU Pornografi 1(1)/4(1)/29 → KUHP 407 | [FULL-TEXT] Komprehensif; **tidak ada argumen *lex specialis* eksplisit** antar-4 rezim |
+| **AI ↔ "Agen Elektronik"** | Menyamakan AI dengan "Agen Elektronik" (ITE Pasal 1 angka 8) berdasar ciri "otomatis"; kutip Aulia (HukumOnline) | [FULL-TEXT] Orisinal; **risiko**: analogi kontroversial (electronic agent ≠ AI otonom) |
+| **Keadilan prosedural vs substantif** | Irene Jenkin: *due process* & *equal protection* diuji terhadap (a) kapasitas forensik aparat, (b) bias gender (90–95% korban perempuan) | [FULL-TEXT] Kontekstual; **data 90–95%** diasumsikan tanpa verifikasi primer |
+| **Trisistem Friedman** | Struktur (kapasitas) → Substansi (ketiadaan aturan) → Budaya (gap generasi digital) | [FULL-TEXT] Diterapkan sebagai diagnosis 3-lapis |
+| **Hukum progresif + diskresi** | Satjipto Rahardjo + Roscoe Pound (social engineering) + Thomas Aaron (diskresi) | [FULL-TEXT] Konsekuen; **tidak ada batas *asas legalitas*** saat mengolaryng terobosan hukum |
+
+### Pasal/peraturan yang dianalisis
+| Pasal | Status | Peran |
+|---|---|---|
+| ITE Pasal 1(8) (Agen Elektronik) | [VERBATIM] | Landasan analogis AI |
+| ITE Pasal 27(1) jo. 45(1) | [VERBATIM] | Delik utama (distribusi kesusilaan) |
+| ITE Pasal 1(1) (Informasi Elektronik) | [VERBATIM] | Objek konten |
+| UU PDP Pasal 66 | [VERBATIM] | Memalsukan data (jalan alternatif) |
+| UU Pornografi Pasal 1(1), 4(1), 29 | [VERBATIM] | Definisi & larangan produksi/distribusi pornografi |
+| KUHP Pasal 407 | [VERBATIM] | Delik pornografi (berlaku 2026) |
+
+### Kritik terhadap tulisan
+- **Analysis jump parsial**: sub-unsur Pasal 27(1) diuraikan, tetapi tidak
+  disubsumsikan ke fakta kasus (hanya dianalisis normatif).
+- **Batasan legalitas**: penggunaan *rule-breaking* progresif/diskresi tidak
+  dibahas—wasas escalar，没想到 ada tegangan dengan *nullum crimen*.
+- **Data tidak diverifikasi**: klaim 90–95% korban perempuan dipakai tanpa
+  sumber primer dalam paper.
+- **Multirezim**: empat rezim dipetakan, tetapi *lex specialis* tidak
+  diuji eksplisit → ambigu rezim mana yang seharusnya berlaku.
+
 ## VI. TEMUAN UTAMA, ARGUMENTASI & PRESKRIPSI (*KEY FINDINGS*)
 
 ### 1. Temuan Utama (*Key Findings & Ratio Decidendi*)

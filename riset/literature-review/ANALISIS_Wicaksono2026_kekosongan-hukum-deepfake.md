@@ -93,6 +93,40 @@
                 risiko). [FULL-TEXT]
 ```
 
+## Vb. ANALISIS MANUAL — TEKNIK PENALARAN & DASAR HUKUM (enrichment)
+
+### Teknik penalaran penulis
+| Teknik | Yang dilakukan | Catatan |
+|---|---|---|
+| **Analisis 3 rezim lapis** | **KUHP** (penipuan/pemalsuan/pencemaran — konteks konvensional) → **ITE** (lebih relevan, norma umum) → **PDP** (biometrik; fokus pengelolaan data ≠ manipulasi identitas) | [FULL-TEXT] Struktur jelas; **tidak menganalisis pasal konkret** (tanpa kutip teks 27(1)/66) |
+| **Tipologi kekosongan 4-dimensi** | (1) **Definisi** → (2) **Operasional/pembuktian** → (3) **Pertanggungjawaban multi-aktor** → (4) **Pencegahan** | [FULL-TEXT] Orisinal & terstruktur; **tidak dipetakan** ke tipologi conflict/vague/leemten (cara stun skripsi kita) |
+| **Implikasi berjenjang** | kepastian → impunitas → perlindungan korban (kerugian non-material) | [FULL-TEXT] Logis; tanpa score/bukti empiris |
+| **Preskripsi 5-arah** | definisi + forensik digital + multi-aktor + preventif/platform + risk-based | [FULL-TEXT] Konkret; **tanpa draft pasal** (konseptual) |
+| **Komparasi 3 negara** | AS (larangan state-level) · UE (transparansi/akuntabilitas/risk) · Tiongkok (pelabelan konten sintetis) | [FULL-TEXT] Deskriptif; **tanpa *tertium comparationis*** (objek/unsur/sanksi) |
+
+### Pasal/peraturan yang dianalisis
+| Peraturan | Status | Peran |
+|---|---|---|
+| KUHP (penipuan, pemalsuan, pencemaran nama baik) | [TAK DISEBUT NOMOR] | Dasar kualifikasirena (piagam_pencurian, pemalsuan, pencemaran) — konteks konvensional |
+| UU ITE (ketentuan umum) | [TAK DISEBUT NOMOR] | Kerangka digital (tidak spesifik AI) |
+| UU PDP (data biometrik) | [TAK DISEBUT NOMOR] | Relevansi biometrik; fokus ≠ manipulasi identitas |
+
+> **Catatan metodologis (methodological gap)**: paper ini **tidak mengutip
+> nomor pasal spesifik** — analisisnya konseptual/normatif-luas, bukan
+> tekstual-subsumtif. Ini pembeda dari Utara&Widyawati yang mengutip pasal
+> verbatim. Sumber: [FULL-TEXT] `data/markdown/10_37477_sev_v10i2_1022.md`.
+
+### Kritik terhadap tulisan
+- **Tanpa pasal konkret**: tidak bisa diuji ke unsur → risiko *analysis
+  jump* tersembunyi di balik generalisasi.
+- **Taksonomi orisinal tanpa peta**: 4-dimensi kekosongan yang berbeda tidak
+  dipetakan ke tipologi *conflict/vague/leemten* → sulit diposisikan
+  terhadap literatur lain.
+- **Komparasi deskriptif**: 3 negara tanpa *tertium comparationis* → tidak
+  ada uji transferabilitas ke Indonesia.
+- **Preskripsi konseptual**: 5-arah konkret namun tanpa draf pasal (lebih
+  lemah dari nosso tahap18 yang menyusun draf).
+
 ## VI. TEMUAN UTAMA, ARGUMENTASI & PRESKRIPSI (*KEY FINDINGS*)
 
 ### 1. Temuan Utama (*Key Findings*) — label klaim: **[FULL-TEXT]**
