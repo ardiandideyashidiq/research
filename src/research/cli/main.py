@@ -254,6 +254,191 @@ async def _async_main(args: Any) -> int:
             print()
             return 0
 
+        if cmd == "fulltext":
+            target = args.target.strip()
+            timeout = getattr(args, "timeout", 15.0)
+            out_dir = Path(getattr(args, "output_dir", "data/markdown"))
+            index_rag = getattr(args, "index_rag", False)
+            force = getattr(args, "force", False)
+            direct_url = getattr(args, "pdf_url", "").strip() or None
+            print(
+                f"\n[+] Resolving open-access full text for: '{target}' (timeout={timeout}s)..."
+            )
+
+            from research.unpaywall.client import get_best_pdf_url
+
+            # 1. Normalize DOI from a target that may be a doi.org URL or cite_key.
+            #    A bare http(s) target that is NOT doi.org is treated as a direct
+            #    PDF/landing URL (landing pages are later run through OJS extraction).
+            doi = target
+            is_url_target = target.lower().startswith(("http://", "https://"))
+            if (
+                target.lower().startswith("doi.org/")
+                or target.lower().startswith("https://doi.org/")
+                or target.lower().startswith("http://doi.org/")
+            ):
+                doi = target.split("doi.org/", 1)[1]
+                is_url_target = False
+
+            # 2. Determine the PDF download URL, in priority order:
+            #    explicit --pdf-url > DOI is a direct PDF URL > Unpaywall > DB record.
+            pdf_url: str | None = direct_url
+            if pdf_url:
+                print(f"[+] Using explicit --pdf-url: {pdf_url}")
+
+            if pdf_url is None and not is_url_target:
+                try:
+                    pdf_url = get_best_pdf_url(doi, timeout=min(timeout, 12.0))
+                    if pdf_url:
+                        print(f"[+] Unpaywall resolved OA PDF: {pdf_url}")
+                except Exception as e:  # noqa: BLE001
+                    logger.debug(f"Unpaywall resolve failed for {doi}: {e}")
+
+            if pdf_url is None:
+                db_rec = app.db.get(target)
+                # If --pdf-url was not given and target is a URL, prefer that URL.
+                if is_url_target:
+                    pdf_url = target
+                    print(f"[+] Using direct URL as download target: {pdf_url}")
+                elif db_rec and db_rec.pdf_url:
+                    pdf_url = db_rec.pdf_url
+                    print(f"[+] Using stored pdf_url from DB: {pdf_url}")
+                elif db_rec and db_rec.url:
+                    pdf_url = db_rec.url
+                    print(f"[+] Using stored landing URL from DB: {pdf_url}")
+
+            # 3. If we still only have a landing page (not a .pdf URL), try to extract a
+            #    PDF via the project's own OJS/Highwire extractor — no manual curl needed.
+            if pdf_url and not pdf_url.lower().endswith(".pdf"):
+                from research.ojs import OJSClient
+
+                real_url = pdf_url
+                # Only run OJS extraction for landing-article pages; for bare
+                # endpoints (e.g. /download/...) treat the URL as a direct target.
+                looks_like_article = "/article/" in real_url.lower() and "/download/" not in real_url.lower()
+                if not looks_like_article:
+                    print(f"[+] Treating as direct download URL: {real_url}")
+                else:
+                    pdf_url = None
+                    try:
+                        ojs = OJSClient(engine="curl_cffi", timeout=min(timeout, 8.0))
+                        meta = await ojs.fetch_metadata(real_url, timeout=min(timeout, 8.0))
+                        if meta and meta.pdf_url:
+                            pdf_url = meta.pdf_url
+                            print(f"[+] Extracted PDF URL via OJS extractor: {pdf_url}")
+                    except Exception as e:  # noqa: BLE001
+                        logger.debug(f"OJS extraction failed for {real_url}: {e}")
+                    if not pdf_url:
+                        pdf_url = real_url  # fall through and try downloading the page anyway
+
+            if not pdf_url:
+                print(
+                    f"\n[-] No open-access PDF found for '{target}' (Unpaywall empty, no "
+                    "--pdf-url and no DB record). Try 'research search' first to index the "
+                    "record, or pass --pdf-url <direct PDF URL>.\n"
+                )
+                return 0
+
+            import re
+
+            safe_slug = re.sub(r"[^A-Za-z0-9]+", "_", target)[:80].strip("_") or "paper"
+
+            # 2. Reuse an already-downloaded local PDF for this DOI if present (the
+            #    dual-engine downloader's cross-DOI tier reuses it, but download_stream
+            #    does not report reuse to the out-queue, so resolve it here).
+            existing_doi_rec = None
+            if doi:
+                existing_doi_rec = app.db.get_by_doi(doi)
+            if existing_doi_rec is None:
+                target_rec = app.db.get(target)
+                if target_rec is not None and target_rec.doi:
+                    existing_doi_rec = app.db.get_by_doi(target_rec.doi)
+            reuse_path: Path | None = None
+            if (
+                existing_doi_rec
+                and existing_doi_rec.download_status == "downloaded"
+                and existing_doi_rec.download_path
+                and Path(existing_doi_rec.download_path).is_file()
+                and Path(existing_doi_rec.download_path).stat().st_size > 0
+            ):
+                reuse_path = Path(existing_doi_rec.download_path)
+                print(f"[+] Reusing verified local PDF: {reuse_path}")
+            if reuse_path is None and pdf_url:
+                existing_url_rec = app.db.get_by_pdf_url(pdf_url)
+                if (
+                    existing_url_rec
+                    and existing_url_rec.download_status == "downloaded"
+                    and existing_url_rec.download_path
+                    and Path(existing_url_rec.download_path).is_file()
+                    and Path(existing_url_rec.download_path).stat().st_size > 0
+                ):
+                    reuse_path = Path(existing_url_rec.download_path)
+                    print(f"[+] Reusing verified local PDF (by URL): {reuse_path}")
+
+            # 2b. Build a PublicationRecord with the resolved URL and download via the
+            #    project's dual-engine downloader (curl-cffi chrome impersonation + OJS
+            #    fallback). This bypasses anti-bot 403s that plain httpx cannot.
+            rec = PublicationRecord(
+                cite_key=safe_slug,
+                doi=doi,
+                pdf_url=pdf_url,
+                url=target,
+                download_status="pending",
+            )
+            in_q: asyncio.Queue[PublicationRecord | None] = asyncio.Queue()
+            out_q: asyncio.Queue[PublicationRecord | None] = asyncio.Queue()
+            await in_q.put(rec)
+            await in_q.put(None)
+
+            app.downloader.timeout = timeout
+            stats = await app.downloader.download_stream(
+                in_q,
+                out_q,
+                concurrency=1,
+                force=force,
+            )
+            print(f"[+] Download stats: {stats}")
+
+            downloaded: PublicationRecord | None = None
+            while not out_q.empty():
+                item = await out_q.get()
+                if item is not None and item.download_status == "downloaded":
+                    downloaded = item
+                    break
+
+            if reuse_path is not None:
+                pdf_path = reuse_path
+            elif downloaded is not None and downloaded.download_path:
+                pdf_path = Path(downloaded.download_path)
+            else:
+                print(
+                    f"\n[-] Could not obtain a valid PDF for '{target}' "
+                    f"(download stats: {stats}). Try supplying a different DOI or citing "
+                    "version that is directly open-access.\n"
+                )
+                return 0
+
+            print(f"[+] Verified PDF -> {pdf_path}")
+
+            # 3. Convert to Markdown
+            print("[+] Converting to Markdown...")
+            out_md = out_dir / f"{safe_slug}.md"
+            out_md.parent.mkdir(parents=True, exist_ok=True)
+            _out_md_path, conv_doc = await app.pdf.convert_file_async(pdf_path, out_md)
+            print(f"[+] Full text Markdown: {out_md} ({conv_doc.total_pages} pages)")
+
+            # 4. Optional RAG index
+            if index_rag:
+                chunks = await asyncio.to_thread(
+                    app.retriever.index_document,
+                    conv_doc,
+                    cite_key=safe_slug,
+                )
+                print(f"[+] Indexed {len(chunks)} chunks into RAG (cite_key='{safe_slug}').")
+
+            print(f"[+] DONE: {out_md}\n")
+            return 0
+
         if cmd == "convert":
             in_path = Path(args.path)
             if in_path.is_file():
@@ -341,17 +526,32 @@ async def _async_main(args: Any) -> int:
                 print("\n  No matching chunks found in database.\n")
                 return 0
 
+            # Build the text output (context-style by default when --format-context
+            # is set; otherwise a readable ranked list with optional source labels).
+            with_source = getattr(args, "with_source", False)
+            lines: list[str] = []
             if args.format_context:
-                print("\n" + app.retriever.format_context(results) + "\n")
+                lines.append(app.retriever.format_context(results))
             else:
-                print(f"\n[+] Top {len(results)} Ranked Excerpts:\n")
+                lines.append(f"[+] Top {len(results)} Ranked Excerpts:\n")
                 for i, r in enumerate(results, start=1):
                     citation = r.formatted_citation()
-                    print(
-                        f"--- [{i}] {citation} (Match: {r.retrieval_mode}, Score: {r.score:.4f}) ---"
+                    src_note = ""
+                    if with_source:
+                        src_note = f" [source: {r.chunk.corpus}/{r.chunk.cite_key}]"
+                    lines.append(
+                        f"### [{i}] {citation}{src_note} (Match: {r.retrieval_mode}, "
+                        f"Score: {r.score:.4f})\n\n{r.chunk.content.strip()}\n"
                     )
-                    print(r.chunk.content.strip())
-                    print()
+            out_text = "\n".join(lines).strip() + "\n"
+
+            output_path = getattr(args, "output", None)
+            if output_path:
+                Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+                Path(output_path).write_text(out_text, encoding="utf-8")
+                print(f"[+] Wrote {len(results)} result(s) -> {output_path}\n")
+            else:
+                print("\n" + out_text)
             return 0
 
         if cmd == "export":

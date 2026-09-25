@@ -362,12 +362,42 @@ Saat membaca buku B. Arief Sidharta, peneliti menemukan rujukan penting ke
 karya Paul Scholten, lalu menelusuri karya asli Paul Scholten tersebut
 (*snowballing*).
 
+#### Alat Operasional (Platform riset ini)
+
+Pengumpulan & pembacaan bahan hukum sekunder/tersier dijalankan lewat
+platform (modul `research`):
+
+1. **Penelusuran doktrin/jurnal**: `uv run research search "<topik>"`
+   mem-parallel arXiv/OpenAlex/Crossref/DOAJ/OpenAIRE (metadata + kanonik DOI).
+2. **Full text wajib (bukan abstrak)**: setiap paper/jurnal yang akan dikutip
+   isinya HARUS dibaca penuh, bukan hanya abstrak:
+   - `uv run research fulltext "<DOI>"` → resolve otomatis (Unpaywall/OJS)
+     → unduh PDF (anti-bot) → konversi Markdown (tersimpan di `data/markdown/`)
+   - Bila URL PDF sudah diketahui: `uv run research fulltext "<DOI>"
+     --pdf-url "<URL galley/repositori>"`
+   - Bila hanya halaman artikel yang diketahui: `uv run research fulltext
+     "<URL halaman artikel>"` → OJS extractor mencari galley otomatis.
+   - **Dilarang** mengambil PDF dengan `curl`/`wget`/httpx manual — semua
+     diarahkan ke perintah di atas (modul downloader menangani anti-bot).
+3. **Penelusuran pustaka web & berita**: `uv run research web-search "<topik>"`
+   (ddgs/Tavily) → Markdown YAML-frontmatter tersimpan di `data/web_reports/`.
+4. **Menggali korpus yang sudah terindeks (RAG)**: `uv run research query
+   "<isu>" --mode hybrid --corpus all --with-source --output file.md` membaca
+   chunk literatur/putusan/web yang sudah diindeks di SQLite.
+
+> Catatan integritas: kutipan pasal/teori tetap wajib diverifikasi dari sumber
+> primer (korpus peraturan) pada Tahap 8/11; platform ini hanya alat
+> *pengumpulan & pembacaan*, bukan pengganti verifikasi norma.
+
 #### Evaluasi & Gate Check
 
 - [ ] Apakah bahan hukum tercatat lengkap beserta identitas bibliografinya
       (halaman, penerbit, tahun) demi transparansi kutipan?
 - [ ] Apakah teknik bola salju telah mencapai titik jenuh (*saturasi bahan
       hukum*)?
+- [ ] Apakah setiap paper yang dikutip isinya telah dibaca **full text**
+      (bukan hanya abstrak) dan sumbernya dapat ditelusuri (*traceable*)?
+- [ ] Apakah pengumpulan memakai perintah CLI platform (bukan download manual)?
 
 ---
 

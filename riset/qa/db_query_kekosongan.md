@@ -1,0 +1,39 @@
+[+] Top 5 Ranked Excerpts:
+
+### [1] [ACADEMIC] [Wicaksono2026KEKOSONGAN_.1022] KEKOSONGAN HUKUM DEEPFAKE SEBAGAI ALAT KEJAHATAN DALAM SISTEM HUKUM PIDANA INDONESIA > 2. Analisis Kekosongan Hukum** **_Deepfake_ (p. 8) [source: literature/Wicaksono2026KEKOSONGAN_.1022] (Match: bm25, Score: -7.4972)
+
+## 2. Analisis Kekosongan Hukum** **_Deepfake_
+
+Kekosongan hukum dalam pengaturan _deepfake_ tidak hanya berupa ketiadaan norma, tetapi juga mencerminkan ketidakcukupan norma yang ada.
+
+> 4 Undang-Undang Nomor 27 Tahun 2022 tentang Perlindungan Data Pribadi.
+
+> 5 Danielle Keats Citron, “Law’s Expressive Value in Combating Deepfake Harms,” Journal of Law and Technology (2021): 44.
+
+<mark>623</mark>
+
+Kekosongan pertama terletak pada aspek definisional, yaitu tidak adanya rumusan hukum yang secara eksplisit mendefinisikan _deepfake_ . Hal ini menyebabkan ketidakjelasan dalam menentukan batasan perbuatan yang dapat dikategorikan sebagai tindak pidana. Kekosongan kedua berkaitan dengan aspek operasional, khususnya dalam hal pembuktian. Sistem hukum acara pidana belum memiliki standar khusus untuk mengidentifikasi dan memverifikasi konten _deepfake_ . Kondisi ini menyulitkan proses pembuktian di pengadilan karena sulit membedakan antara konten asli dan manipulasi. Kekosongan ketiga terletak pada aspek pertanggungjawaban. Kejahatan _deepfake_ melibatkan berbagai pihak, mulai dari pengembang teknologi hingga pengguna akhir. Sistem hukum pidana yang masih berorientasi pada pelaku tunggal belum mampu menjangkau struktur tanggung jawab yang kompleks tersebut.
+
+### [2] [ACADEMIC] [Wicaksono2026KEKOSONGAN_.1022] KEKOSONGAN HUKUM DEEPFAKE SEBAGAI ALAT KEJAHATAN DALAM SISTEM HUKUM PIDANA INDONESIA > 3. Implikasi Kekosongan Hukum (p. 10) [source: literature/Wicaksono2026KEKOSONGAN_.1022] (Match: bm25, Score: -7.4479)
+
+## 3. Implikasi Kekosongan Hukum
+
+Kekosongan hukum dalam pengaturan _deepfake_ berdampak langsung terhadap prinsip kepastian hukum. Ketidakjelasan norma menyebabkan masyarakat tidak memiliki pedoman yang jelas mengenai batasan perilaku yang diperbolehkan dan dilarang. Selain itu, kondisi ini juga meningkatkan potensi impunitas karena pelaku kejahatan dapat lolos dari jerat hukum. Di sisi lain, korban kejahatan _deepfake_ tidak memperoleh perlindungan hukum yang optimal. Hal ini menunjukkan bahwa kekosongan hukum tidak hanya berdampak pada penegakan hukum, tetapi juga pada perlindungan hak-hak masyarakat.
+
+Kekosongan hukum dalam pengaturan _deepfake_ memiliki implikasi yang luas terhadap sistem hukum pidana. Salah satu implikasi utama adalah terganggunya kepastian hukum. Ketidakjelasan norma menyebabkan masyarakat tidak memiliki pedoman yang jelas mengenai perilaku yang diperbolehkan dan dilarang.<sup>7</sup> Selain itu, kekosongan hukum juga dapat menyebabkan terjadinya impunitas, yaitu kondisi di mana pelaku kejahatan tidak dapat dijatuhi sanksi karena tidak adanya dasar hukum yang jelas. Hal ini dapat menurunkan kepercayaan masyarakat terhadap sistem hukum. Dari sisi korban, kekosongan hukum mengakibatkan kurangnya perlindungan terhadap individu yang dirugikan oleh _deepfake_ . Korban sering kali mengalami kerugian yang bersifat non-material, seperti kerusakan reputasi, yang sulit
+
+> 7 Barda Nawawi Arief, Masalah Penegakan Hukum dan Kebijakan Hukum Pidana (Jakarta: Kencana, 2018), 45.
+
+<mark>625</mark>
+
+### [3] [ACADEMIC] [Wicaksono2026KEKOSONGAN_.1022] KEKOSONGAN HUKUM DEEPFAKE SEBAGAI ALAT KEJAHATAN DALAM SISTEM HUKUM PIDANA INDONESIA > 3. Implikasi Kekosongan Hukum (p. 10) [source: literature/Wicaksono2026KEKOSONGAN_.1022] (Match: bm25, Score: -7.2878)
+
+dipulihkan melalui mekanisme hukum yang ada. Kekosongan hukum dalam pengaturan _deepfake_ memiliki implikasi yang signifikan terhadap kepastian hukum dan efektivitas penegakan hukum. Salah satu implikasi utama adalah munculnya ketidakpastian hukum, di mana masyarakat tidak memiliki pedoman yang jelas mengenai batasan perilaku yang diperbolehkan dan dilarang. Hal ini bertentangan dengan prinsip dasar hukum pidana yang menekankan pada kepastian dan kejelasan norma.
+
+### [4] [ACADEMIC] [Wicaksono2026KEKOSONGAN_.1022] KEKOSONGAN HUKUM DEEPFAKE SEBAGAI ALAT KEJAHATAN DALAM SISTEM HUKUM PIDANA INDONESIA > 2. Analisis Kekosongan Hukum** **_Deepfake_ (p. 8) [source: literature/Wicaksono2026KEKOSONGAN_.1022] (Match: bm25, Score: -7.2080)
+
+Kekosongan hukum dalam pengaturan _deepfake_ dapat dianalisis melalui beberapa aspek. Pertama, dari perspektif normatif, tidak adanya definisi hukum mengenai _deepfake_ menyebabkan ketidakjelasan dalam menentukan batasan perbuatan yang dapat dikategorikan sebagai tindak pidana. Hal ini bertentangan dengan prinsip kepastian hukum yang merupakan salah satu pilar utama dalam sistem hukum pidana. Kedua, dari perspektif operasional, tidak adanya standar pembuktian yang jelas untuk mengidentifikasi konten _deepfake_ menjadi hambatan dalam proses penegakan hukum. Teknologi _deepfake_ yang semakin canggih membuat konten manipulatif sulit dibedakan dari konten asli, sehingga membutuhkan metode forensik digital yang lebih maju. Ketiga, dari perspektif pertanggungjawaban pidana, kejahatan _deepfake_ melibatkan berbagai pihak, mulai dari pengembang teknologi hingga pengguna akhir. Dalam sistem hukum pidana yang masih berorientasi pada pelaku tunggal, kondisi ini menimbulkan kesulitan dalam menentukan pihak yang harus bertanggung jawab.<sup>6</sup> Keempat, kekosongan hukum juga dapat dilihat dari tidak adanya mekanisme pencegahan yang efektif. Regulasi yang ada lebih bersifat represif, yaitu menindak setelah terjadinya kejahatan, sementara perkembangan teknologi menuntut pendekatan yang lebih preventif. Kekosongan hukum dalam pengaturan _deepfake_ tidak hanya berarti ketiadaan norma, tetapi juga mencakup ketidakjelasan dan ketidakcukupan norma yang ada. Kekosongan ini dapat dianalisis dari beberapa dimensi utama, yaitu dimensi definisional, operasional, dan pertanggungjawaban. Dari dimensi definisional, tidak adanya definisi hukum mengenai _deepfake_ dalam peraturan perundang-undangan Indonesia menyebabkan ketidakjelasan dalam menentukan batasan perbuatan yang dapat dikategorikan sebagai tindak pidana. Tanpa definisi yang jelas, aparat penegak hukum akan kesulitan dalam mengklasifikasikan suatu perbuatan sebagai pelanggaran hukum. Hal ini berpotensi menimbulkan inkonsistensi dalam penegakan hukum serta mengurangi kepastian hukum bagi masyarakat. Dari dimensi operasional, kekosongan hukum terlihat pada tidak adanya standar pembuktian yang
+
+### [5] [ACADEMIC] [Utara2025analysiscriminalenforcement] Analysis of Criminal Law Enforcement on Non-Consensual Deepfake Pornography in the Dissemination of Manipulative Content in Indonesia > 1. Latar Belakang (p. 4) [source: literature/Utara2025analysiscriminalenforcement] (Match: bm25, Score: -6.8621)
+
+Penelitian ini sangat penting karena kekosongan hukum yang terjadi dalam menangani fenomena deepfake pornografi non-konsensual di Indonesia. Meskipun Indonesia telah memiliki beberapa undang-undang yang terkait dengan informasi dan transaksi elektronik (UU ITE), pornografi (UU Pornografi), dan perlindungan data pribadi (UU PDP), tidak ada regulasi spesifik yang mengatur teknologi deepfake yang mengarah pada penyalahgunaan identitas pribadi tanpa izin. Hal ini menciptakan ketidakpastian hukum dalam penegakan keadilan bagi korban. Kekosongan regulasi ini menyebabkan kesulitan dalam pembuktian dan penegakan hukum, terutama mengingat kompleksitas teknologi deepfake yang memerlukan keahlian khusus dalam proses penyidikan. Dalam hal ini, korban seringkali rentan terhadap ketidakadilan, karena tidak ada undang-undang yang jelas mengakomodasi karakteristik teknologi deepfake. Oleh karena itu, penelitian ini diperlukan untuk mengisi kekosongan hukum dan memberikan solusi bagi penegakan hukum yang lebih adil dan efisien.

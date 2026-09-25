@@ -8,7 +8,7 @@
 - **Federated Academic Search**: Parallel querying across **arXiv**, **OpenAlex**, **Crossref**, **DOAJ**, and **OpenAIRE** with automatic canonical DOI deduplication.
 - **BibTeX Processing & Ingestion**: High-performance parsing of single `.bib` files or entire recursive directory trees, with normalization and export to JSON, SQLite, and BibTeX.
 - **Open Journal Systems (OJS) Discovery**: Automated discovery of Highwire Press and Dublin Core HTML metadata with multi-galley download link resolution.
-- **Open Access Retrieval**: Unpaywall API integration and OpenAlex metadata inspection for direct PDF resolution.
+- **Open Access Retrieval (`fulltext`)**: Unpaywall API integration, OpenAlex metadata inspection, direct `--pdf-url` support, and OJS/Highwire galley extraction in one CLI command (`research fulltext`) turning a DOI/URL into full-text Markdown.
 - **Citation Graph Snowballing**: Automated forward (citing) and backward (referenced) graph traversal starting from database records or seed `.bib` collections.
 - **Idempotent Parallel Downloader**: Queued concurrent downloading with content inspection (`%PDF` magic byte verification) and granular error auditing (preventing false-positive dead link tags on soft paywalls or transient timeouts).
 - **Web Search Integration & Auto-Indexing**: Load-balanced multi-key **Tavily** and zero-config **DuckDuckGo (ddgs)** search engines, automatic sanitization into clean Markdown documents with YAML frontmatter, and instant semantic chunking into SQLite FTS5 RAG.
@@ -72,6 +72,23 @@ uv run python tests/test_timeouts.py            # Fast-fail timeouts on unrespon
 5. **Zero False-Positive Download Auditing**:
    - An HTTP 200 response alone does not mean a download succeeded; servers often return HTML login portals or captcha challenges.
    - `inspect_content()` reads the first 1024 bytes and validates `%PDF-` magic bytes. If HTML or paywall headers are found, the status is categorized as `failed_not_pdf` rather than `dead_link`.
+6. **Full-Text First (Literature Review)**:
+   - When analyzing a paper with a DOI, subagents MUST obtain the full text via
+     `uv run research fulltext "<DOI>"` (add `--index-rag` when RAG indexing is wanted)
+     instead of settling for abstracts.
+   - **Manual `curl`/`httpx`/`wget` PDF retrieval is STRICTLY FORBIDDEN** for literature
+     analysis. Every download goes through the CLI:
+       - `uv run research fulltext "<DOI>"` → Unpaywall/OJS auto-resolve
+       - `uv run research fulltext "<DOI>" --pdf-url "<direct PDF or OJS download URL>"`
+         → when the PDF URL is already known (galley, repository link, OpenAlex OA URL)
+       - `uv run research fulltext "<article landing URL>"` → OJS extractor finds the
+         galley automatically
+   - The dual-engine downloader (curl-cffi Chrome impersonation + OJS fallback)
+     already handles anti-bot (Cloudflare/OJS) protection — never reimplement it.
+   - An abstract-only analysis is a **degraded fallback** that must be flagged with the
+     `[ABSTRACT]` / `[METADATA]` epistemic labels, never the target outcome. Only mark a
+     paper `[FULL-TEXT]` after reading the Markdown produced by `fulltext` (or a
+     previously converted local `.md`), never from a PDF you grabbed ad hoc.
 
 ---
 
@@ -374,6 +391,58 @@ app.close_sync()
 
 ---
 
+### 7b. Open-Access Full-Text Retrieval (`fulltext`)
+
+Resolves a **DOI / doi.org URL / DB cite_key** directly to its **full-text Markdown**:
+Unpaywall open-access resolve → PDF download (via the dual-engine downloader with
+curl-cffi Chrome impersonation + OJS fallback, so anti-bot 403s are bypassed;
+magic-byte verified) → PyMuPDF conversion → optional RAG indexing.
+
+**This is the canonical "get the full text" one-shot command for agents.** Use it
+instead of falling back to abstracts whenever a paper has a DOI.
+
+#### CLI Usage
+```bash
+# Resolve a DOI to its full-text Markdown (saved under data/markdown/)
+uv run research fulltext "10.15642/aj.2025.11.1.125-153"
+
+# Also chunk & index the full text into the RAG database
+uv run research fulltext "10.15642/aj.2025.11.1.125-153" --index-rag
+
+# Pass a DIRECT PDF URL when Unpaywall has no OA match (OJS galley, repository, etc.)
+uv run research fulltext "10.xxxx/paper" --pdf-url "https://jurnal.../article/download/123/456"
+
+# Custom Markdown output directory, longer timeout, force re-download/re-convert
+uv run research fulltext "10.21070/ups.11586" --output-dir data/markdown --timeout 25 --force
+```
+
+#### Output
+Prints the resolved PDF path and the generated Markdown file path, e.g.:
+```
+[+] Full text Markdown: data/markdown/10_15642_aj_2025_11_1_125_153.md (29 pages)
+```
+The Markdown file is the **full text** — read it to extract findings (Tahap 6/17).
+
+#### Resolution order & behavior
+`fulltext` finds the PDF URL in this order, so agents never need to hand-roll downloads:
+1. `--pdf-url <URL>` (explicit direct URL)
+2. `target` itself is a bare `http(s)://...pdf` / OJS download endpoint → used directly
+3. Unpaywall Open-Access resolve of a DOI
+4. Stored `pdf_url` / landing `url` of a DB cite_key
+5. If the resolved URL is an **article landing page** (contains `/article/`, not
+   `/download/`), the project's OJS/Highwire extractor pulls the galley PDF URL
+   automatically.
+If the target/URL already has a verified local PDF in the DB (by DOI or by URL),
+it is reused instead of re-downloaded.
+
+#### Notes
+- If Unpaywall finds no OA PDF and no DB/`--pdf-url` gives a URL, the command reports
+  empty — supply `--pdf-url` or index the record via `research search` first.
+- Bug-free guarantee: this command is the substitute for manual `curl`-based PDF
+  retrieval; agents MUST use it rather than hand-rolling httpx/curl downloads.
+
+---
+
 ### 8. Indonesian Court Judgment Engine (`putusan`)
 
 Processes judicial rulings across MA, MK, MKMK, PN, PT, PA, PM, PTUN, DKPP, and KIP. Handles legal typography unspacing, watermark/disclaimer stripping, legal milestone segmentation (`DUDUK_PERKARA`, `PERTIMBANGAN_HUKUM`, `AMAR`), and context banner injection.
@@ -437,7 +506,7 @@ app.close_sync()
 
 ### 10. Cross-Corpus Unified Retrieval & RAG (`query`)
 
-Performs unified semantic search across `literature`, `putusan`, and `web`. Supports `hybrid` (Reciprocal Rank Fusion $k=60$), `bm25` (SQLite FTS5), and `dense` (dot product on normalized float32 vectors).
+Performs unified semantic search across `literature`, `putusan`, and `web`. Supports `hybrid` (Reciprocal Rank Fusion $k=60$), `bm25` (SQLite FTS5), and `dense` (dot product on normalized float32 vectors). Use `--with-source` to label each hit with its `corpus`/`cite_key`, and `--output FILE` to save the retrieved excerpts to Markdown (handy for riset pendahuluan notes).
 
 #### CLI Usage
 ```bash
@@ -464,6 +533,11 @@ uv run research query "transformer attention mechanism" \
 uv run research query "positional encoding" \
   --cite-key Vaswani2017Attention \
   --mode dense
+
+# Write results to a file for research notes (riset pendahuluan), with source labels
+uv run research query "kekosongan hukum deepfake indonesia" \
+  --mode bm25 --corpus all --limit 5 \
+  --with-source --output riset/qa/db_query_kekosongan.md
 ```
 
 #### Python API

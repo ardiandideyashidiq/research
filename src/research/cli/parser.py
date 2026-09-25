@@ -163,6 +163,42 @@ def build_parser() -> argparse.ArgumentParser:
         help="Max forward/backward citations to fetch (default: 10)",
     )
 
+    # 4b. fulltext (resolve DOI/cite_key -> download -> convert -> RAG index)
+    p_ft = subparsers.add_parser(
+        "fulltext",
+        help="Resolve a DOI/cite_key/URL to its open-access full text: Unpaywall resolve -> download PDF (magic-byte verified) -> convert to Markdown -> (optional) index RAG",
+    )
+    p_ft.add_argument(
+        "target",
+        help="DOI (10.xxxx/...), doi.org URL, or database cite_key of the paper",
+    )
+    p_ft.add_argument(
+        "--pdf-url",
+        default="",
+        help="Direct PDF URL to download when Unpaywall has no OA match (bypasses resolve)",
+    )
+    p_ft.add_argument(
+        "--output-dir",
+        default="data/markdown",
+        help="Directory to save converted .md files (default: data/markdown)",
+    )
+    p_ft.add_argument(
+        "--index-rag",
+        action="store_true",
+        help="Chunk and index the converted Markdown into RAG database",
+    )
+    p_ft.add_argument(
+        "--force",
+        action="store_true",
+        help="Force re-download and re-convert even if a local PDF/MD already exists",
+    )
+    p_ft.add_argument(
+        "--timeout",
+        type=float,
+        default=15.0,
+        help="Download timeout in seconds (default: 15.0)",
+    )
+
     # 4. download
     p_dl = subparsers.add_parser(
         "download",
@@ -236,6 +272,15 @@ def build_parser() -> argparse.ArgumentParser:
         "--format-context",
         action="store_true",
         help="Output as LLM-ready markdown prompt block",
+    )
+    p_query.add_argument(
+        "--output",
+        help="Write the search results (as raw markdown) to this file path",
+    )
+    p_query.add_argument(
+        "--with-source",
+        action="store_true",
+        help="Include cite_key and corpus source labels in each result block",
     )
     p_query.add_argument(
         "--embed",
