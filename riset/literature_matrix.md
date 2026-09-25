@@ -5,13 +5,13 @@
 
 | # | Cite Key (file) | Paper | Sumber | Label |
 |---:|---|---|---|---|
-| 1 | `ANALISIS_ADABALA2026_WhenTechnologyLiesIndia` | TEMPLATE LENGKAP ANALISIS ARTIKEL JURNAL / PAPER ILMIAH | literature | — |
+| 1 | `ANALISIS_ADABALA2026_WhenTechnologyLiesIndia` | TEMPLATE LENGKAP ANALISIS ARTIKEL JURNAL / PAPER ILMIAH | literature | [ABSTRACT] |
 | 2 | `ANALISIS_AlfathoniPratamaLubis_2024-perlindungan-korban-deepfake-porno` | ANALISIS ARTIKEL JURNAL / PAPER ILMIAH | literature | [ABSTRACT] |
-| 3 | `ANALISIS_BhagavathyV2026_DeepfakeCrimesIndia` | TEMPLATE LENGKAP ANALISIS ARTIKEL JURNAL / PAPER ILMIAH | literature | — |
+| 3 | `ANALISIS_BhagavathyV2026_DeepfakeCrimesIndia` | TEMPLATE LENGKAP ANALISIS ARTIKEL JURNAL / PAPER ILMIAH | literature | [ABSTRACT] |
 | 4 | `ANALISIS_Canares2025_regulasi_misinformasi_asiatenggara` | Social media, misinformation, and regulation in Southeast Asia | literature | [ABSTRACT] |
-| 5 | `ANALISIS_Cucilovic2024_DeepfakeCriminalLawImplications` | TEMPLATE LENGKAP ANALISIS ARTIKEL JURNAL / PAPER ILMIAH | literature | — |
+| 5 | `ANALISIS_Cucilovic2024_DeepfakeCriminalLawImplications` | TEMPLATE LENGKAP ANALISIS ARTIKEL JURNAL / PAPER ILMIAH | literature | [ABSTRACT] |
 | 6 | `ANALISIS_Fitriani2026_kebijakan-formulasi-delik-deepfake` | [FULL-TEXT] | literature | [FULL-TEXT] |
-| 7 | `ANALISIS_Han2025_DeepfakeSexualKorea` | TEMPLATE LENGKAP ANALISIS ARTIKEL JURNAL / PAPER ILMIAH | literature | — |
+| 7 | `ANALISIS_Han2025_DeepfakeSexualKorea` | TEMPLATE LENGKAP ANALISIS ARTIKEL JURNAL / PAPER ILMIAH | literature | [ABSTRACT] |
 | 8 | `ANALISIS_Husain2026_tanggung-jawab-pidana-sextortion` | Criminal Liability for Online Gender-Based Sextortion Against Women Under Indone… | literature | [FULL-TEXT] |
 | 9 | `ANALISIS_Jasserand2016_legal-nature-biometric-data` | [FULL-TEXT] | literature | [FULL-TEXT] |
 | 10 | `ANALISIS_Marlan2025_generative-identity-theft-right-of-publicity` | Generative Identity Theft: Criminalizing Deepfakes Using the Right of Publicity … | literature | [FULL-TEXT] |
@@ -45,11 +45,11 @@
 | 38 | `PAPER_Pamungkas2026_pelanggaran-data-pribadi-ai-komparasi` | Pertanggungjawaban Pidana atas Pelanggaran Data Pribadi Berbasis Kecerdasan Buat… | tahap8b | [FULL-TEXT] |
 | 39 | `PAPER_PatilMishra2026_platform-liability-deepfake-porno-India` | Platform Liability and Deepfake Pornography: Are India's Intermediary Rules Fit … | tahap8b | [FULL-TEXT] |
 | 40 | `PAPER_Pawelec2022_deepfake-demokrasi-teori` | Deepfakes and Democracy (Theory): How Synthetic Audio-Visual Media for Disinform… | tahap8b | [ABSTRACT] |
-| 41 | `PAPER_Pechenin2026_consent-biometric-data-generative-ai` | Consent for Processing Biometric Personal Data by Generative AI: Practical Imple… | tahap8b | — |
+| 41 | `PAPER_Pechenin2026_consent-biometric-data-generative-ai` | Consent for Processing Biometric Personal Data by Generative AI: Practical Imple… | tahap8b | [ABSTRACT] |
 | 42 | `PAPER_RahmanHabibulah2019_pertanggungjawaban-pidana-ai` | The Criminal Liability of Artificial Intelligence: Is It Plausible to Hitherto I… | tahap8b | [FULL-TEXT] |
 | 43 | `PAPER_RamaPrasadaMahadewi2023_urgensi-regulasi-AI-hak-cipta` | Urgensi Pengaturan *Artificial Intelligence* (AI) dalam Bidang Hukum Hak Cipta d… | tahap8b | [FULL-TEXT] |
 | 44 | `PAPER_RomeroMoreno2024_AI-generatif-deepfake-HAM` | Generative AI and deepfakes: a human rights approach to tackling harmful content | tahap8b | [ABSTRACT] |
-| 45 | `PAPER_Schwartz2026_ai-influencers-right-of-publicity` | AI Influencers and a Right of Publicity (Schwartz 2026) | tahap8b | — |
+| 45 | `PAPER_Schwartz2026_ai-influencers-right-of-publicity` | AI Influencers and a Right of Publicity (Schwartz 2026) | tahap8b | [ABSTRACT] |
 | 46 | `PAPER_Sofian2025_subjek-hukum-pertanggungjawaban-ai` | Konsepsi Subjek Hukum dan Pertanggungjawaban Pidana Artificial Intelligence (Sof… | tahap8b | [FULL-TEXT] |
 | 47 | `PAPER_SujatmikoSuronoRangsimanop2025_tanggung-jawab-pidana-korporasi` | Corporate Criminal Liability in Tax Crimes in Indonesia (Sujatmiko, Surono & Ran… | tahap8b | [FULL-TEXT] |
 | 48 | `PAPER_VanderSloot2022_regulasi-deepfake-synthetic-society` | Deepfakes: Regulatory Challenges for the Synthetic Society | tahap8b | [ABSTRACT] |
