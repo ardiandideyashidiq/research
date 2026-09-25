@@ -58,15 +58,33 @@ Standar asas normatif (rinci & pengoperasian konflik temporal di
 - **Prosedur/penalaran**: Ius Curia Novit, Res Judicata, bukti elektronik
   (PDP 64(3) [TERBACA]).
 
-## 2.4 Tinjauan Kepustakaan (22 Paper)
+## 2.4 Tinjauan Kepustakaan (50 Paper)
 
-Matriks lengkap & klaster A–G ada di `riset/tahap1.md` §5b.3 &
-`riset/tahap12.md`. Peta tematik:
+Matriks lengkap 50 paper (uta `riset/literature_matrix.md`); kartu rinci
+di `riset/literature-review/` (22) & `riset/tahap8b_paper/` (28); klaster
+A–G di `riset/tahap12.md`. Peta tematik (label [FULL-TEXT]=F-T,
+[ABSTRACT]=ABS, [METADATA]=MET):
+
 - **Kesusilaan/seksual**: Utara&Widyawati [F-T], Wiguna&Aisyah [ABS],
-  Alfathoni [ABS], Sakti [MET], Husain [F-T].
-- **Reputasi**: Fitriani [F-T], Wicaksono-penegakan [ABS].
-- **Data/perdata**: Salsabila [F-T], Rezvorovych [F-T], Jasserand [F-T],
-  Marlan [F-T], Zigo [F-T].
-- **Disinformasi**: Putra [ABS], Canares [ABS], Vainaite [MET], Nicoli [ABS].
-- **Konflik temporal & perbandingan**: Wicaksono-BBD [F-T], Nurnisaa [ABS],
-  Han [ABS], Bhagavathy [ABS], Čučilović [ABS].
+  Alfathoni [ABS], Sakti [MET], Husain [F-T], Ariani [F-T] (PSE-Telegram),
+  Patil&Mishra [F-T] (India), Hailtik [F-T].
+- **Reputasi**: Fitriani [F-T], Wicaksono-penegakan [ABS], Chacko [ABS]
+  (persona/personality India), Schwartz [ABS] (AI influencers/right of
+  publicity), Westkamp [ABS] (copyright vs AI training), Ochoa [ABS]
+  (overlaps copyright-publicity-personality).
+- **Data/perdata/biometrik**: Salsabila [F-T], Rezvorovych [F-T],
+  Jasserand [F-T], Marlan [F-T], Zigo [F-T], Pechenin [F-T] (consent
+  biometrik generative AI), Bosher [ABS] (digital replicas), Rama-Prasada
+  [F-T] (hak cipta+AI), van der Sloot [ABS] (synthetic society).
+- **Disinformasi/pemilu**: Putra [ABS], Canares [ABS], Vainaite [MET],
+  Nicoli [ABS], Groh [F-T] (deteksi deepfake politik), Pawelec [ABS]
+  (deepfake & demokrasi), BirrerJust [ABS], Chesterman [ABS] (lawful but
+  awful), RomeroMoreno [ABS] (AI Act + HAM), Walter [ABS] (governance).
+- **AI pidana/subjek hukum**: Rahman-Habibulah [F-T], Sofian [F-T],
+  Bessoran [F-T], Indarto [F-T], Pamungkas [F-T] (data pidana AI komparasi),
+  Jaya&Goh [F-T] (subjek hukum AI), Sujatmiko [F-T] (pidana korporasi).
+- **Platform/moderasi**: Liu [F-T] (platform liability RRT), Daud [F-T]
+  (intermediary Malaysia), Gorwa&Veale [ABS] (model marketplace).
+- **Perbandingan/regulasi**: Han [ABS] (Korea), Čučilović [ABS] (EU AI
+  Act), Bhagavathy [ABS] (India), Filipova [ABS] (China), Nurnisaa [ABS]
+  (ASEAN ACDRM).
