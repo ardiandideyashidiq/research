@@ -76,7 +76,18 @@ uv run python tests/test_timeouts.py            # Fast-fail timeouts on unrespon
    - When analyzing a paper with a DOI, subagents MUST obtain the full text via
      `uv run research fulltext "<DOI>"` (add `--index-rag` when RAG indexing is wanted)
      instead of settling for abstracts.
-   - **Manual `curl`/`httpx`/`wget` PDF retrieval is STRICTLY FORBIDDEN** for literature
+   7. **Every Research Stage Uses a Subagent**:
+   - Each of the 20 stages of the normative workflow (see `workflow.md` and the
+     `riset/tahapN.md` trail) MUST be executed with a dedicated subagent (`Agent`,
+     `general-purpose`) rather than the main agent doing the analysis inline.
+   - The main agent prepares the doctrinally grounded materials (pasal [TERBACA]
+     from the corpus, verified papers, `knowledge/`), writes a self-contained brief,
+     spawns the subagent, and reviews/incorporates the returned stage file.
+   - Subagents write the stage output to `riset/tahapN.md` (or the relevant file),
+     follow the stage's gate check in `workflow.md`, and adhere to zero-hallucination
+     rules ([FULL-TEXT]/[ABSTRACT]/[METADATA] labels; no invented pasal/paper).
+   - This keeps analysis parallelizable, reviewable, and traceable.
+8. **Manual `curl`/`httpx`/`wget` PDF retrieval is STRICTLY FORBIDDEN** for literature
      analysis. Every download goes through the CLI:
        - `uv run research fulltext "<DOI>"` → Unpaywall/OJS auto-resolve
        - `uv run research fulltext "<DOI>" --pdf-url "<direct PDF or OJS download URL>"`
