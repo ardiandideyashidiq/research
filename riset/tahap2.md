@@ -69,11 +69,13 @@ UU ITE dan **ayat (10)** menggantikan acuannya ke pasal KUHP baru:
   reputasional), Pasal 27B (pemerasan), Pasal 28 ayat (1) & (3) (berita
   bohong konsumen/kerusuhan), Pasal 29 (ancaman), Pasal 40 (moderasi),
   Pasal 40A dst. — di luar daftar cabut huruf r.
-- **KUHP baru belum berlaku saat penulisan** (masa transisi 2026) →
-  UU ITE masih *lex lata* penuh. Akibat: perbuatan deepfake yang sama
-  (terutama kesusilaan) **berada di dua rezim yang tumpang tindih** —
-  ITE sebagai hukum yang berlaku sekarang vs KUHP baru sebagai hukum yang
-  hendak memindahkan delik.
+- **KUHP baru: sudah berlaku efektif sejak 2 Jan 2026** (Pasal 624
+  [TERBACA]: 3 tahun sejak diundangkan 2 Jan 2023), **dan telah diubah
+  UU 1/2026** (Penyesuaian Pidana, berlaku — cek korpus 2026-09-25).
+  Konsekuensi: UU ITE yang dicabut via Pasal 622(1)r **tidak lagi lex lata
+  penuh**; perbuatan deepfake kesusilaan berpindah ke KUHP 407 (dgn
+  penyesuaian 1/2026). Konflik temporal = dua rezim **lex lata** yang
+  bertumpang tindih dalam masa peralihan penegakan & penafsiran.
 - 22 paper **mayoritas tidak memetakan konflik ini** (gap inti skripsi,
   `tahap1.md` §5b.3.3): Wicaksono-BBD tidak menyebut KUHP 1/2023 sama sekali
   [FULL-TEXT]; Nurnisaa&Surya memakai UU ITE versi 19/2016 [ABSTRACT].

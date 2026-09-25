@@ -457,9 +457,15 @@ Hasil sementara **[analisis awal, menunggu Tahap 2]**:
    **terdefinisi** — bukan subjek hukum asing.
 3. Yang terbuka: kualifikasi perbuatan spesifik (membuat dengan AI,
    meniru wajah/suara orang nyata, menimbulkan kesan palsu) dan
-   **hubungan temporal** ITE (lex lata) vs KUHP baru (mulai berlaku;
-   memindahkan delik kesusilaan/SARA/akses). Ini menghasilkan
-   **konflik norma temporal** — bahan utama Tahap 2.
+   **hubungan temporal** ITE vs KUHP baru.
+   **Catatan koreksi temporal (cek korpus 2026-09-25)**: Pasal 624 UU 1/2023
+   [TERBACA] — berlaku **3 tahun sejak diundangkan** (2 Jan 2023) →
+   **efektif sejak 2 Jan 2026**, dan kini UU 1/2023 telah **diubah UU
+   1/2026** (Penyesuaian Pidana, berlaku). Jadi pada masa penulisan riset,
+   KUHP baru **SUDAH berlaku** (bukan "mulai berlaku") — konflik bukan lagi
+   "ITE sekarang vs KUHP nanti", melainkan perbandingan dua rezim *lex lata*
+   dengan pemindahan delik (Pasal 622) + penyesuaian UU 1/2026. Bahan utama
+   Tahap 2 & 11.
 
 ## 7. Gap & Flags Verifikasi (Zero-Hallucination Tracking)
 

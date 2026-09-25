@@ -171,16 +171,16 @@ tahap penyusunan skripsi.
 
 | # | Item | Sumber audit | Tindakan |
 |---|---|---|---|
-| V1 | **Tanggal berlaku efektif KUHP 1/2023** + konsekuensi UU 1/2026 (Penyesuaian Pidana) & kekuatan UU 1/2026 mengubah Pasal 622/407/172 | K1 | Baca UU 1/2026 Pasal VII dst. + PP/peraturan pelaksana; cek status korpus; perbarui Bab I/III/IV |
+| V1 | **Tanggal berlaku efektif KUHP 1/2023** + konsekuensi UU 1/2026 (Penyesuaian Pidana) & kekuatan UU 1/2026 mengubah Pasal 622/407/172 | K1 | **SEBAGIAN TERISI (cek MCP 2026-09-25)**: Pasal 624 KUHP [TERBACA] = berlaku 3 th sejak diundangkan (2 Jan 2023) → **efektif 2 Jan 2026**; UU 1/2026 berlaku & BAB III mengubah KUHP (Pasal VII–622). **Premis "ITE lex lata penuh" telah dikoreksi di tahap1 §6b & tahap2 §2.1.** Masih: butir konkret perubahan Pasal 407/622 oleh UU 1/2026 + PP pelaksana |
 | V2 | Nobel pasal sanksi PDP: **66 jo. 68** (bukan 67) | K2 | Perbarui tahap11, 13, 16, 17, 18 |
 | V3 | Nomor & penunjukan 47 putusan MK uji materi UU 1/2023 (mis. 282/PUU-XXIII/2025 membatalkan Pasal 240–241) | korpus | **SEBAGIAN TERISI (cek MCP 2026-09-25)**: 47 putusan terdaftar; relevan klaster reputasi = MK 282/2025 (Pasal 240–241 inkonstitusional) & MK 50/2026 (Pasal 310/311 KUHP dimaknai proteksi akademisi/aktivis). Belum ada yang menyentuh 407/441/622 → tetap cek sebelum Bab III |
 | V4 | Putusan MK uji materi UU ITE (tahap1 §7 #10) | tahap1 | **SEBAGIAN TERISI (cek MCP 2026-09-25)**: 11 putusan terdaftar; yang mengubah jangkauan deepfake: **MK 105/2024** (Pasal 27A & 45(4): "orang lain"/"suatu hal" dibatasi → korban lembaga/korporasi/pejabat diciutkan) & **MK 115/2024** (Pasal 28(3)/45A(3): "kerusuhan" = fisik, bukan digital). Wajib dikutip Bab III klaster B/D (dicatat `tahap14.md` §5b) |
 | V5 | Nomor putusan **PN Pasir Pangaraian dan PN Bandung** (dari Husain [F-T]) | tahap8 C, 17 | Ambil nomor & ratio decidendi; verifikasi inkracht |
-| V6 | Teks **UU TPKS 12/2022 Pasal 4(1)i, 14** | tahap8, 12 | Baca korpus |
+| V6 | Teks **UU TPKS 12/2022 Pasal 4(1)i, 14** | tahap8, 12 | **TERISI (cek MCP 2026-09-25)** — Pasal 4(1)i & 14 dibaca; 14: perekaman/transmisi muatan seksual tanpa persetujuan (≤4 th/denda 200jt; ayat 2 dgn maksud pemerasan ≤6 th/300jt; delik aduan; exempt kepentingan umum). Dicatat `tahap8.md` B.4 |
 | V7 | Putusan deepfake Indonesia yang inkracht (kasus 2025–2026 masih proses) | tahap13, 12 | Koleksi putusan/berkas |
 | V8 | **PP pelaksana Pasal 40(6) UU 1/2024** & PP PSE 71/2019 jo. | tahap1 §7 #5, tahap17 A4 | Identifikasi peraturan/pasal; verifikasi keberlakuan |
 | V9 | Kapan tepatnya **ITE pasal yang dicabut Pasal 622(1)r mulai tidak berlaku** (apakah bergeser ke KUHP 407 otomatis pada saat KUHP berlaku, atau tunggu peraturan peralihan) | K1 + tahap18 §4 | Perjelas di Bab IV: apakah Pasal Z draft masih relevan jika KUHP sudah berlaku |
-| V10 | Teks verbatim **KUHP 243, 332, 258(2), 441** (dipakai sebagai pengganti delik ITE) | tahap12 §1.1 | Baca langsung (saat audit hanya 172/407/622/624 diverifikasi ulang) |
+| V10 | Teks verbatim **KUHP 243, 332, 258(2), 441** (dipakai sebagai pengganti delik ITE) | tahap12 §1.1 | **TERISI (cek MCP 2026-09-25)** — 243 (SARA via TI, **harus berakibat Kekerasan**), 332 (akses ilegal, ≤6-8 th), 258 (intersepsi/transmisi, ≤10 th), 441 (penghinaan TI +1/3; pejabat +1/3) dibaca; dicatat `tahap8.md` B.2 |
 | V11 | Definisi & nomor pasal UU PDP yang dikutip paper di luar 65–68 (4, 12, 35, 46–47, 64) | tahap5 §1.8, tahap12 E2 | Verifikasi korpus sebelum kutip |
 | V12 | **UU 28/2014 (Hak Cipta)** untuk jalur likeness | tahap3, 8, 12 | Baca isi bila jalur IP dipakai Bab IV |
 | V13 | Produk hukum asing (EU AI Act Art. 50, China Deep Synthesis, Korea amendemen 2024, Denmark draft) — verifikasi dari sumber primer, bukan hanya [ABS] | tahap12 G, tahap18 | Bila dikutip substantif, baca teks resmi/terjemahan |

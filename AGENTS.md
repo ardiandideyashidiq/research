@@ -101,6 +101,18 @@ uv run python tests/test_timeouts.py            # Fast-fail timeouts on unrespon
      `[ABSTRACT]` / `[METADATA]` epistemic labels, never the target outcome. Only mark a
      paper `[FULL-TEXT]` after reading the Markdown produced by `fulltext` (or a
      previously converted local `.md`), never from a PDF you grabbed ad hoc.
+9. **Pasal.id MCP for Statutory Verification**:
+   - Any Indonesian regulation, pasal, or citation used in analysis MUST be verified
+     against the Pasal.id MCP corpus (`resolve_law` → `get_law_context` → `read_law`)
+     when available. Label verified text `[TERBACA]`; otherwise `[REFERENSI]` /
+     `[PERLU VERIFIKASI]`.
+   - Subagents verifying statutes MUST check `get_law_context(detail='relationships')`
+     for amendments (e.g. UU 1/2026) and `court_reviews` (putusan MK uji materi) —
+     a pasal may be modified or held inkonstitusional (e.g. MK 105/2024 limiting
+     ITE 27A "orang lain"; MK 115/2024 "kerusuhan" = physical).
+   - Never rely on a paper's quoted pasal number; confirm against the corpus before
+     citing substantively (papers routinely quote outdated versions, e.g. UU ITE
+     19/2016 or wrong PDP sanctions).
 
 ---
 

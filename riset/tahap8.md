@@ -58,10 +58,40 @@ dari korpus Pasal.id kecuali ditandai.
   atau denda kategori IV–VI; ayat (2) pengecualian karya seni/budaya/
   olahraga/kesehatan/ilmu pengetahuan. → Menjangkau **deepfake seksual**
   (setelah KUHP baru berlaku; memindahkan delik dari ITE via Pasal 622).
+- **Pasal 243** [TERBACA, verifikasi 2026-09-25]: menyiar/memperdengarkan/
+  menyebarluaskan via TI pernyataan permusuhan terhadap golongan (ras,
+  kebangsaan, etnis, agama, dsb.) **yang berakibat Kekerasan** → penjara ≤4 th
+  / denda kat. IV. (Pengganti ITE 28(2)/45A(2); **unsur "berakibat timbulnya
+  Kekerasan"** perlu dibuktikan — lihat MK 115/2024 soal "kerusuhan").
+- **Pasal 258** [TERBACA]: tanpa hak mendengarkan/merekam/mengubah/
+  menghambat/mencatat transmisi IE/DE tidak publik (1) & menyiarkan/
+  menyebarluaskan hasilnya (2) → penjara ≤10 th / denda kat. VI. (Pengganti
+  ITE 31/47).
+- **Pasal 332** [TERBACA]: akses ilegal ke Komputer/Sistem Elektronik →
+  (1) ≤6 th, (2) dgn tujuan memperoleh info ≤7 th, (3) menerobos pengamanan
+  ≤8 th. (Pengganti ITE 30/46).
 - **Pasal 441**: ketentuan pidana penghinaan (Pasal 433–439) **ditambah 1/3
   jika dilakukan dengan sarana teknologi informasi** (ayat (1)). →
   Deepfake reputasional via TI dipidana lebih berat; ayat (2) menambah lagi
   jika korban pejabat sedang menjalankan tugas.
+
+### B.4 UU 12/2022 (TPKS) — Pasal Dibaca [TERBACA, verifikasi 2026-09-25]
+
+- **Pasal 4 ayat (1) huruf i**: "kekerasan seksual berbasis elektronik"
+  termasuk jenis TPKS. ✅
+- **Pasal 14 ayat (1)** [TERBACA]: tanpa hak (a) melakukan perekaman dan/
+  atau mengambil gambar/tangkapan layar bermuatan seksual di luar kehendak/
+  tanpa persetujuan objek; (b) mentransmisikan IE/DE bermuatan seksual di
+  luar kehendak penerima; (c) penguntitan/pelacakan via sistem elektronik
+  untuk tujuan seksual → dipidana **kekerasan seksual berbasis elektronik**,
+  penjara ≤4 th, denda ≤Rp200 jt.
+- **ayat (2)**: dgn maksud pemerasan/pengancaman/memaksa/menyesatkan →
+  penjara ≤6 th, denda ≤Rp300 jt. **Tepat untuk deepfake seksual + sextortion.**
+- **ayat (3)**: **delik aduan** kecuali korban Anak/Penyandang Disabilitas.
+- **ayat (4)**: pengecualian kepentingan umum/pembelaan diri TPKS.
+- **Relevansi**: jalur *lex specialis* kekerasan seksual yang lebih tepat
+  untuk deepfake seksual non-konsensual (klaster A) — melengkapi ITE 27/45 &
+  KUHP 407; ditandai di `tahap14/17` sebagai bahan Bab III.
 
 ### B.3 Bahan di Luar Hierarki (tetap primer otoritatif)
 
