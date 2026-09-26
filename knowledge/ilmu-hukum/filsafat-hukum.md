@@ -56,8 +56,8 @@ tentang hal-hal yang paling mendasar dan mendalam dari keberadaan manusia.
 Aliran filsafat sering kali berkembang sebagai respons terhadap anggapan
 kegagalan agama dalam memberikan jawaban atas pertanyaan-pertanyaan mendasar.
 
- strikingly, ada ketidaksepahaman yang sering terjadi pada tataran
-terminologi. **Karl Joachim Friedrich** menyatakan bahwa filsafat hukum
+Selain itu, ada ketidaksepahaman yang sering terjadi pada tataran
+terminologi. **Carl Joachim Friedrich** menyatakan bahwa filsafat hukum
 merupakan bagian dari filsafat umum karena menawarkan refleksi filosofis atas
 dasar-dasar hukum umum. Objek filsafat hukum tidak lain adalah hukum. Hukum
 erat kaitannya dengan norma-norma yang mengatur tingkah laku manusia, dan
@@ -73,7 +73,7 @@ nilai-nilai tertinggi yang harus dipenuhi masyarakat `[FULL-TEXT]`.
 
 ---
 
-## II. Ruang Lingkup: Enam Branch Filsafat Hukum
+## II. Ruang Lingkup: Enam Cabang Filsafat Hukum
 
 Ruang lingkup filsafat hukum tidak terlepas dari ajaran filsafat, termasuk
 sejumlah cabang filsafat umum yang diterapkan pada hukum atau fenomena hukum
