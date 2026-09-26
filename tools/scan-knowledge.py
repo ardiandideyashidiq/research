@@ -17,7 +17,10 @@ CHECKS = [
 def scan(path):
     out = []
     for i, l in enumerate(open(path, encoding='utf-8'), 1):
-        if l.lstrip().startswith(('|', '>', '-', '*', '#')) or '`' in l or 'http' in l:
+        # CJK/FFFD is checked per-file above; the line-level patterns below
+        # skip blockquotes and code, but NOT tables or headings, which have
+        # been corrupted too.
+        if l.lstrip().startswith(('>', '-', '*')) or '`' in l or 'http' in l:
             continue
         for name, rx in CHECKS:
             for m in rx.finditer(l):
