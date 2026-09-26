@@ -76,6 +76,21 @@ menyatakan bahwa anak luar perkawinan **tetap memiliki hubungan perdata**
 dengan ayah biologis dan keluarganya begitu ayah kandung dibuktikan.
 Analisis yang menyatakan sebaliknya berada di belakang perkembangan putusan.
 
+### D. Catatan Tambahan dari Verifikasi September 2026
+
+| Instrumen | Temuan | Label wajib |
+|---|---|---|
+| **UU 35/2009** tentang NARKOTIKA | `berlaku` tetapi `status_certain: false`; 7 hubungan amendmen termasuk **dicabut oleh UU 1/2023** dan **mencabut UU 22/1997**; 15 putusan MK | `[TERBACA]` untuk status dan amar, `[PERLU VERIFIKASI]` untuk isi pasal |
+| **UU 20/2025** tentang KUHAP baru | `berlaku`; Pasal 1 hanya preambul definisi, dan daftar definisinya **tidak ada di korpus** | Jangan kutip Pasal 1 untuk substansi |
+| **UU 22/1997** | Dicabut oleh UU 35/2009 | `[PERLU VERIFIKASI]` |
+| **KUHP 1946** | Tidak ada di korpus; `resolve_law` gagal | Tidak bisa `[TERBACA]` |
+
+**Pola berulang di korpus Pasal.id:** banyak `verdict_text` pada `putusan_mk`
+menyalin **putusan pengadilan instance**, bukan penalaran Mahkamah Konstitusi.
+Contoh nyata: MK 147/PUU-XXIV/2026 yang klasifikasinya "kewenangan hakim memeriksa
+perkara pecandu" tetapi verdict-nya memuat putusan Pengadilan Negeri Tanjung
+Karang. Amar dan klasifikasi tetap layak dipakai; teks verdict tidak.
+
 ## II. Instrumen yang Tidak Ada di Korpus Pasal.id
 
 | Instrumen | Yang Terverifikasi | Implikasi |
