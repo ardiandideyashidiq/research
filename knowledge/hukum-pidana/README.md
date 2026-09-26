@@ -20,5 +20,8 @@ status instrumen dan jebakan korpus.
 - <a href="./corporate-criminal-liability.md">`corporate-criminal-liability.md`</a>
   — **Pertanggungjawaban Pidana Korporasi**: peralihan subjek dari persona fisik ke persona hukum, fungsi identifikasi korporasi, dan skema sanksi serta penyelesaian.
 
+- <a href="./sistem-peradilan-pidana.md">`sistem-peradilan-pidana.md`</a>
+  — **Sistem Peradilan Pidana**: penggantian kodifikasi pasca pencabutan KUHAP, prinsip dasar Pasal 2, ruang lingkup Pasal 3, hakim aktif, dan fungsi penyidikan.
+
 - <a href="./tindak-pidana-korupsi.md">`tindak-pidana-korupsi.md`</a>
   — **Tindak Pidana Korupsi**: unsur perbuatan dan kerugian negara, riwayat legislasi, serta kedudukan Pasal 14 pasca-putusan MK 123/PUU-XXIII/2025.
