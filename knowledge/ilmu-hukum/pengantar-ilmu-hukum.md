@@ -12,7 +12,7 @@ jenis: pustaka-subjek
 
 Ilmu hukum (*legal science*, *Rechtswissenschaft*, *scientia iuris*) adalah
 cabang pengetahuan yang objek kajiannya adalah kaidah-kaidah hukum, yaitu
-norma-norma yang mengikat dan dapat dipaksakan. Biographyilio yang
+norma-norma yang mengikat dan dapat dipaksakan. Perbedaan yang
 membedakannya dari ilmu pengetahuan empiris terletak pada sifatnya yang
 preskriptif, bukan deskriptif.
 
@@ -61,7 +61,7 @@ sesuai dengan realita — dirumuskan sejak Aristoteles dan dirumuskan ulang
 `[FULL-TEXT]`.
 
 Sebaliknya, ilmu yang **sarat nilai** bersifat **preskriptif**: ia
-mengemukakan, bukan sekadar mengemukakan apa adanya. Karena sarat nilai,
+menganjurkan, bukan sekadar mengemukakan apa adanya. Karena sarat nilai,
 sebagian orang menyebutnya juga ilmu normatif atau bagian dari kajian etika.
 Kebenarannya adalah **kebenaran koherensi** (*coherence theory*): suatu
 pernyataan dianggap benar bila ia "kohesif" atau terkait dengan pernyataan lain
@@ -87,8 +87,8 @@ Agung RI Nomor 1590 K/Pid/1997. Dari fakta, MA menyimpulkan bahwa tindakan
 terdakwa "mengambil radio tape" tersebut adalah *mengambil dengan maksud untuk
 memiliki secara melawan hak*, sehingga terpenuhi unsur pencurian. Dengan
 demikian, putusan yang menghukum terdakwa yang diambil MA secara keilmuan
-benar — *seyogianya*perdana dipidana — karena koheren dengan ketentuan Pasal 362
-KUHP yang dipakai sebagai acuan.
+benar — *seyogianya* terdakwa dipidana — karena koheren dengan ketentuan
+Pasal 362 KUHP yang dipakai sebagai acuan.
 
 ---
 
@@ -124,7 +124,7 @@ dipandang sebagai gejala empiris yang murni faktual dan diteliti dengan pola
 metode empiris standar; ilmu itu menjadi bebas nilai dan netral, sehingga
 pertimbangan etis dan politis ikut terpisah dari bidang kajian.
 
-Kelemahanolversinya bersifat struktural. Ilmu hukum empiris hanya sampai
+Kelemahannya bersifat struktural. Ilmu hukum empiris hanya sampai
 memberikan suatu deskripsi dari gejala hukum; setelah itu selesai sudah.
 Bahkan ilmu itu tidak memberikan penjelasan ilmiah dari kegiatan deskripsi
 tersebut, sehingga timbul pertanyaan mengenai relevansi praktisnya. Untuk
@@ -140,8 +140,10 @@ berada di luar bidang kerja ilmu hukum empiris. Ketiga, penjelasan yang
 dihasilkan bersifat *ex post facto*; sedangkan hakikat kerja yuridis adalah
 *ex ante* `[FULL-TEXT]`.
 
-> **Arah kebijakan:** kritik Marzuki menetapkan bahwa kelemahan itu
-> menj favourable]
+> **Catatan konsekuensi:** kritik Marzuki berujung pada satu
+> kesimpulan: kelemahan empirisme hukum terletak pada sifat kerja yuridis
+> itu sendiri yang bersifat *ex ante*, bukan pada dugaan bahwa hukum
+> tidak dapat diamati.
 
 ---
 
@@ -187,7 +189,7 @@ hierarki tersebut. Pasal 8 ayat (1) memuat peraturan perundang-undangan di
 luar jenis pada Pasal 7 ayat (1), termasuk yang ditetapkan MPR, DPR, DPD,
 Mahkamah Agung, Mahkamah Konstitusi, BPK, Komisi Yudisial, Bank Indonesia,
 Menteri, badan, lembaga, atau komisi yang setingkat yang dibentuk dengan
-undang-undang atau pemerintah atas perintah undang-undang, sertaibrate
+undang-undang atau pemerintah atas perintah undang-undang, serta
 kepala daerah pada tingkat provinsi dan kabupaten/kota `[TERBACA]`.
 
 > **Catatan pembaruan kerangka:** pemeriksaan
@@ -252,7 +254,7 @@ sengketa mengenai dana yang salah masuk ke rekening dan tidak dapat dikembalikan
 dengan persetujuan pemilik rekening, hakim dapat mengacu pada prinsip *unjust
 enrichment* `[FULL-TEXT]`.
 
-### C. Hukum Positif versus Hukum yang Berf berlaku
+### C. Hukum Positif versus Hukum yang berlaku
 
 Marzuki menegaskan satu perbedaan yang sering terlewat `[FULL-TEXT]`.
 Hukum positif adalah *general rule of conduct laid down by a political
@@ -330,7 +332,7 @@ Penelitian normatif bekerja pada teks norma; hasilnya dinilai dengan
 koherensi dan konsensus, bukan dengan signifikansi statistik. Penelitian
 empiris bekerja pada perilaku dan praktik; hasilnya dinilai dengan
 korespondensi terhadap data. Keduanya dapat dijalankan berurutan dalam satu
-rancangan — pengumpulan data empiris serves sebagai bahan kasus, analisis
+rancangan — pengumpulan data empiris sebagai bahan kasus, analisis
 normatif menentukan status yuridisnya — tetapi tidak boleh dicampur dalam satu
 argumen tanpa pemisahan eksplisit.
 
