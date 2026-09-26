@@ -322,7 +322,7 @@ wufu' at-tanwit wa ba'da sadl al-dayn* [FULL-TEXT]. Dalam KHI,
 batas yang berlaku adalah **1/3**, baik pada wasiat wajibah bagi orang
 tua angkat (Pasal 209) maupun hibah yang diberikan orang dewasa
 (Pasal 210) [FULL-TEXT]. Batas 1/3 ini berfungsi sebagai_-]_PROTEKSI_
-agar pewaris tidak dapatTonness dengan meninggalkan ahli waris
+agar pewaris tidak dapat-tonness dengan meninggalkan ahli waris
 tanpa warisan sedikit pun.
 
 ---

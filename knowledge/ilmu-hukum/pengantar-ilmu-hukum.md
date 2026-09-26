@@ -61,7 +61,7 @@ sesuai dengan realita — dirumuskan sejak Aristoteles dan dirumuskan ulang
 `[FULL-TEXT]`.
 
 Sebaliknya, ilmu yang **sarat nilai** bersifat **preskriptif**: ia
-mengUdahukan, bukan sekadar mengemukakan apa adanya. Karena sarat nilai,
+mengemukakan, bukan sekadar mengemukakan apa adanya. Karena sarat nilai,
 sebagian orang menyebutnya juga ilmu normatif atau bagian dari kajian etika.
 Kebenarannya adalah **kebenaran koherensi** (*coherence theory*): suatu
 pernyataan dianggap benar bila ia "kohesif" atau terkait dengan pernyataan lain

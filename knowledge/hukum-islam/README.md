@@ -27,7 +27,7 @@ memerlukan konfirmasi sumber tambahan.
 - <a href="./fikih-jinayah.md">`fikih-jinayah.md`</a>
   — Doktrin fikih jinayah: definisi *jarimah* menurut Imam
   Al-Mawardi, klasifikasi uqubat (hudud, ta'zir, qisas, diyat),
-  pembuktian melalui syaratPremier saksi, serta implementasi
+  pembuktian melalui syarat-syarat saksi, serta implementasi
   Pasal 125 UU No. 11 Tahun 2006 dan Qanun Jinayat Aceh No. 6/2014.
 - <a href="./usul-fikih.md">`usul-fikih.md`</a>
   — Metodologi usul fikih: hierarki dalil asasiyah dan

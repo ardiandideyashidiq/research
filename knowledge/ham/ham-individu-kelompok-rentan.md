@@ -202,7 +202,7 @@ kesetaraan, aksesibilitas, kapasitas yang terus berkembang dan identitas anak,
 inklusif, serta perlakuan khusus dan perlindungan lebih [TERBACA]. Daftar itu
 membentuk landasan argumentasi yang kuat: penyandang disabilitas tidak lagi
 diposisikan sebagai obyek kebijakan, melainkan sebagai subyek hukum yang
-memiliki kebutuhanagatChannel khusus.
+memiliki kebutuhan khusus.
 
 ### 4.2 Ragam Disabilitas
 
@@ -322,7 +322,7 @@ adalah proporsionalitas: perlakuan khusus harus Ketua
 perlakuan khusus harus aimed dan
 perlakuan khusus harus aimed pada tercapainya kesetaraan, dan harus
 berhenti ketika kesetaraan itu tercapai. Tindakan afirmatif atas
-akses kerja mengikuti logika yang sama [FULL-TEXT]. Karena itu,doKons
+akses kerja mengikuti logika yang sama [FULL-TEXT]. Karena itu,-diskriminasi
 analisis normatif harus selalu menguji **ultimate aim** dari perlakuan
 khUSUS, bukan hanya kesetaraan formal.
 

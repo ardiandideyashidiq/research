@@ -183,7 +183,7 @@ sebagai jalan keluar, sehingga perempuan secara formal tetap memerlukan wali
 Syarat materiil melekat pada masing-masing pihak; syarat formal mengatur
 cara melangsungkannya, dan **Pasal 12** UU 1/1974 menghendaki peraturan
 perundang-undangan tersendiri [TERBACA]. **Mesta Wahyu Nita**
-merangkum syarat materiil sebagai persetujuan kedua calon slappingPasal 6
+merangkum syarat materiil sebagai persetujuan kedua calon pengantin Pasal 6
 ayat (1), batas umur Pasal 7 ayat (1), izin orang tua Pasal 6 ayat (2),
 larangan Pasal 8-10, dan waktu tunggu Pasal 11 [FULL-TEXT].
 
