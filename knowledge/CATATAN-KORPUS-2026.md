@@ -97,24 +97,29 @@ dari ingatan.
 Semua file di bawah sudah diverifikasi: satu H1, section Referensi ada, dan
 lulus pemindaian korupsi (CJK, U+FFFD, dan kata glued).
 
-| Folder | File | Baris |
-|---|---|---|
-| `hukum-islam/` | `fikih-muamalat.md` | 371 |
-| `hukum-islam/` | `fikih-jinayah.md` | 230 |
-| `hukum-islam/` | `usul-fikih.md` | 318 |
-| `hukum-islam/` | `hukum-waris-islam.md` | 340 |
-| `hukum-islam/` | `hukum-keluarga-islam.md` | 311 |
-| `hukum-islam/` | `tasawuf-dzikir.md` | 219 |
-| `hukum-islam/` | `hukum-islam-indonesia.md` | 339 |
-| `hukum-perdata/` | `perikatan.md` | 400 |
-| `hukum-perdata/` | `harta-benda.md` | 372 |
-| `hukum-keluarga/` | `perkawinan.md` | 469 |
-| `hukum-adat/` | `kedudukan-hukum-adat.md` | 471 |
-| `hukum-tata-negara/` | `uud-1945.md` | 480 |
-| `ilmu-hukum/` | `pengantar-ilmu-hukum.md` | 373 |
-| `ham/` | `ham-konstitusional.md` | 288 |
-| `ham/` | `ham-ranah-sosial.md` | 309 |
-| `ham/` | `ham-individu-kelompok-rentan.md` | 381 |
+| File | Baris |
+|---|---|
+| `CATATAN-KORPUS-2026.md` | 201 |
+| `ham/ham-individu-kelompok-rentan.md` | 381 |
+| `ham/ham-konstitusional.md` | 288 |
+| `ham/ham-ranah-sosial.md` | 309 |
+| `hukum-adat/kedudukan-hukum-adat.md` | 471 |
+| `hukum-islam/fikih-jinayah.md` | 230 |
+| `hukum-islam/fikih-muamalat.md` | 371 |
+| `hukum-islam/hukum-islam-indonesia.md` | 339 |
+| `hukum-islam/hukum-keluarga-islam.md` | 311 |
+| `hukum-islam/hukum-waris-islam.md` | 340 |
+| `hukum-islam/tasawuf-dzikir.md` | 219 |
+| `hukum-islam/usul-fikih.md` | 318 |
+| `hukum-keluarga/perkawinan.md` | 469 |
+| `hukum-perdata/harta-benda.md` | 372 |
+| `hukum-perdata/perikatan.md` | 400 |
+| `hukum-tata-negara/uud-1945.md` | 480 |
+| `ilmu-hukum/filsafat-hukum.md` | 297 |
+| `ilmu-hukum/hukum-dan-ilmu-pengetahuan.md` | 343 |
+| `ilmu-hukum/logika-hukum.md` | 351 |
+| `ilmu-hukum/pengantar-ilmu-hukum.md` | 376 |
+| `ilmu-hukum/teori-hukum.md` | 450 |
 
 File-file ini tidak mengutip KUHAP, UU 36/2009, UU 5/1999, PP 24/1998, atau
 UU 13/2003, sehingga catatan pada Bagian I tidak mengubah isinya. Verifikasi
@@ -122,30 +127,31 @@ ulang diperlukan bila file tersebut kemudian direvisi.
 
 ### B. Pemeriksaan Korupsi Wajib Sebelum Commit
 
-Pemeriksaan CJK saja **tidak cukup**. Kerusakan yang paling sering muncul
-adalah kata gabung yang menyamar, misalnya `slappingPasal`, `dapatTonness`,
-`mengUdahukan`, `kebutuhanagatChannel`, `doKons`, dan `harta danMuamalah`.
-Semuanya muncul sebagai degenerasi keluaran panjang dan lolos pemeriksaan
-karakter non-ASCII.
+Pemeriksaan karakter non-ASCII saja **tidak cukup**. Kerusakan yang pernah
+terjadi konsisten lolos sanity check dan hanya terlihat pada baca ulang:
 
-Jalankan kedua pemeriksaan berikut sebelum commit:
+| Coraksi | Contoh |
+|---|---|
+| Kata gabung | `slappingPasal`, `dapatTonness`, `mengUdahukan`, `kebutuhanagatChannel`, `doKons`, `harta danMuamalah` |
+| Kata terpotong | `Biographyilio`, `Kelemahanolversinya`, `sertaibrate`, `BagaimanaLand_akad` |
+| Kata terduplikasi | `mengemukakan, bukan sekadar mengemukakan`, `Hukum yang Berf berlaku` |
+| Kata asing tersisip | `empiris serves`, `menggambarkan apa adanya` |
+| Artefak interpolasi | `meng{Prakata}tidak` |
+| Skrip asing | `Vandive@`, karakter CJK, U+FFFD |
+
+Jalankan pemeriksa yang sudah disertakan di repo:
 
 ```bash
-# 1. CJK dan replacement character
-grep -rlP '[\x{3000}-\x{9FFF}\x{FFFD}]' knowledge/ || echo "bersih"
-
-# 2. Kata glued
-python3 -c "
-import re, glob
-GLUED = re.compile(r'[a-z]{2,}[A-Z][a-z]{2,}')
-for f in glob.glob('knowledge/**/*.md', recursive=True):
-    for i, l in enumerate(open(f, encoding='utf-8'), 1):
-        if l.startswith('|') or 'http' in l:
-            continue
-        for m in GLUED.finditer(l):
-            print(f'{f}:{i} glued {m.group(0)!r}')
-"
+python3 tools/scan-knowledge.py
 ```
+
+Pemeriksa tersebut memakai lima tanda yang langsung diturunkan dari kegagalan
+nyata, bukan tebakan kosakata: CJK dan U+FFFD, token dengan huruf besar di
+tengah kata, artefak kurung kurawal, kata asing yang tersisip di dalam
+kalimat Indonesia, serta fragmen khas degradasi. Keluarannya harus `0 hit(s)`.
+
+ juga perlu diperiksa juga secara manual sebelum commit: baris yang memuat
+`[TERBACA]`, karena di situlah klaim yang paling merusak kalau salah.
 
 ## IV. Istilah yang Tidak Ada di Korpus Buku
 

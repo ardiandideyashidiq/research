@@ -122,7 +122,7 @@ Hukum Pidana [TERBACA]. Karena itu, kutipan pasal-pasal UU 23/2002 dalam
 praktik perlu diverifikasi ulang terhadap teks konsolidasi terbaru.
 
 Undang-undang tersebut telah beberapa kali diuji di Mahkamah Konstitusi.
-Putusan Nomor 018/PUU-III/2005 meng{Prakata}tidak dapat diterima
+Putusan Nomor 018/PUU-III/2005 mengakui tidak diterima
 permohonan; Putusan Nomor 33/PUU-XV/2017 dan Putusan Nomor 6/PUU-XV/2017
 menolak permohonan; Putusan Nomor 85/PUU-XVII/2019 mengabulkan sebagian
 permohonan; Putusan Nomor 49/PUU-XXIV/2026 dengan klasifikasi hak anak atas
