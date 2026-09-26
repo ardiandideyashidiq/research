@@ -265,9 +265,10 @@ bawah pengertian yang sama atau memiliki kemiripan, dan salah satu di antaranya
 telah diketahui hukumnya, maka penalaran itu dapat dijalankan.
 
 > **Relevansi:** penalaran *case-to-case* inilah yang menjadi dasar
-> penggunaan **asas *ratio decidendi*** dalampeat peradilan dan dalam
-> `[PERLU VERIFIKASI]` — istilah *ratio decidendi* sendiri tidak ditemukan
-> dalam korpus yang dibaca.
+> penggunaan **asas *ratio decidendi*** dalam praktik peradilan dan dalam
+> penulisan doktrin. Namun istilah *ratio decidendi* sendiri **tidak
+> ditemukan** dalam korpus yang dibaca, sehingga statusnya
+> `[PERLU VERIFIKASI]`.
 
 ---
 
@@ -308,10 +309,10 @@ penalaran tidak terlihat lebih kuat daripada yang sebenarnya.
 ### 1. Mengapa logika formal tidak cukup untuk penalaran hukum?
 
 Karena logika formal hanya menjamin sahnya bentuk argumen, bukan benar
-tidaknya premisnya. Premis mayor yang salah menghasilkan konklusi yang salah
-doktrin: kelemahan utama deduksi terletak pada premis, bukan pada bentuknya.
-Karena itu penalaran hukum tidak pernah berhenti pada logika formal; ia perlu
-diapit oleh penilaian factual (dalam *context of discovery*) sebelum
+tidaknya premisnya: premis mayor yang salah menghasilkan konklusi yang
+salah. Kelemahan utama deduksi terletak pada premis, bukan pada bentuknya.
+Karena itu penalaran hukum tidak pernah berhenti pada logika formal; ia
+perlu diapit oleh penilaian fakta (dalam *context of discovery*) sebelum
 *context of justification*.
 
 ### 2. Bagaimana membedakan penalaran deduktif dan induktif dalam sebuah tulisan?

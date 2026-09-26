@@ -248,7 +248,7 @@ pemahaman filsafat hukum Indonesia dibahas lebih lanjut di `teori-hukum.md`
 tertentu; tugasnya membedah dan memecahkan masalah praktis. **Teori hukum**
 berada di antara keduanya: ia tidak mendeskripsikan isi hukum yang berlaku,
 melainkan menjawab pertanyaan "yang mana yang hukum?" **Filsafat hukum**
-berada di puncak: ia tidakoperand pada sistem hukum tertentu, melainkan
+berada di puncak: ia tidak berdasar pada sistem hukum tertentu, melainkan
 menyelidiki hakikat hukum itu sendiri secara umum dan abstrak.
 
 Kauffmann membedakannya dari sisi orientasi: filsafat hukum berorientasi pada
@@ -272,13 +272,13 @@ jawaban yang berbeda dari para filsuf; ia tidak memberi jawaban tunggal
 
 ### 3. Bagaimana menggunakan filsafat hukum dalam penulisan normatif?
 
-Gunakan sebagai **Uji keabsahan tujuan**, bukan sebagai sumber premis langsung.
-Struktur yang lazim: (1) identifikasi cita hukum yang dinyatakan pasal; (2)
-uji konsistensinya dengan nilai-nilai aksiologis yang diambil dari konstitusi
-atau doktrin; (3) uji apakah nilai itu benar-benar diuntungkan dalam penerapan
-pasal; (4) bila tidak, rumuskanouchDJ konsekuensi normatifnya. Langkah (2)–(3)
-adalah Contributions distinct dariIRR pencarian hukum positif dan dapat
-menjadi Contributions orisinal penelitian normatif.
+Gunakan sebagai **uji keabsahan tujuan**, bukan sebagai sumber premis
+langsung. Struktur yang lazim: (1) identifikasi cita hukum yang dinyatakan
+pasal; (2) uji konsistensinya dengan nilai-nilai aksiologis yang diambil dari
+konstitusi atau doktrin; (3) uji apakah nilai itu benar-benar diuntungkan
+dalam penerapan pasal; (4) bila tidak, rumuskan konsekuensi normatifnya.
+Langkah (2)–(3) adalah bagian yang berbeda dari pencarian hukum positif
+dan dapat menjadi sumbangan orisinal penelitian normatif.
 
 ---
 
