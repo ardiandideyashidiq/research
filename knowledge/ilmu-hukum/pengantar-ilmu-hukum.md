@@ -319,8 +319,8 @@ tanpa diperkuat alat bukti lain.
 > **[PERLU VERIFIKASI]** Klaim bahwa sistem hukum acara pidana Indonesia
 > menganut *negatief wettelijk* perlu diverifikasi terhadap naskah Hukum
 > Acara Criminal yang berlaku melalui korpus Pasal.id sebelum dijadikan premis
-> mayor dalam karya akademik. Klaim tersebut hanya bersumber dari buku ajar
-> `[FULL-TEXT]`, belum dari teks peraturan `[TERBACA]`.
+> mayor dalam karya akademik. Klaim tersebut baru `[FULL-TEXT]` — bersumber
+> dari buku ajar, belum `[TERBACA]` atas teks peraturan.
 
 ---
 
