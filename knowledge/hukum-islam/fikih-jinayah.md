@@ -110,8 +110,8 @@ qisas.
 Dari sisi riwayat, sumber mencatat bahwa Qanun Nomor 10 Tahun 2002
 menempatkan kewenangan syariat pada empat bidang, yaitu
 *Qishas-Diyat*, *Hudud*, dan *Ta'zir*, beserta perkara-perkara
-perdata Islam [FULL-TEXT]. Vandive@
-Qanun 10/2002 itu sendiri sudah dicabut oleh UU No. 11 Tahun 2006
+perdata Islam [FULL-TEXT]. Qanun 10/2002 itu sendiri sudah
+dicabut oleh UU No. 11 Tahun 2006
 [TERBACA] — sehingga rujukan historisnya harus dibaca sebagai
 potret kondisi sebelum penggantian, bukan norma yang berlaku kini.
 
@@ -131,7 +131,7 @@ Pelaksanaan hukuman cambuk melibatkan beberapa institusi dan prosedur
 [FULL-TEXT]:
 
 * Jaksa sebagai pelaksana eksekusi uqubat cambuk.
-* Jaksa menyiapkan tempat dan waktu pencambukan dengan berlatih
+* Jaksa menyiapkan tempat dan waktu pencambukan dengan
   koordinasi dengan Ketua Mahkamah Syariah, kepala dinas kesehatan,
   dan instansi yang membawahi *wilayatul hisbah* atau dinas
   syariat Islam setempat.

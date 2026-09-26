@@ -24,3 +24,6 @@ sessions/
 # Logs
 logs/
 *.log
+
+# Agent worktrees (transient)
+.claude/worktrees/

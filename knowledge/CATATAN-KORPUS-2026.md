@@ -92,23 +92,60 @@ dari ingatan.
 
 ## III. Temuan Validasi yang Sudah Mengarahkan File Terkini
 
-File yang sudah ditulis dan lolos gate:
+### A. File yang Sudah Lolos Gate
 
-- `knowledge/hukum-perdata/perikatan.md`
-- `knowledge/hukum-perdata/harta-benda.md`
-- `knowledge/hukum-keluarga/perkawinan.md`
-- `knowledge/hukum-islam/fikih-muamalat.md`
-- `knowledge/hukum-islam/fikih-jinayah.md`
-- `knowledge/hukum-adat/kedudukan-hukum-adat.md`
-- `knowledge/hukum-tata-negara/uud-1945.md`
-- `knowledge/ilmu-hukum/pengantar-ilmu-hukum.md`
-- `knowledge/ham/ham-konstitusional.md`
-- `knowledge/ham/ham-ranah-sosial.md`
-- `knowledge/ham/ham-individu-kelompok-rentan.md`
+Semua file di bawah sudah diverifikasi: satu H1, section Referensi ada, dan
+lulus pemindaian korupsi (CJK, U+FFFD, dan kata glued).
+
+| Folder | File | Baris |
+|---|---|---|
+| `hukum-islam/` | `fikih-muamalat.md` | 371 |
+| `hukum-islam/` | `fikih-jinayah.md` | 230 |
+| `hukum-islam/` | `usul-fikih.md` | 318 |
+| `hukum-islam/` | `hukum-waris-islam.md` | 340 |
+| `hukum-islam/` | `hukum-keluarga-islam.md` | 311 |
+| `hukum-islam/` | `tasawuf-dzikir.md` | 219 |
+| `hukum-islam/` | `hukum-islam-indonesia.md` | 339 |
+| `hukum-perdata/` | `perikatan.md` | 400 |
+| `hukum-perdata/` | `harta-benda.md` | 372 |
+| `hukum-keluarga/` | `perkawinan.md` | 469 |
+| `hukum-adat/` | `kedudukan-hukum-adat.md` | 471 |
+| `hukum-tata-negara/` | `uud-1945.md` | 480 |
+| `ilmu-hukum/` | `pengantar-ilmu-hukum.md` | 373 |
+| `ham/` | `ham-konstitusional.md` | 288 |
+| `ham/` | `ham-ranah-sosial.md` | 309 |
+| `ham/` | `ham-individu-kelompok-rentan.md` | 381 |
 
 File-file ini tidak mengutip KUHAP, UU 36/2009, UU 5/1999, PP 24/1998, atau
-UU 13/2003, sehingga catatan di atas tidak mengubah isinya. Verifikasi ulang
-diperlukan bila file tersebut kemudian direvisi.
+UU 13/2003, sehingga catatan pada Bagian I tidak mengubah isinya. Verifikasi
+ulang diperlukan bila file tersebut kemudian direvisi.
+
+### B. Pemeriksaan Korupsi Wajib Sebelum Commit
+
+Pemeriksaan CJK saja **tidak cukup**. Kerusakan yang paling sering muncul
+adalah kata gabung yang menyamar, misalnya `slappingPasal`, `dapatTonness`,
+`mengUdahukan`, `kebutuhanagatChannel`, `doKons`, dan `harta danMuamalah`.
+Semuanya muncul sebagai degenerasi keluaran panjang dan lolos pemeriksaan
+karakter non-ASCII.
+
+Jalankan kedua pemeriksaan berikut sebelum commit:
+
+```bash
+# 1. CJK dan replacement character
+grep -rlP '[\x{3000}-\x{9FFF}\x{FFFD}]' knowledge/ || echo "bersih"
+
+# 2. Kata glued
+python3 -c "
+import re, glob
+GLUED = re.compile(r'[a-z]{2,}[A-Z][a-z]{2,}')
+for f in glob.glob('knowledge/**/*.md', recursive=True):
+    for i, l in enumerate(open(f, encoding='utf-8'), 1):
+        if l.startswith('|') or 'http' in l:
+            continue
+        for m in GLUED.finditer(l):
+            print(f'{f}:{i} glued {m.group(0)!r}')
+"
+```
 
 ## IV. Istilah yang Tidak Ada di Korpus Buku
 

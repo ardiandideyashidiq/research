@@ -11,7 +11,7 @@ jenis: pustaka-subjek
 # Fikih Muamalat (*Islamic Jurisprudence of Transactions*)
 
 Fikih muamalah adalah cabang ilmu fiqh yang mengatur hubungan antara
-sesama manusia dalam hal harta danMuamalah. Secara etimologi, kata
+sesama manusia dalam hal harta dan muamalah. Secara etimologi, kata
 *fiqh* berarti paham, sedangkan *muamalah* adalah bentuk masdar dari
 kata *'amala* yang berarti saling bertindak dan saling bekerja
 [FULL-TEXT]. Secara terminologi, muamalah ialah segala aturan agama
@@ -175,7 +175,7 @@ di muka; jika dipastikan, hukumnya jatuh menjadi riba [FULL-TEXT].
 
 **a. Riba (beternak uang):** Sistem yang tidak memperhitungkan aspek
 kerja nyata dan lebih menekankan sektor finansial serta persoalan waktu.
-Prinsipnya adalah *the value of time of money*, yaitu pendapatan
+Prinsipnya adalah *nilai waktu atas uang*, yaitu pendapatan
 hanya karena waktu berlalu. Para ulama mendefinisikan riba sebagai
 tambahan yang tidak disertai kompensasi yang disyaratkan dalam jual
 beli [FULL-TEXT].
@@ -347,9 +347,9 @@ konflik: ketika qiyas menyimpulkan sesuatu yang bertentangan
 dengan *illat* yang telah ditetapkan, maka *illat* dipegang dan
 qiyas dibatasi [FULL-TEXT].
 
-### 3. BagaimanaLand_akad baru yang belum diatur mendasarinya?
+### 3. Dari mana landasan akad baru yang belum diatur?
 
- besides qiyas, */al-'urf* (adat kebiasaan) dapat dipakai sebagai
+Selain qiyas, *al-'urf* (adat kebiasaan) dapat dipakai sebagai
 dalil di bawah mazhab tertentu, khususnya mazhab Maliki. *Analogi:*
 seperti *custom* dalam hukum komoditas yang tetap diperbolehkan
 selama tidak bertentangan dengan ketentuan yang lebih tinggi. Kebiasaan
