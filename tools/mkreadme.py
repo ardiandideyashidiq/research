@@ -13,6 +13,10 @@ META = {
  'hukum-tata-negara': ("Hukum Tata Negara & Konstitusi",
    "Doktrin struktural UUD 1945: kedudukan Pembukaan, evolusi amandemen, "
    "pengelompokan hak konstitusional, dan teknik klausul delegasi."),
+ 'hukum-pidana': ("Hukum Pidana",
+   "Doktrin hukum pidana Indonesia menurut UU No. 1 Tahun 2023: asas "
+   "legalitas dan kesalahan, tipikor, pertanggungjawaban korporasi, serta "
+   "sistem peradilan pidana."),
  'hukum-lingkungan': ("Hukum Lingkungan & Sumber Daya Alam",
    "Doktrin UU 32/2009: asas perlindungan lingkungan, hak atas lingkungan "
    "yang sehat, pengelolaan sumber daya alam, serta Amdal dan perizinan "
@@ -28,6 +32,9 @@ DESC = {
  'hukum-keluarga/perkawinan.md': ("Hukum Perkawinan", "dasar UU 1/1974, rukun dan syarat perkawinan menurut fikih nikah dan KHI, pencatatan nikah, serta perkawinan campuran"),
  'hukum-adat/kedudukan-hukum-adat.md': ("Kedudukan Hukum Adat", "pengakuan bersyarat dalam UUPA 1960, fungsi perdata dalam KUHPerdata, dan relasi peradilan adat"),
  'hukum-tata-negara/uud-1945.md': ("Struktur UUD 1945", "kedudukan Pembukaan sebagai norma fundamental, evolusi amandemen, hak konstitusional, klausul delegasi, dan open legal policy"),
+ 'hukum-pidana/asas-legalitas-dan-kesalahan.md': ("Asas Legalitas dan Asas Kesalahan", "asas legalitas beserta larangan analogi, empat maknanya menurut Machteld Boot, dan batasannya pada strict liability serta vicarious liability"),
+ 'hukum-pidana/tindak-pidana-korupsi.md': ("Tindak Pidana Korupsi", "unsur perbuatan dan kerugian negara, riwayat legislasi, serta kedudukan Pasal 14 pasca-putusan MK 123/PUU-XXIII/2025"),
+ 'hukum-pidana/corporate-criminal-liability.md': ("Pertanggungjawaban Pidana Korporasi", "peralihan subjek dari persona fisik ke persona hukum, fungsi identifikasi korporasi, dan skema sanksi serta penyelesaian"),
  'hukum-lingkungan/hukum-lingkungan.md': ("Hukum Lingkungan", "asas perlindungan lingkungan, hak konstitusional atas lingkungan yang sehat, internalisasi biaya pencemar, dan keadilan antar generasi"),
  'hukum-lingkungan/pengelolaan-sda.md': ("Pengelolaan SDA", "rezim pengelolaan sumber daya alam, konservasi, keanekaragaman hayati, dan hak hutan adat"),
  'hukum-lingkungan/amdal-dan-proses-permitasan.md': ("Amdal dan Perizinan", "Amdal, ANDAL, UKL-UPL, persetujuan lingkungan, dan sanksi administratif"),

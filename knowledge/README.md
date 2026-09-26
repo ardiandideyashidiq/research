@@ -84,6 +84,9 @@ sebagai indeks.
 - <a href="./hukum-adat/README.md">`hukum-adat/`</a> — kedudukan hukum adat.
 - <a href="./hukum-tata-negara/README.md">`hukum-tata-negara/`</a> — struktur
   UUD 1945.
+- <a href="./hukum-pidana/README.md">`hukum-pidana/`</a> —
+  asas legalitas dan kesalahan, tindak pidana korupsi, pertanggungjawaban
+  korporasi, dan sistem peradilan pidana.
 - <a href="./hukum-lingkungan/README.md">`hukum-lingkungan/`</a> —
   3 file: asas perlindungan lingkungan, pengelolaan sumber daya alam,
   serta Amdal dan perizinan lingkungan.
