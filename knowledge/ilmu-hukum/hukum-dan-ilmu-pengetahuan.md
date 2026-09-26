@@ -13,6 +13,7 @@ jenis: pustaka-subjek
 Ilmu pengetahuan (*science*) adalah pengetahuan yang sistematis, objeknya
 jelas, dan dapat diuji kebenarannya secara metodologis `[FULL-TEXT]`. Ilmu
 sudah pasti pengetahuan, tetapi pengetahuan belum tentu adalah ilmu
+`[FULL-TEXT]`. Atas premis inilah perbedaan antara kajian empiris dan
 kajian normatif menjadi mungkin.
 
 **Catatan epistemik:** uraian ini bersumber dari buku-buku yang benar-benar
@@ -22,7 +23,7 @@ Berkas tidak mengutip pasal; klaim normatif statute ditandai
 
 ---
 
-## I. Ilmu dan Pengetahuan: Perbedaan yang Pruden
+## I. Ilmu dan Pengetahuan: Perbedaan yang Fundamental
 
 ### A. Makna Ganda "Ilmu"
 
@@ -47,15 +48,16 @@ enam syarat `[FULL-TEXT]`.
 |---|---|---|
 | Sistematis | Dapat dirunut dari awal sampai akhir, antarbagian tidak terlepas secara vertikal | Preskripsi harus tersusun berurutan |
 | Umum (*general*) | Berlaku di mana pun, lintas ruang dan waktu | Rumusan kaidah tidak boleh khas satu perkara |
-| Rasional | Dapat dijangkau dengan akal sehat, bebas dari subyektifitas dan emosi | Larangan memakaiUES argumentasi emosional |
+| Rasional | Dapat dijangkau dengan akal sehat, bebas dari subyektifitas dan emosi | Larangan memakai argumentasi emosional |
+| Obyektif | Menggambarkan realitas sebagaimana adanya, bukan hasil rekayasa | Batas: hukum tidak mengukur frekuensi |
+| Metodis | Metode yang dipakai jelas dan tertentu | Pemilihan metode menentukan output |
 | Dapat dipertanggungjawabkan | Berdasarkan argumentasi rasional dengan kaidah kebenaran dan logika | Keterlacakan penalaran |
 
-Syarat kelima paling menentukan bagi Choosing metode: dalam penelitian hukum,
-harus tegas apakah menggunakan penelitian hukum doktrinal atau empiris.
-Salah memilih penggunaan metode, maka hasil yang dihasilkan pun salah
-`[FULL-TEXT]`.
+Syarat kelima paling menentukan: dalam penelitian hukum, harus tegas apakah
+menggunakan penelitian hukum doktrinal atau empiris. Salah memilih
+penggunaan metode, maka hasil yang dihasilkan pun salah `[FULL-TEXT]`.
 
-### C. Pengetahuan sebagai practicality yang Lebih Umum
+### C. Pengetahuan sebagai Kategori yang Lebih Umum
 
 Dalam kajian kefilsafatan, **pengetahuan** (*knowledge*) mengandung arti
 menjelaskan adanya informasi, pemahaman, dan keahlian (*skill*) yang diperoleh
