@@ -320,19 +320,20 @@ perlu diapit oleh penilaian fakta (dalam *context of discovery*) sebelum
 
 Perhatikan arah gerak argumennya. Deduktif bergerak dari premis mayor yang umum
 ke kesimpulan yang khusus — inilah yang lazim dalam *Begriffsjurisprudenz*
-dan dalam silogisme peradilan. Induktif bergerak dari kasus-kasus khusus ke
-rumusan umum — inilah yang lazim dalam telaah doktrin untuk menemukan asas.
+dan dalam silogisme peradilan. Induktif bergerak dari kasus-kasus khusus
+menuju rumusan umum — inilah yang lazim dalam telaah doktrin untuk
+menemukan asas.
 Abduktif bergerak bolak-balik: menyusun hipotesis sementara, lalu mengujinya
 terhadap bukti yang tersedia.
 
 ### 3. Kapan sebaiknya menggunakan analogi dalam argumentasi hukum?
 
-Analogia digunakan ketika **aturan ada tetapi tidak cukup jelas** atau **tidak
+Analogi digunakan ketika **aturan ada tetapi tidak cukup jelas** atau **tidak
 lengkap** untuk menyelesaikan perkara. Batasnya: *a contrario* diperbolehkan
 pada kaidah umum, sedangkan pada kaidah yang memuat larangan, penal, atau
 hak-hak yang secara khusus dirumuskan, analogi dilarang `[PERLU VERIFIKASI]`.
-Pemakaian analogi harus dinyatakan eksplisit sebagai langkah argumentasi yang
-ter-doped, bukan disembunyikan dalam bentuk subsumpsi.
+Pemakaian analogi harus dinyatakan eksplisit sebagai langkah argumentasi,
+bukan disembunyikan di dalam bentuk subsumpsi.
 
 ---
 
