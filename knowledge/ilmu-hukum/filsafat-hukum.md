@@ -221,7 +221,7 @@ Perkembangan terbaru menyangkut pertanyaan bagaimana bahasa hukum harus
 ditafsirkan dengan benar. Beberapa ahli teori, yang dimulai pada awal abad
 ke-20, merasakan manfaat jika memikirkan hakikat hukum terutama dari sudut
 pandangan profesional hukum seperti hakim atau pengacara. Perkembangan itu
-sebagian dapat dijelaskan oleh fakta bahwa para ahli teori tersebut merefleksikan
+sebagian dijelaskan oleh fakta bahwa para ahli teori tersebut merefleksikan
 hukum hampir secara eksklusif dalam sistem *common law* yang maju, di mana
 pengacara yang terlatih khusus berdebat atas nama kepentingan klien, dan di
 mana hakim sering kali memainkan peran kuasi-legislatif dalam membentuk

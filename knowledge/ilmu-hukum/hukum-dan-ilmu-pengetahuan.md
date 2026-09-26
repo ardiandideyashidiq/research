@@ -167,7 +167,7 @@ hukum tidak tertulis, dan karya ilmuwan hukum yang berwibawa di bidangnya
 ### C. Epistemologi
 
 Epistemologi adalah cabang filsafat yang mempelajari pertanyaan-pertanyaan
-holistik dan mendasar berkenaan dengan pengetahuan dan ilmu pengetahuan, meliputi
+holistik dan mendasar berkenaan dengan pengetahuan dan ilmu pengetahuan:
 (1) hakikat pengetahuan, (2) sumber pengetahuan, dan (3) metode pengetahuan
 `[FULL-TEXT]`. Ketiga pertanyaan tersebut adalah proyek besar epistemologi dan
 dapat diajukan terhadap setiap cabang ilmu pengetahuan.

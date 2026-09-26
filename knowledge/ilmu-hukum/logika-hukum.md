@@ -156,8 +156,9 @@ Hanya sembilan bentuk berikut yang keabsihannya terjamin `[FULL-TEXT]`:
 AAA, AII, AEE, AOO, IAI, IEO, EAE, EIO, dan OAO. Contoh klasik AAA:
 *Semua mahasiswa jurusan hukum wajib mengikuti ujian; semua mahasiswa
 jurusan hukum adalah makhluk hidup; jadi, semua mahasiswa jurusan hukum
-wajib mengikuti ujian.* Contoh AII: *Semua mahasiswa jurusan hukum wajib mengikuti
-ujian; Adnan adalah mahasiswa jurusan hukum; jadi, Adnan wajib mengikuti ujian.*
+wajib mengikuti ujian.* Contoh AII: *Semua mahasiswa jurusan hukum wajib
+mengikuti ujian; Adnan adalah mahasiswa jurusan hukum; jadi, Adnan wajib
+mengikuti ujian.*
 
 ### D. Tujuh Hukum Keabsihan Silogisme
 
@@ -249,9 +250,9 @@ abduktif sebenarnya adalah menyusun suatu hipotesis, dan dimasukkan sebagai
 
 Penalaran deduktif dan induktif beserta abduksi merupakan penerapan gejala-
 gejala dalam urutan logis yang belum tertutup; melalui deduksi atau induksi,
-bentuk logisnya menjadi tertutup `[FULL-TEXT]`. Kelemahan utama penggunaan logika
-deduktif adalah jika premisnya keliru, maka hasil penalarannya juga keliru
-atau invalid `[FULL-TEXT]`.
+bentuk logisnya menjadi tertutup `[FULL-TEXT]`. Kelemahan utama penggunaan
+logika deduktif adalah jika premisnya keliru, maka hasil penalarannya juga
+keliru atau invalid `[FULL-TEXT]`.
 
 ### B. Penalaran dari Kasus ke Kasus
 

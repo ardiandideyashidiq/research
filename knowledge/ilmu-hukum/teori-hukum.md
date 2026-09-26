@@ -38,8 +38,8 @@ alam terdapat kuasa *adikodrati* yang mengatur fungsi dan gerak gejala itu.
 **Tahap metafisis**, yaitu tahap ketika hakikat kekuatan *adikodrati*
 diganti dengan ketentuan-kententuan abstrak seperti kodrat dan penyebab.
 **Tahap positif**, yaitu tahap ketika orang tidak lagi mencapai pengetahuan
-tentang yang mutlak baik teologis maupun metafisis, tetapi membatasi diri pada
-fakta-fakta yang disajikan.
+tentang yang mutlak baik teologis maupun metafisis, tetapi membatasi diri
+pada fakta-fakta yang disajikan.
 
 Secara metodologis, positivisme hukum menyingkirkan pemikiran metafisis yang
 abstrak; tiap norma hukum harus diwujudkan menjadi norma yang konkrit dan
@@ -86,8 +86,8 @@ memberikan tempat bagi hukum yang hidup dalam masyarakat.
 > **Titik gesekan internal positivisme Austin:** Austin sendiri
 > membedakan *laws properly so called* dari *laws improperly so called*,
 > tetapi definisi "hukum sebagai perintah umum dari kedaulatan" menyisakan
-> ruang tafsir yang besar ketika perintah itu datang dari badan yang bukan
-> kedaulatan asli. Kritik inilah yang kemudian dirintis **H.L.A. Hart**.
+> ruang tafsir ketika perintah datang dari badan yang bukan kedaulatan asli.
+> Kritik inilah yang kemudian dirintis **H.L.A. Hart**.
 
 ---
 
@@ -113,11 +113,11 @@ Hart mengoreksi Austin dengan contoh: perintah dari kelompok yang bersenjata
 justru bukan perintah dalam makna hukum, karena yang menentukan adalah
 kewenangan, bukan sekadar kemampuan memaksakannya `[FULL-TEXT]`.
 
-> **Catatan cakupan:** klasifikasi atas *primary* dan *secondary rules* ini
-> bersumber dari buku ajar `[FULL-TEXT]`. Penjelasan lengkap tentang *rule of
-> recognition*, konsep *minimum content of natural law*, dan perdebatan
-> *thin/thick rule of law* tidak ditemukan dalam sumber tersebut dan hanya
-> boleh dikutip dari karyanya sendiri setelah dibaca langsung — statusnya
+> **Catatan cakupan:** klasifikasi *primary/secondary rules* ini bersumber
+> dari buku ajar `[FULL-TEXT]`. Penjelasan lengkap tentang *rule of
+> recognition*, *minimum content of natural law*, dan perdebatan *thin/thick
+> rule of law* tidak ditemukan dalam sumber tersebut dan hanya boleh
+> dikutip dari karyanya sendiri setelah dibaca langsung — statusnya
 > `[PERLU VERIFIKASI]`.
 
 ---
@@ -231,9 +231,9 @@ sudah dibuat merupakan keharusan berikutnya** `[FULL-TEXT]`. Dari sini lahir
 adagium *omnis interpretatio vel declarant, vel extendit, vel restringit* —
 setiap penafsiran bersifat menjelaskan, memperluaskan, ataupun membatasi.
 
-Persoalan mendasar yang menentukan arah aliran penafsiran adalah
-**apakah penafsiran hukum dan pembuatan hukum itu dipisahkan secara ketat dan
-tajam, atau tidak** `[FULL-TEXT]`. Jika keduanya dipisahkan ketat,
+Persoalan mendasar yang menentukan arah aliran penafsiran: **apakah penafsiran
+hukum dan pembuatan hukum dipisahkan secara ketat dan tajam, atau tidak**
+`[FULL-TEXT]`. Jika keduanya dipisahkan ketat,
 penafsiran ditempatkan di bawah pembuatan hukum: penafsiran tidak boleh
 melampaui batas yang dibuat pembentuk undang-undang. Jawaban ini melahirkan
 aliran *Begriffsjurisprudenz* bersama dogmatik hukum dan *legal positivism*,
@@ -249,8 +249,8 @@ dengan aliran *freirechtbewegung*: hakim diberi kebebasan dalam penemuan
 hukum dan dapat mengesampingkan undang-undang atas dasar itikad baik.
 
 **Hubungan dengan CLS:** dalam konteks Indonesia, *Critical Legal Studies*
-memberi pengaruh kepada Teori Hukum Progresif. Ada beberapa titik ketersinggungan
-yang saling melengkapi `[FULL-TEXT]`. **Pertama**, ketidakpercayaan terhadap
+memberi pengaruh kepada Teori Hukum Progresif. Ada beberapa titik yang
+saling melengkapi `[FULL-TEXT]`. **Pertama**, ketidakpercayaan terhadap
 netralitas hukum dan keinginan merombak struktur sosial hierarkis — THP
 mendeskripsikan hukum bukan dalam ruang hampa. **Kedua**, tulisan-tulisan awal
 **Satjipto Rahardjo** di masa reformasi dan transisi memiliki kesamaan dengan
@@ -287,12 +287,11 @@ hak asasi yang dimiliki kelompok minoritas `[FULL-TEXT]`.
 
 Karena hak berkaitan erat dengan keadilan, **Dworkin** mengkritik Teori
 Keadilan **John Rawls** karena mendasarkan distribusi keadilan pada situasi
-hipotetis. Menurut Dworkin, pendasaran itu sangat fundamental dan **Rawls**
-tidak dapat memberikan dasar yang mengikat bagi masyarakat untuk mengakuinya.
-Penolakan terhadap teori **Rawls** karena **Dworkin** mendasarkan teorinya pada
-pemahaman bahwa **negara diwajibkan memperlakukan para warganya secara sama**
-(*equal*) `[FULL-TEXT]`.
-
+hipotetis. Menurut **Dworkin**, pendasaran itu sangat fundamental dan **Rawls**
+tidak dapat memberikan dasar yang mengikat bagi masyarakat untuk
+mengakuinya. Penolakan terhadap teori **Rawls** karena **Dworkin**
+mendasarkan teorinya pada pemahaman bahwa **negara diwajibkan memperlakukan
+para warganegarnya secara sama** (*equal*) `[FULL-TEXT]`.
 ### C. Batasan dan Perbaikan
 
 **Muhammad Ashri** mencatat kelemahan pendekatan ini: sebagai sebuah definisi
@@ -380,12 +379,10 @@ kekuatan, yang kemudian digunakan untuk memperkuat suatu konstruksi hukum
 ### C. Kritik dari Sisi *Law and Society*
 
 **Carol Smart**, pemikir hukum poststrukturalis dari Inggris, mengkritisi
-pemikiran **CLS** dari arah yang berbeda: hukum harus dipahami sebagai sistem
-pengetahuan (*episteme*), bukan sistem peraturan untuk menyelesaikan konflik.
-Sebagai sistem pengetahuan, hukum bersaing dengan berbagai bentuk pengetahuan
-lain — agama dan sains — dan bahkan pengalaman nyata individu dalam
+pemikiran **CLS** dari arah berbeda: hukum harus dipahami sebagai sistem
+pengetahuan (*episteme*), bukan sistem peraturan. Sebagai sistem pengetahuan,
+hukum bersaing dengan agama, sains, dan pengalaman nyata individu dalam
 mendefinisikan kebenaran, kesalahan, kebaikan, dan keburukan `[FULL-TEXT]`.
-
 ### D. Relevansi untuk Analisis Hukum Indonesia
 
 **Ifdal Kasim** menilai kajian-kajian hukum **CLS** sangat relevan untuk
@@ -408,15 +405,14 @@ hambatan untuk melakukan kajian yang kritikal terhadap hukum `[FULL-TEXT]`.
 
 Kriteria pemilihan teori adalah jenis kasusnya. Untuk kasus *jelas* (*clear
 case*) yang fakta-faktanya tidak diragukan, logika positivistik — subsumsi
-deduktif — adalah alat yang memadai dan hemat biaya. Untuk kasus *keras* (*hard
-case*) di mana teks norma tidak memberi jawaban eksplisit, teori hukum
+deduktif — adalah alat yang memadai dan hemat biaya. Untuk kasus *keras*
+(*hard case*) di mana teks norma tidak memberi jawaban eksplisit, teori hukum
 progresif atau realisme memberi ruang untuk penalaran yang lebih substantif.
 Untuk kasus yang menuntut kepastian normatif dalam lalu lintas, teori hak
-Dworkin menyediakan kerangka untuk menimbang hak terhadap kepentingan
+**Dworkin** menyediakan kerangka untuk menimbang hak terhadap kepentingan
 kolektif. Untuk kasus yang menyangkut pemerasan struktural, kerangka **CLS**
 menyediakan alat untuk menelusuri *hidden political intentions* di balik
 rumusan norma.
-
 ### 2. Apakah positivisme hukum bertentangan dengan keadilan?
 
 Ya, tetapi hanya pada tataran konseptual. Positivisme tidak menyatakan bahwa
@@ -440,9 +436,15 @@ penalaran.
 
 ## Referensi
 
-- Safudin, E., Baihaqi, A.,dkk. (2022). *Memahami teori hukum*. Q-Media. `[FULL-TEXT]`
-- Asshiddiqie, J. (2006). *Teori Hans Kelsen tentang hukum*. Rajawali Press. `[FULL-TEXT]`
-- Mochtar, Z. A., & Hiariej, E. O. S. (2021). *Dasar-dasar ilmu hukum*. (Penerbit tidak tercantum). `[FULL-TEXT]`
-- Kurniawan, B. (2020). *Logika dan penalaran hukum*. Rajawali Press. `[FULL-TEXT]`
-- Atmadja, I. D. G.,dkk. (2017). *Teori-teori hukum*. Rajawali Press. `[FULL-TEXT]`
-- Dworkin, R. (1978). *Taking rights seriously*. Harvard University Press. `[PERLU VERIFIKASI]`
+- Safudin, E., Baihaqi, A.,dkk. (2022). *Memahami teori hukum*. Q-Media.
+  `[FULL-TEXT]`
+- Asshiddiqie, J. (2006). *Teori Hans Kelsen tentang hukum*. Rajawali
+  Press. `[FULL-TEXT]`
+- Mochtar, Z. A., & Hiariej, E. O. S. (2021). *Dasar-dasar ilmu hukum*.
+  (Penerbit tidak tercantum). `[FULL-TEXT]`
+- Kurniawan, B. (2020). *Logika dan penalaran hukum*. Rajawali Press.
+  `[FULL-TEXT]`
+- Atmadja, I. D. G.,dkk. (2017). *Teori-teori hukum*. Rajawali Press.
+  `[FULL-TEXT]`
+- Dworkin, R. (1978). *Taking rights seriously*. Harvard University
+  Press. `[PERLU VERIFIKASI]`

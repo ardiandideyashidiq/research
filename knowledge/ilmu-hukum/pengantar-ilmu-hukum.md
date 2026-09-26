@@ -311,8 +311,9 @@ Verifikasi yang khas hukum adalah pembuktian, yang menggunakan tiga sistem
 `[FULL-TEXT]`. **Sistem *negatief wettelijk***, yaitu hakim wajib terikat pada
 alat bukti minimum menurut undang-undang, tetapi masih perlu ditambah dengan
 keyakinan hakim. **Sistem *positief wettelijk***, yaitu tanpa keyakinan hakim,
-tetap dapat dipidana sepanjang alat bukti mencukupi. **Sistem *vrij bewijs*** atau
-*conviction intime*, yang menyatakan cukup dengan keyakinan hakim sekalipun
+tetap dapat dipidana sepanjang alat bukti mencukupi. **Sistem
+*vrij bewijs*** atau *conviction intime*, yang menyatakan cukup dengan keyakinan
+hakim sekalipun
 tanpa diperkuat alat bukti lain.
 
 > **[PERLU VERIFIKASI]** Klaim bahwa sistem hukum acara pidana Indonesia
