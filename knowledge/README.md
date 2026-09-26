@@ -58,6 +58,35 @@ Pustaka doktrin & framework untuk menganalisis **status hukum perkara**
   formula/template kalimat per bagian, contoh utuh + bedah komponen, red
   flags abstrak, terjemahan Inggris & pemilihan keywords.
 
+- <a href="./CATATAN-KORPUS-2026.md">`CATATAN-KORPUS-2026.md`</a>
+  — **WAJIB dibaca sebelum menulis file baru**: instrumen yang sudah dicabut
+  (KUHAP dicabut UU 20/2025), instrumen yang absen dari korpus Pasal.id (naskah
+  asli UUD 1945, KUHPerdata), pemetaan salah, katalog korupsi keluaran, dan
+  pemeriksa `tools/scan-knowledge.py`.
+
+## Pustaka substansi per subjek
+
+Disintil dari korpus buku di
+`/home/rd/Documents/organized/01-kuliah/hukum/topikal/topical/` (1.044 buku,
+18 folder subjek). Berbeda dengan pustaka framework di atas, isinya adalah
+doktrin substansi bidang hukum tertentu. Setiap subfolder punya README sendiri
+sebagai indeks.
+
+- <a href="./ilmu-hukum/README.md">`ilmu-hukum/`</a> — 5 file: pengantar ilmu
+  hukum, teori hukum lintas mazhab (positivisme, Kelsen, progresif, Dworkin,
+  CLS), filsafat hukum, logika hukum, hukum dan ilmu pengetahuan.
+- <a href="./hukum-perdata/README.md">`hukum-perdata/`</a> — perikatan dan
+  harta benda.
+- <a href="./hukum-islam/README.md">`hukum-islam/`</a> — 7 file: fikih
+  muamalat, fikih jinayah, usul fikih, hukum waris Islam, hukum keluarga
+  Islam, tasawuf, dan fikih dalam hukum Indonesia.
+- <a href="./hukum-keluarga/README.md">`hukum-keluarga/`</a> — perkawinan.
+- <a href="./hukum-adat/README.md">`hukum-adat/`</a> — kedudukan hukum adat.
+- <a href="./hukum-tata-negara/README.md">`hukum-tata-negara/`</a> — struktur
+  UUD 1945.
+- <a href="./ham/README.md">`ham/`</a> — 3 file: HAM konstitusional, ranah
+  sosial-ekonomi, dan kelompok rentan.
+
 ## Cara pakai dalam workflow
 
 - **Tahap 5** (kerangka konseptual) & **Tahap 6** (teori bertingkat):
@@ -71,3 +100,8 @@ Pustaka doktrin & framework untuk menganalisis **status hukum perkara**
 - **Tahap 17–18** (argumentasi & preskripsi): pakai Tahap VI (IRAC + triade
   Radbruch) dan `framework-operasional.md` Template Operasional; sub-isu dari
   `dekonstruksi-isu-hukum.md` jadi titian rumusan masalah Bab III/IV.
+- **Tahap 2 & 19** (pemetaan korpus & penulisan): subjek doktrin di
+  `ilmu-hukum/`, `hukum-perdata/`, `hukum-islam/`, `hukum-tata-negara/`
+  dipakai sebagai bahan pembanding doktrin, bukan sebagai analisis
+  empiris. Sebelum mengutip pasal dari salah satu file itu, cek dulu
+  `CATATAN-KORPUS-2026.md`.
