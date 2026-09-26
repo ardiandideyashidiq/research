@@ -20,6 +20,9 @@ status instrumen dan jebakan korpus.
 - <a href="./corporate-criminal-liability.md">`corporate-criminal-liability.md`</a>
   — **Pertanggungjawaban Pidana Korporasi**: peralihan subjek dari persona fisik ke persona hukum, fungsi identifikasi korporasi, dan skema sanksi serta penyelesaian.
 
+- <a href="./narkov.md">`narkov.md`</a>
+  — **NARKOTIKA dan Pembinaan**: struktur 17 BAB, status berlakunya undang-undang, bab khusus rehabilitasi dan pembinaan, serta peta putusan Mahkamah Konstitusi.
+
 - <a href="./sistem-peradilan-pidana.md">`sistem-peradilan-pidana.md`</a>
   — **Sistem Peradilan Pidana**: penggantian kodifikasi pasca pencabutan KUHAP, prinsip dasar Pasal 2, ruang lingkup Pasal 3, hakim aktif, dan fungsi penyidikan.
 

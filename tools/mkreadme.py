@@ -36,6 +36,7 @@ DESC = {
  'hukum-pidana/tindak-pidana-korupsi.md': ("Tindak Pidana Korupsi", "unsur perbuatan dan kerugian negara, riwayat legislasi, serta kedudukan Pasal 14 pasca-putusan MK 123/PUU-XXIII/2025"),
  'hukum-pidana/corporate-criminal-liability.md': ("Pertanggungjawaban Pidana Korporasi", "peralihan subjek dari persona fisik ke persona hukum, fungsi identifikasi korporasi, dan skema sanksi serta penyelesaian"),
  'hukum-pidana/sistem-peradilan-pidana.md': ('Sistem Peradilan Pidana', 'penggantian kodifikasi pasca pencabutan KUHAP, prinsip dasar Pasal 2, ruang lingkup Pasal 3, hakim aktif, dan fungsi penyidikan'),
+ 'hukum-pidana/narkov.md': ('NARKOTIKA dan Pembinaan', 'struktur 17 BAB, status berlakunya undang-undang, bab khusus rehabilitasi dan pembinaan, serta peta putusan Mahkamah Konstitusi'),
  'hukum-lingkungan/hukum-lingkungan.md': ("Hukum Lingkungan", "asas perlindungan lingkungan, hak konstitusional atas lingkungan yang sehat, internalisasi biaya pencemar, dan keadilan antar generasi"),
  'hukum-lingkungan/pengelolaan-sda.md': ("Pengelolaan SDA", "rezim pengelolaan sumber daya alam, konservasi, keanekaragaman hayati, dan hak hutan adat"),
  'hukum-lingkungan/amdal-dan-proses-permitasan.md': ("Amdal dan Perizinan", "Amdal, ANDAL, UKL-UPL, persetujuan lingkungan, dan sanksi administratif"),
